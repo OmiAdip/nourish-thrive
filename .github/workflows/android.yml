@@ -1,0 +1,74 @@
+name: Build Android app
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: android-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - name: Check the Expo token is set
+        id: check
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::warning::Add the EXPO_TOKEN secret to build the app."
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.ready == 'yes'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.ready == 'yes'
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: expo/expo-github-action@v8
+        if: steps.check.outputs.ready == 'yes'
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install
+        if: steps.check.outputs.ready == 'yes'
+        run: npm ci
+
+      - name: Add the signing key
+        if: steps.check.outputs.ready == 'yes'
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > release.keystore
+          cat > credentials.json <<JSON
+          {
+            "android": {
+              "keystore": {
+                "keystorePath": "release.keystore",
+                "keystorePassword": "$KEYSTORE_PASSWORD",
+                "keyAlias": "nourishthrive",
+                "keyPassword": "$KEYSTORE_PASSWORD"
+              }
+            }
+          }
+          JSON
+
+      - name: Link the Expo project
+        if: steps.check.outputs.ready == 'yes'
+        run: eas init --non-interactive --force
+
+      - name: Build the APK on Expo
+        if: steps.check.outputs.ready == 'yes'
+        run: eas build --platform android --profile preview --non-interactive

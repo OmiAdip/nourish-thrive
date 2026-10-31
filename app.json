@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Nourish&Thrive",
+    "slug": "nourish-thrive",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F7F5F0",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F5F0"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.zoistek.nourishthrive",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#3E6B4F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["android.permission.CAMERA"]
+    }
+  }
+}

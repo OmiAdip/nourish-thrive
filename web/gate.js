@@ -158,12 +158,12 @@
     var i=0;
     var wrap=document.createElement('div');
     wrap.setAttribute('role','dialog');wrap.setAttribute('aria-label','Message from your coach');
-    wrap.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(43,34,48,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))';
-    wrap.innerHTML='<div style="background:#fff;border-radius:24px;max-width:440px;width:100%;padding:20px 20px 16px;box-shadow:0 20px 50px -20px rgba(43,34,48,.5);font-family:\'Work Sans\',system-ui,sans-serif;color:#2B2230">'+
-      '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3E6B4F">Message from your coach</div>'+
-      '<div id="ntn-date" style="font-size:12px;color:#7A7086;margin:2px 0 10px"></div>'+
+    wrap.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(20,56,42,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))';
+    wrap.innerHTML='<div style="background:#fff;border-radius:24px;max-width:440px;width:100%;padding:20px 20px 16px;box-shadow:0 20px 50px -20px rgba(20,56,42,.5);font-family:\'Figtree\',system-ui,sans-serif;color:#1E2B25">'+
+      '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2B7F5A">Message from your coach</div>'+
+      '<div id="ntn-date" style="font-size:12px;color:#66766F;margin:2px 0 10px"></div>'+
       '<div id="ntn-body" style="font-size:15.5px;line-height:1.55;white-space:pre-wrap;max-height:50vh;overflow:auto"></div>'+
-      '<button id="ntn-ok" style="width:100%;margin-top:16px;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(140deg,#8A3D5C,#4E2033);font-family:inherit;cursor:pointer"></button></div>';
+      '<button id="ntn-ok" style="width:100%;margin-top:16px;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(140deg,#2F8A63,#154D37);font-family:inherit;cursor:pointer"></button></div>';
     document.body.appendChild(wrap);
     function show(){
       var n=notes[i];
@@ -219,14 +219,14 @@
     setTimeout(showCoachNotes,1500);
   }
 
-  var css='.ntl{max-width:400px;margin:0 auto;padding:48px 22px 40px;font-family:"Work Sans",system-ui,sans-serif;color:#2B2230}'+
-  '.ntl h1{font-family:"Fraunces",Georgia,serif;font-size:34px;line-height:1.05;margin:0 0 6px;color:#6B2D45}'+
-  '.ntl p{margin:0 0 22px;color:#7A7086;font-size:14.5px;line-height:1.5}'+
+  var css='.ntl{max-width:400px;margin:0 auto;padding:48px 22px 40px;font-family:"Figtree",system-ui,sans-serif;color:#1E2B25}'+
+  '.ntl h1{font-family:"Quicksand","Figtree",sans-serif;font-size:34px;line-height:1.05;margin:0 0 6px;color:#1F6B4C}'+
+  '.ntl p{margin:0 0 22px;color:#66766F;font-size:14.5px;line-height:1.5}'+
   '.ntl label{display:block;font-size:12.5px;font-weight:700;margin:14px 0 6px}'+
-  '.ntl input{width:100%;box-sizing:border-box;border:1.5px solid #E5E0D8;border-radius:14px;padding:13px 14px;font-size:16px;background:#fff;color:#2B2230;font-family:inherit}'+
-  '.ntl .go{width:100%;margin-top:20px;border:none;border-radius:999px;padding:14px;font-size:15.5px;font-weight:700;color:#fff;background:linear-gradient(140deg,#8A3D5C,#4E2033);font-family:inherit;cursor:pointer}'+
+  '.ntl input{width:100%;box-sizing:border-box;border:1.5px solid #E2ECE6;border-radius:14px;padding:13px 14px;font-size:16px;background:#fff;color:#1E2B25;font-family:inherit}'+
+  '.ntl .go{width:100%;margin-top:20px;border:none;border-radius:999px;padding:14px;font-size:15.5px;font-weight:700;color:#fff;background:linear-gradient(140deg,#2F8A63,#154D37);font-family:inherit;cursor:pointer}'+
   '.ntl .go:disabled{opacity:.6}'+
-  '.ntl .lnk{display:block;width:100%;background:none;border:none;color:#6B2D45;font-weight:600;font-size:14px;margin-top:14px;font-family:inherit;cursor:pointer}'+
+  '.ntl .lnk{display:block;width:100%;background:none;border:none;color:#1F6B4C;font-weight:600;font-size:14px;margin-top:14px;font-family:inherit;cursor:pointer}'+
   '.ntl .msg{margin-top:14px;font-size:13.5px;line-height:1.45;border-radius:12px;padding:10px 12px}'+
   '.ntl .err{background:#FBE9E5;color:#9A3422}.ntl .ok{background:#E7F0EA;color:#2F5A3F}';
 

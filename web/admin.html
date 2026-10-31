@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Nourish&amp;Thrive · Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F7F5F0;--card:#fff;--ink:#2B2230;--mut:#7A7086;--line:#E5E0D8;--berry:#6B2D45;--berry-deep:#3A1626;--leaf:#3E6B4F;--leaf-light:#E7F0EA;--peach:#F6E3D7;--red:#B4432F;--amber:#B7791F;color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Work Sans',system-ui,-apple-system,sans-serif;font-size:14.5px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;margin:0;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(247,245,240,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:rgba(247,245,240,.92)}
+.top-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:20px;color:var(--berry);margin-right:auto}
+.brand small{font-family:'Work Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf);margin-left:8px}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:100%}
+.tab{border:none;background:none;padding:8px 13px;border-radius:999px;font-weight:600;color:var(--mut);white-space:nowrap}
+.tab[aria-current="true"]{background:var(--peach);color:var(--berry-deep)}
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(43,34,48,.04),0 12px 30px -20px rgba(43,34,48,.25)}
+.card h2{font-size:19px;margin-bottom:10px}
+.mut{color:var(--mut)}
+.small{font-size:12.5px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:14px}
+@media(min-width:860px){.grid.two{grid-template-columns:1fr 1fr}}
+.btn{border:none;border-radius:999px;padding:10px 16px;font-weight:700;background:linear-gradient(140deg,#8A3D5C,#4E2033);color:#fff}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
+.btn.soft{background:var(--leaf-light);color:var(--leaf)}
+.btn.danger{background:#FBE9E5;color:var(--red)}
+.btn.sm{padding:7px 12px;font-size:12.5px}
+label.f{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
+input.i,select.i,textarea.i{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:16px}
+textarea.i{min-height:110px;resize:vertical;line-height:1.45}
+textarea.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;min-height:260px}
+input.i:focus,select.i:focus,textarea.i:focus{outline:none;border-color:var(--berry);box-shadow:0 0 0 4px rgba(107,45,69,.1)}
+.fields{display:grid;gap:0 12px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.list{display:flex;flex-direction:column}
+.member{display:flex;align-items:center;gap:12px;padding:12px 4px;border-top:1px solid var(--line);background:none;border-left:none;border-right:none;border-bottom:none;text-align:left;width:100%}
+.member:first-child{border-top:none}
+.member:hover{background:#FBFAF7}
+.av{width:40px;height:40px;border-radius:999px;flex-shrink:0;display:grid;place-items:center;color:#fff;font-family:'Fraunces',serif;font-weight:700;background:linear-gradient(140deg,#8A3D5C,#4E2033)}
+.grow{flex:1;min-width:0}
+.name{font-weight:700}
+.ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--leaf-light);color:var(--leaf);margin:2px 4px 2px 0;white-space:nowrap}
+.chip.red{background:#FBE9E5;color:var(--red)}
+.chip.amber{background:#FCF1DE;color:var(--amber)}
+.chip.berry{background:var(--peach);color:var(--berry-deep)}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.stat{background:var(--bg);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-family:'Fraunces',serif;font-size:21px}
+.stat span{font-size:11.5px;color:var(--mut)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:8px 8px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);border-top:none}
+.photos{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.photo{flex-shrink:0;text-align:center;font-size:11.5px;color:var(--mut)}
+.photo img{width:120px;height:160px;object-fit:cover;border-radius:12px;display:block;background:var(--bg);margin-bottom:4px}
+.note{background:var(--bg);border-radius:14px;padding:10px 12px;margin-bottom:8px;white-space:pre-wrap;line-height:1.45}
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.keybtn{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 10px;font-size:12.5px}
+.keybtn[aria-pressed="true"]{border-color:var(--berry);background:var(--peach)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;z-index:50;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);max-width:90vw}
+.center{max-width:400px;margin:8vh auto;padding:0 18px}
+.back{border:none;background:none;color:var(--berry);font-weight:700;padding:6px 0;margin-bottom:8px}
+.err{background:#FBE9E5;color:#9A3422;border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13.5px}
+.empty{color:var(--mut);padding:10px 0}
+svg.chart{width:100%;height:auto;display:block}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="app"><div class="center mut">Loading…</div></div>
+<script>
+(function(){
+'use strict';
+var SB_URL='https://jzctsfvowmuowfxaiayy.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6Y3RzZnZvd211b3dmeGFpYXl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MDM2OTUsImV4cCI6MjEwODk3OTY5NX0.H62HF0V9dC1u6lkKiA4HEi1S0-2w9dYxSSr5v_Gmkrc';
+var AUTH='ntadminauth';
+var app=document.getElementById('app');
+var session=null;try{session=JSON.parse(localStorage.getItem(AUTH)||'null')}catch(e){}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function $(sel,root){return (root||document).querySelector(sel)}
+function $$(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel))}
+function toast(t){$$('.toast').forEach(function(x){x.remove()});var d=document.createElement('div');d.setAttribute('role','status');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2600)}
+function parseVal(v){if(typeof v==='string'){try{return JSON.parse(v)}catch(e){return v}}return v}
+function fmtDate(d){if(!d)return '–';var x=new Date(d);return isNaN(x)?String(d):x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+function ago(d){if(!d)return 'never';var m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<2)return 'just now';if(m<60)return m+' min ago';var h=Math.floor(m/60);if(h<24)return h+' h ago';var dd=Math.floor(h/24);return dd===1?'yesterday':dd+' days ago'}
+function daysSince(d){return d?Math.floor((Date.now()-new Date(d).getTime())/864e5):999}
+function initials(n){return String(n||'M').trim().split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase()}
+function num(v){var n=Number(v);return isFinite(n)?n:null}
+function isoDay(off){var d=new Date();d.setDate(d.getDate()-off);return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+
+/* ---------- Supabase ---------- */
+function saveSession(s){
+  if(s&&s.access_token){session={access_token:s.access_token,refresh_token:s.refresh_token,expires_at:s.expires_at||Math.floor(Date.now()/1000)+(s.expires_in||3600),user:s.user};localStorage.setItem(AUTH,JSON.stringify(session))}
+  else{session=null;localStorage.removeItem(AUTH)}
+}
+async function auth(path,body,tok){
+  var h={'Content-Type':'application/json',apikey:SB_KEY};if(tok)h.Authorization='Bearer '+tok;
+  var r=await fetch(SB_URL+'/auth/v1/'+path,{method:'POST',headers:h,body:JSON.stringify(body||{})});
+  var d={};try{d=await r.json()}catch(e){}
+  if(!r.ok)throw new Error(d.msg||d.error_description||d.message||d.error||'Something went wrong');
+  return d;
+}
+var refreshing=null;
+async function token(){
+  if(!session)throw new Error('Please log in');
+  if(session.expires_at-90>Date.now()/1000)return session.access_token;
+  if(!refreshing)refreshing=auth('token?grant_type=refresh_token',{refresh_token:session.refresh_token}).then(function(d){saveSession(d);return d.access_token}).finally(function(){refreshing=null});
+  return refreshing;
+}
+async function rest(method,path,body,extra){
+  var h={apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'};
+  for(var k in (extra||{}))h[k]=extra[k];
+  var r=await fetch(SB_URL+'/rest/v1/'+path,{method:method,headers:h,body:body!==undefined?JSON.stringify(body):undefined});
+  if(r.status===401){saveSession(null);render();throw new Error('Please log in again')}
+  if(!r.ok){var t='';try{t=(await r.json()).message}catch(e){}throw new Error(t||('Request failed ('+r.status+')'))}
+  if(r.status===204)return null;
+  var txt=await r.text();return txt?JSON.parse(txt):null;
+}
+function enc(v){return encodeURIComponent(v)}
+var db={
+  userKeys:function(uid){return rest('GET','user_data?user_id=eq.'+uid+'&select=key,updated_at&order=key')},
+  userGet:async function(uid,keys){
+    var rows=await rest('GET','user_data?user_id=eq.'+uid+'&key=in.('+enc(keys.map(function(k){return '"'+k.replace(/"/g,'')+'"'}).join(','))+')&select=key,value,updated_at');
+    var out={};(rows||[]).forEach(function(r){out[r.key]=parseVal(r.value)});return out;
+  },
+  userSet:function(uid,key,val){return rest('POST','user_data?on_conflict=user_id,key',[{user_id:uid,key:key,value:typeof val==='string'?val:JSON.stringify(val)}],{Prefer:'resolution=merge-duplicates,return=minimal'})},
+  userDel:function(uid,key){return rest('DELETE','user_data?user_id=eq.'+uid+'&key=eq.'+enc(key))},
+  docs:function(col){return rest('GET','shared_docs?collection=eq.'+enc(col)+'&select=doc_id,data,updated_at&order=updated_at.desc&limit=1000')},
+  doc:async function(col,id){var r=await rest('GET','shared_docs?collection=eq.'+enc(col)+'&doc_id=eq.'+enc(id)+'&select=data');return r&&r[0]?r[0].data:null},
+  docSet:function(col,id,data){return rest('POST','shared_docs?on_conflict=collection,doc_id',[{collection:col,doc_id:id,data:data}],{Prefer:'resolution=merge-duplicates,return=minimal'})},
+  docDel:function(col,id){return rest('DELETE','shared_docs?collection=eq.'+enc(col)+'&doc_id=eq.'+enc(id))}
+};
+
+/* ---------- state & routing ---------- */
+var state={tab:'members',users:null,filter:'',member:null};
+function go(tab,member){state.tab=tab;state.member=member||null;location.hash=member?'member-'+member:tab;render()}
+window.addEventListener('hashchange',function(){
+  var h=location.hash.slice(1);
+  if(h.indexOf('member-')===0){if(state.member!==h.slice(7)){state.tab='members';state.member=h.slice(7);render()}}
+  else if(['members','squad','recipes','calls'].indexOf(h)>=0&&(h!==state.tab||state.member)){state.tab=h;state.member=null;render()}
+});
+
+/* ---------- login ---------- */
+function loginView(note){
+  app.innerHTML='<div class="center"><h1 style="font-size:32px;color:var(--berry);line-height:1.05">Nourish<br>&amp;Thrive</h1>'+
+  '<p class="mut" style="margin:6px 0 20px">Coach panel. Log in with your coach account.</p>'+
+  '<form id="lf" class="card" novalidate><label class="f" for="le">Email</label><input class="i" id="le" type="email" autocomplete="email" autocapitalize="none">'+
+  '<label class="f" for="lp">Password</label><input class="i" id="lp" type="password" autocomplete="current-password">'+
+  '<button class="btn" style="width:100%;margin-top:16px" id="lb">Log in</button><div id="lm"></div></form></div>';
+  if(note)$('#lm').innerHTML='<div class="err">'+esc(note)+'</div>';
+  $('#lf').onsubmit=async function(ev){
+    ev.preventDefault();var b=$('#lb');b.disabled=true;b.textContent='Please wait…';$('#lm').innerHTML='';
+    try{var s=await auth('token?grant_type=password',{email:$('#le').value.trim().toLowerCase(),password:$('#lp').value});saveSession(s);await start()}
+    catch(e){$('#lm').innerHTML='<div class="err">'+esc(/invalid login/i.test(e.message)?'Wrong email or password.':e.message)+'</div>';b.disabled=false;b.textContent='Log in'}
+  };
+}
+async function start(){
+  try{
+    var ok=await rest('POST','rpc/is_coach',{});
+    if(ok!==true){var em=session.user&&session.user.email;saveSession(null);loginView((em||'This account')+' does not have coach access. Ask the app owner to make it a coach account.');return}
+  }catch(e){saveSession(null);loginView(e.message);return}
+  var h=location.hash.slice(1);
+  if(h.indexOf('member-')===0){state.tab='members';state.member=h.slice(7)}
+  else if(['members','squad','recipes','calls'].indexOf(h)>=0)state.tab=h;
+  render();
+}
+
+/* ---------- shell ---------- */
+function shell(inner){
+  var tabs=[['members','Members'],['squad','Squad & challenge'],['recipes','Recipes'],['calls','Calls']];
+  app.innerHTML='<header class="top"><div class="top-in"><div class="brand">Nourish&amp;Thrive<small>Coach</small></div>'+
+    '<nav class="tabs">'+tabs.map(function(t){return '<button class="tab" data-tab="'+t[0]+'" aria-current="'+(state.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</nav>'+
+    '<button class="btn ghost sm" id="logout">Log out</button></div></header><main class="wrap" id="main">'+inner+'</main>';
+  $$('.tab').forEach(function(b){b.onclick=function(){go(b.dataset.tab)}});
+  $('#logout').onclick=async function(){try{await auth('logout',{},session.access_token)}catch(e){}saveSession(null);loginView()};
+}
+function render(){
+  if(!session){loginView();return}
+  if(state.tab==='members'&&state.member)return memberView(state.member);
+  if(state.tab==='members')return membersView();
+  if(state.tab==='squad')return squadView();
+  if(state.tab==='recipes')return recipesView();
+  if(state.tab==='calls')return callsView();
+}
+
+/* ---------- members list ---------- */
+function flags(u){
+  var f=[],p=u.profile||{},d=daysSince(u.last_active);
+  if(d>=3&&d<999)f.push(['Quiet '+d+' days','red']);
+  if(d>=999)f.push(['Not started','amber']);
+  if(u.unread_notes)f.push([u.unread_notes+' unread message'+(u.unread_notes>1?'s':''),'berry']);
+  if(p.maintenance)f.push(['Maintenance','']);
+  if(u.role==='coach')f.push(['Coach','berry']);
+  return f;
+}
+async function membersView(){
+  shell('<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Members</h2>'+
+    '<input class="i" id="q" placeholder="Search name or email" style="max-width:280px" value="'+esc(state.filter)+'"></div>'+
+    '<div id="ms" class="stats" style="margin:14px 0"></div><div id="ml" class="list"><div class="empty">Loading members…</div></div></div>');
+  try{state.users=await rest('POST','rpc/admin_users',{})}catch(e){$('#ml').innerHTML='<div class="err">'+esc(e.message)+'</div>';return}
+  var us=state.users||[];
+  var active=us.filter(function(u){return daysSince(u.last_active)<3}).length;
+  var quiet=us.filter(function(u){var d=daysSince(u.last_active);return d>=3&&d<999}).length;
+  $('#ms').innerHTML=stat(us.length,'members')+stat(active,'active in last 3 days')+stat(quiet,'gone quiet');
+  function draw(){
+    var q=state.filter.toLowerCase();
+    var list=us.filter(function(u){var n=((u.profile||{}).name||'')+' '+(u.email||'');return !q||n.toLowerCase().indexOf(q)>=0});
+    $('#ml').innerHTML=list.length?list.map(function(u){
+      var p=u.profile||{},c=u.latest_checkin||{};
+      var w=num(c.weight)||num(p.weight),g=num(p.goal);
+      return '<button class="member" data-id="'+u.id+'"><div class="av">'+esc(initials(p.name||u.email))+'</div><div class="grow"><div class="name ell">'+esc(p.name||'(no name yet)')+'</div>'+
+        '<div class="small mut ell">'+esc(u.email||'')+' · active '+esc(ago(u.last_active))+(w?' · '+w+' kg'+(g?' → goal '+g+' kg':''):'')+'</div>'+
+        '<div>'+flags(u).map(function(f){return '<span class="chip '+f[1]+'">'+esc(f[0])+'</span>'}).join('')+'</div></div><span class="mut">›</span></button>';
+    }).join(''):'<div class="empty">No members found.</div>';
+    $$('.member').forEach(function(b){b.onclick=function(){go('members',b.dataset.id)}});
+  }
+  $('#q').oninput=function(){state.filter=this.value;draw()};
+  draw();
+}
+function stat(v,l){return '<div class="stat"><b>'+esc(v)+'</b><span>'+esc(l)+'</span></div>'}
+
+/* ---------- one member ---------- */
+async function memberView(uid){
+  shell('<button class="back" id="bk">‹ All members</button><div id="mv"><div class="card empty">Loading…</div></div>');
+  $('#bk').onclick=function(){go('members')};
+  var keys,data,user;
+  try{
+    if(!state.users)state.users=await rest('POST','rpc/admin_users',{});
+    user=(state.users||[]).find(function(u){return u.id===uid});
+    if(!user){$('#mv').innerHTML='<div class="card err">Member not found.</div>';return}
+    keys=await db.userKeys(uid)||[];
+    var want=['profile','checkins','daily-target','training-plan'];
+    for(var i=0;i<7;i++)want.push('food-log-'+isoDay(i));
+    data=await db.userGet(uid,want);
+  }catch(e){$('#mv').innerHTML='<div class="card err">'+esc(e.message)+'</div>';return}
+  var p=data.profile&&typeof data.profile==='object'?data.profile:{};
+  var checks=Array.isArray(data.checkins)?data.checkins:[];
+  var tgt=data['daily-target']&&typeof data['daily-target']==='object'?data['daily-target']:{};
+  var start=num(p.weight),latest=checks.length?num(checks[checks.length-1].weight):start,goal=num(p.goal);
+  var lost=start&&latest?(start-latest).toFixed(1):null;
+
+  var food=[];for(var j=6;j>=0;j--){var day=isoDay(j),items=Array.isArray(data['food-log-'+day])?data['food-log-'+day]:[];
+    food.push({day:day,kcal:items.reduce(function(a,x){return a+(num(x.kcal)||0)},0),p:items.reduce(function(a,x){return a+(num(x.p)||0)},0),n:items.length})}
+
+  var html='';
+  html+='<div class="card"><div class="row"><div class="av" style="width:52px;height:52px;font-size:20px">'+esc(initials(p.name||user.email))+'</div><div class="grow">'+
+    '<h1 style="font-size:24px">'+esc(p.name||'(no name yet)')+'</h1><div class="mut small">'+esc(user.email)+' · joined '+esc(fmtDate(user.joined))+' · active '+esc(ago(user.last_active))+'</div>'+
+    '<div>'+flags(user).map(function(f){return '<span class="chip '+f[1]+'">'+esc(f[0])+'</span>'}).join('')+(p.tier?'<span class="chip">'+esc(p.tier)+'</span>':'')+'</div></div></div>'+
+    (p.why&&p.why.statement?'<p style="margin:12px 0 0"><span class="mut small">Their why:</span><br>'+esc(p.why.statement)+'</p>':'')+'</div>';
+
+  html+='<div class="grid two"><div>';
+  // progress
+  html+='<div class="card"><h2>Progress</h2><div class="stats">'+stat(start?start+' kg':'–','start')+stat(latest?latest+' kg':'–','latest')+stat(goal?goal+' kg':'–','goal')+stat(lost!==null?(lost>0?'−':'+')+Math.abs(lost)+' kg':'–','change')+'</div>'+
+    chart(checks)+
+    (checks.length?'<div class="scroll" style="margin-top:10px"><table><thead><tr><th>Date</th><th>Weight</th><th>Energy</th><th>Sleep</th><th>Win</th><th>Struggle</th></tr></thead><tbody>'+
+      checks.slice(-8).reverse().map(function(c){return '<tr><td>'+esc(c.date||c.iso||'')+'</td><td>'+esc(c.weight||'')+'</td><td>'+esc(c.energy||'')+'</td><td>'+esc(c.sleep||'')+'</td><td>'+esc(c.win||'')+'</td><td>'+esc(c.struggle||'')+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">No check-ins yet.</div>')+
+    '<div style="margin-top:12px"><button class="btn ghost sm" id="ph">Show progress photos</button><div id="phs"></div></div></div>';
+  // food
+  html+='<div class="card"><h2>Food, last 7 days</h2><div class="scroll"><table><thead><tr><th>Day</th><th>Items</th><th>Calories</th><th>Protein</th></tr></thead><tbody>'+
+    food.map(function(f){var over=tgt.calories&&f.kcal>tgt.calories*1.1;return '<tr><td>'+esc(fmtDate(f.day))+'</td><td>'+f.n+'</td><td'+(over?' style="color:var(--red);font-weight:700"':'')+'>'+(f.n?Math.round(f.kcal):'–')+(tgt.calories?' <span class="mut small">/ '+tgt.calories+'</span>':'')+'</td><td>'+(f.n?Math.round(f.p)+' g':'–')+(tgt.protein?' <span class="mut small">/ '+tgt.protein+' g</span>':'')+'</td></tr>'}).join('')+
+    '</tbody></table></div></div>';
+  html+='</div><div>';
+  // messages
+  html+='<div class="card"><h2>Messages</h2><p class="mut small" style="margin:0 0 8px">They see your message the next time they open the app.</p>'+
+    '<textarea class="i" id="nb" placeholder="Write a message to '+esc(p.name||'this member')+'…" maxlength="2000"></textarea>'+
+    '<div class="row" style="margin-top:8px;justify-content:flex-end"><button class="btn" id="ns">Send message</button></div><div id="nl" style="margin-top:12px"></div></div>';
+  // targets
+  html+='<div class="card"><h2>Daily targets</h2><div class="fields">'+
+    fld('tc','Calories',tgt.calories)+fld('tp','Protein (g)',tgt.protein)+fld('tcb','Carbs (g)',tgt.carbs)+fld('tf','Fat (g)',tgt.fat)+'</div>'+
+    '<label class="f" for="td">Diet</label><input class="i" id="td" value="'+esc(tgt.diet||'')+'">'+
+    '<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="ts">Save targets</button></div></div>';
+  // profile / plan
+  html+='<div class="card"><h2>Goal and plan</h2><div class="fields">'+fld('pg','Goal weight (kg)',p.goal)+
+    '<div><label class="f" for="pt">Membership</label><input class="i" id="pt" value="'+esc(p.tier||'')+'"></div></div>'+
+    '<label class="row small" style="margin-top:12px;gap:8px"><input type="checkbox" id="pm"'+(p.maintenance?' checked':'')+'> Maintenance mode (goal reached)</label>'+
+    '<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="ps">Save</button></div></div>';
+  // raw data
+  html+='<div class="card"><h2>All saved data</h2><p class="mut small" style="margin:0 0 10px">Everything the app saved for this member, like their training plan and meal plan. Tap one to view or change it. Be careful: wrong changes can break that part of their app.</p>'+
+    '<div class="keys">'+keys.map(function(k){return '<button class="keybtn" data-k="'+esc(k.key)+'" aria-pressed="false">'+esc(k.key)+'</button>'}).join('')+'</div>'+
+    '<div id="raw" hidden style="margin-top:12px"><div class="row" style="justify-content:space-between"><b id="rk"></b><span class="mut small" id="ru"></span></div>'+
+    '<textarea class="i code" id="rv" spellcheck="false"></textarea><div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn danger sm" id="rd">Delete</button><button class="btn" id="rs">Save changes</button></div></div></div>';
+  html+='</div></div>';
+  $('#mv').innerHTML=html;
+
+  // photos
+  $('#ph').onclick=async function(){
+    this.disabled=true;this.textContent='Loading photos…';
+    try{var d=await db.userGet(uid,['progress-photos']);var ps=Array.isArray(d['progress-photos'])?d['progress-photos']:[];
+      $('#phs').innerHTML=ps.length?'<div class="photos" style="margin-top:10px">'+ps.slice().reverse().map(function(x){
+        return Object.keys(x.poses||{}).map(function(pose){var src=String(x.poses[pose]||'');return /^data:image\//.test(src)?'<div class="photo"><img alt="'+esc(pose+' '+(x.date||''))+'" src="'+esc(src)+'">'+esc(pose)+' · '+esc(fmtDate(x.date))+(x.weight?' · '+esc(x.weight)+' kg':'')+'</div>':''}).join('')}).join('')+'</div>':'<div class="empty">No photos yet.</div>';
+      this.hidden=true;
+    }catch(e){$('#phs').innerHTML='<div class="err">'+esc(e.message)+'</div>';this.disabled=false;this.textContent='Show progress photos'}
+  };
+  // messages
+  async function loadNotes(){
+    try{var ns=await rest('GET','coach_notes?user_id=eq.'+uid+'&order=created_at.desc&select=id,body,created_at,read_at&limit=50');
+      $('#nl').innerHTML=(ns||[]).length?ns.map(function(n){return '<div class="note">'+esc(n.body)+'<div class="small mut" style="margin-top:6px">'+esc(new Date(n.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))+' · '+(n.read_at?'✓ read':'not read yet')+'</div></div>'}).join(''):'<div class="empty small">No messages yet.</div>';
+    }catch(e){$('#nl').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+  }
+  loadNotes();
+  $('#ns').onclick=async function(){
+    var body=$('#nb').value.trim();if(!body){toast('Write a message first');return}
+    this.disabled=true;
+    try{await rest('POST','coach_notes',{user_id:uid,body:body},{Prefer:'return=minimal'});$('#nb').value='';toast('Message sent');user.unread_notes=(user.unread_notes||0)+1;loadNotes()}
+    catch(e){toast(e.message)}
+    this.disabled=false;
+  };
+  // targets
+  $('#ts').onclick=async function(){
+    var t=Object.assign({},tgt,{calories:num($('#tc').value),protein:num($('#tp').value),carbs:num($('#tcb').value),fat:num($('#tf').value),diet:$('#td').value.trim()||tgt.diet});
+    this.disabled=true;
+    try{await db.userSet(uid,'daily-target',t);tgt=t;toast('Targets saved. They update when the member next opens the app.')}catch(e){toast(e.message)}
+    this.disabled=false;
+  };
+  // profile
+  $('#ps').onclick=async function(){
+    this.disabled=true;
+    try{var fresh=(await db.userGet(uid,['profile'])).profile;var np=Object.assign({},typeof fresh==='object'&&fresh?fresh:p,{goal:$('#pg').value.trim()||p.goal,tier:$('#pt').value.trim()||p.tier,maintenance:$('#pm').checked});
+      await db.userSet(uid,'profile',np);p=np;user.profile=np;toast('Saved')}catch(e){toast(e.message)}
+    this.disabled=false;
+  };
+  // raw editor
+  var cur=null;
+  $$('.keybtn').forEach(function(b){b.onclick=async function(){
+    $$('.keybtn').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');
+    cur=b.dataset.k;$('#raw').hidden=false;$('#rk').textContent=cur;$('#rv').value='Loading…';
+    var meta=keys.find(function(k){return k.key===cur});$('#ru').textContent=meta?'changed '+ago(meta.updated_at):'';
+    try{var v=(await db.userGet(uid,[cur]))[cur];$('#rv').value=typeof v==='string'?v:JSON.stringify(v,null,2)}catch(e){$('#rv').value='';toast(e.message)}
+  }});
+  $('#rs').onclick=async function(){
+    if(!cur)return;var txt=$('#rv').value,val;
+    try{val=JSON.parse(txt);val=JSON.stringify(val)}catch(e){if(/^\s*[\[{]/.test(txt)){toast('That isn\u2019t valid JSON. Check brackets and commas.');return}val=txt}
+    this.disabled=true;try{await db.userSet(uid,cur,val);toast('Saved')}catch(e){toast(e.message)}this.disabled=false;
+  };
+  $('#rd').onclick=async function(){
+    if(!cur||!confirm('Delete "'+cur+'" for this member? This can\u2019t be undone.'))return;
+    try{await db.userDel(uid,cur);toast('Deleted');memberView(uid)}catch(e){toast(e.message)}
+  };
+}
+function fld(id,l,v){return '<div><label class="f" for="'+id+'">'+esc(l)+'</label><input class="i" id="'+id+'" inputmode="decimal" value="'+esc(v==null?'':v)+'"></div>'}
+function chart(checks){
+  var pts=checks.map(function(c){return num(c.weight)}).filter(function(v){return v});
+  if(pts.length<2)return '';
+  var W=600,H=160,P=24,min=Math.min.apply(null,pts),max=Math.max.apply(null,pts);if(max-min<1){max+=.5;min-=.5}
+  var xy=pts.map(function(v,i){return [P+i*(W-2*P)/(pts.length-1),P+(max-v)*(H-2*P)/(max-min)]});
+  return '<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Weight from '+pts[0]+' to '+pts[pts.length-1]+' kg">'+
+    '<polyline fill="none" stroke="#6B2D45" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="'+xy.map(function(p){return p.join(',')}).join(' ')+'"/>'+
+    xy.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="#fff" stroke="#6B2D45" stroke-width="2"/>'}).join('')+
+    '<text x="'+P+'" y="14" font-size="12" fill="#7A7086">'+max.toFixed(1)+' kg</text><text x="'+P+'" y="'+(H-4)+'" font-size="12" fill="#7A7086">'+min.toFixed(1)+' kg</text></svg>';
+}
+
+/* ---------- Squad & challenge ---------- */
+var CH_DEFAULT={on:true,title:'8 Week Christmas Challenge',start:'2026-10-28',weeks:8,prize:'£300 cash for the top score',workoutsPerWeek:3,stepsGoal:8000,mindsetDays:4,bonus:{}};
+async function squadView(){
+  shell('<div class="card"><h2>Challenge</h2><div id="cf" class="empty">Loading…</div></div><div class="card"><h2>Squad members</h2><p class="mut small" style="margin:0 0 8px">Everyone who joined the Squad. Removing someone takes their entry off the leaderboard; they can rejoin from the app.</p><div id="sq" class="empty">Loading…</div></div>');
+  try{
+    var cfg=Object.assign({},CH_DEFAULT,await db.doc('config','challenge')||{});
+    $('#cf').className='';
+    $('#cf').innerHTML='<label class="row small" style="gap:8px"><input type="checkbox" id="con"'+(cfg.on?' checked':'')+'> Challenge is running</label>'+
+      '<label class="f" for="ct">Title</label><input class="i" id="ct" value="'+esc(cfg.title)+'">'+
+      '<div class="fields"><div><label class="f" for="cs">Start date</label><input class="i" id="cs" type="date" value="'+esc(cfg.start)+'"></div>'+fld('cw','Weeks',cfg.weeks)+fld('cwo','Workouts / week',cfg.workoutsPerWeek)+fld('cst','Steps goal / day',cfg.stepsGoal)+fld('cm','Mindset days / week',cfg.mindsetDays)+'</div>'+
+      '<label class="f" for="cp">Prize</label><input class="i" id="cp" value="'+esc(cfg.prize)+'">'+
+      '<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="csv">Save challenge</button></div>';
+    $('#csv').onclick=async function(){
+      var n=Object.assign({},cfg,{on:$('#con').checked,title:$('#ct').value.trim()||cfg.title,start:$('#cs').value||cfg.start,weeks:num($('#cw').value)||cfg.weeks,workoutsPerWeek:num($('#cwo').value)||0,stepsGoal:num($('#cst').value)||0,mindsetDays:num($('#cm').value)||0,prize:$('#cp').value.trim()});
+      this.disabled=true;try{await db.docSet('config','challenge',n);cfg=n;toast('Challenge saved')}catch(e){toast(e.message)}this.disabled=false;
+    };
+  }catch(e){$('#cf').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+  try{
+    var rows=await db.docs('squad')||[];
+    var wk=[];for(var i=0;i<7;i++)wk.push(isoDay(i));
+    $('#sq').className='';
+    $('#sq').innerHTML=rows.length?'<div class="scroll"><table><thead><tr><th>Name</th><th>Steps this week</th><th>Last update</th><th></th></tr></thead><tbody>'+rows.map(function(r){
+      var d=r.data||{},steps=wk.reduce(function(a,day){return a+(num((d.steps||{})[day])||0)},0);
+      return '<tr><td><b>'+esc(d.name||'Member')+'</b></td><td>'+steps.toLocaleString('en-GB')+'</td><td>'+esc(ago(d.updatedAt||r.updated_at))+'</td><td style="text-align:right"><button class="btn danger sm" data-rm="'+esc(r.doc_id)+'" data-n="'+esc(d.name||'Member')+'">Remove</button></td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">No one has joined the Squad yet.</div>';
+    $$('[data-rm]').forEach(function(b){b.onclick=async function(){
+      if(!confirm('Remove '+b.dataset.n+' from the Squad?'))return;
+      try{await db.docDel('squad',b.dataset.rm);toast('Removed');squadView()}catch(e){toast(e.message)}
+    }});
+  }catch(e){$('#sq').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+}
+
+/* ---------- Recipes ---------- */
+async function recipesView(){
+  shell('<div class="card"><h2>Waiting for approval</h2><p class="mut small" style="margin:0 0 8px">Recipes members sent in. Approved recipes appear for everyone in the app.</p><div id="rp" class="empty">Loading…</div></div><div class="card"><h2>Community recipes</h2><div id="rc" class="empty">Loading…</div></div>');
+  function rcard(x,actions){return '<div style="padding:10px 0;border-top:1px solid var(--line)"><div class="row" style="justify-content:space-between"><div class="grow"><b>'+esc((x.e||'')+' '+(x.n||'Recipe'))+'</b><div class="small mut">'+esc([x.meal,x.mins?x.mins+' min':'',x.k?x.k+' kcal':'',x.p?x.p+' g protein':''].filter(Boolean).join(' · '))+'</div></div><div class="row">'+actions+'</div></div>'+
+    (Array.isArray(x.ing)&&x.ing.length?'<details class="small" style="margin-top:6px"><summary>Ingredients and steps</summary><p>'+x.ing.map(esc).join('<br>')+'</p>'+(Array.isArray(x.steps)?'<ol>'+x.steps.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol>':'')+'</details>':'')+'</div>'}
+  try{
+    var subs=await db.docs('submissions')||[],items=[];
+    subs.forEach(function(r){((r.data||{}).items||[]).forEach(function(it){items.push({it:it,from:r.doc_id})})});
+    $('#rp').className='';
+    $('#rp').innerHTML=items.length?items.map(function(o,i){return rcard(o.it,'<button class="btn soft sm" data-ap="'+i+'">Approve</button><button class="btn danger sm" data-rj="'+i+'">Reject</button>')}).join(''):'<div class="empty">Nothing waiting.</div>';
+    async function decide(i,approve){
+      var o=items[i];
+      try{
+        if(approve)await db.docSet('community',String(o.it.id),Object.assign({},o.it,{approvedAt:new Date().toISOString()}));
+        var cur=await db.doc('submissions',o.from)||{};
+        await db.docSet('submissions',o.from,{items:(cur.items||[]).filter(function(x){return x.id!==o.it.id})});
+        toast(approve?'Approved':'Rejected');recipesView();
+      }catch(e){toast(e.message)}
+    }
+    $$('[data-ap]').forEach(function(b){b.onclick=function(){decide(+b.dataset.ap,true)}});
+    $$('[data-rj]').forEach(function(b){b.onclick=function(){decide(+b.dataset.rj,false)}});
+  }catch(e){$('#rp').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+  try{
+    var com=await db.docs('community')||[];
+    $('#rc').className='';
+    $('#rc').innerHTML=com.length?com.map(function(r){return rcard(r.data||{},'<button class="btn danger sm" data-del="'+esc(r.doc_id)+'">Remove</button>')}).join(''):'<div class="empty">No community recipes yet.</div>';
+    $$('[data-del]').forEach(function(b){b.onclick=async function(){if(!confirm('Remove this recipe for everyone?'))return;try{await db.docDel('community',b.dataset.del);toast('Removed');recipesView()}catch(e){toast(e.message)}}});
+  }catch(e){$('#rc').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+}
+
+/* ---------- Calls ---------- */
+async function callsView(){
+  shell('<div class="card"><h2>Booked calls</h2><div id="cl" class="empty">Loading…</div></div>');
+  try{
+    var rows=await db.docs('bookings')||[],all=[];
+    rows.forEach(function(r){var d=r.data||{};(d.items||[]).forEach(function(it){all.push(Object.assign({},it,{name:d.name,phone:d.phone,tier:d.tier,uid:r.doc_id}))})});
+    var up=all.filter(function(x){return new Date(x.at).getTime()>Date.now()-15*6e4}).sort(function(a,b){return String(a.at).localeCompare(String(b.at))});
+    $('#cl').className='';
+    $('#cl').innerHTML=up.length?'<div class="scroll"><table><thead><tr><th>When</th><th>Member</th><th>Phone</th><th>Note</th></tr></thead><tbody>'+up.map(function(x){
+      return '<tr><td>'+esc(new Date(x.at).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))+'</td><td><a href="#member-'+esc(x.uid)+'">'+esc(x.name||'Member')+'</a></td><td>'+(x.phone?'<a href="https://wa.me/'+esc(String(x.phone).replace(/[^0-9]/g,''))+'" target="_blank" rel="noopener">'+esc(x.phone)+'</a>':'–')+'</td><td>'+esc(x.note||x.topic||'')+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">No upcoming calls.</div>';
+  }catch(e){$('#cl').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+}
+
+/* ---------- boot ---------- */
+if(session)start();else loginView();
+})();
+</script>
+</body>
+</html>

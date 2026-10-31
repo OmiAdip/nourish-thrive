@@ -2,6 +2,7 @@
 (function(){
   var SB_URL='https://jzctsfvowmuowfxaiayy.supabase.co';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6Y3RzZnZvd211b3dmeGFpYXl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MDM2OTUsImV4cCI6MjEwODk3OTY5NX0.H62HF0V9dC1u6lkKiA4HEi1S0-2w9dYxSSr5v_Gmkrc';
+  var SITE_URL='https://omiadip.github.io/nourish-thrive/';
   var AUTH_KEY='ntauth', OWNER_KEY='ntowner', DIRTY_KEY='ntdirty';
   var LOCAL_ONLY={session:1};
   var realFetch=window.fetch.bind(window);
@@ -181,6 +182,20 @@
   window.ntCheckCoachNotes=showCoachNotes;
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&document.getElementById('nt-app')&&document.getElementById('nt-app').dataset.ran&&Date.now()-lastNotesCheck>60000)showCoachNotes()});
 
+
+  /* Password change from the app's Preferences: checks the current password, then saves the new one. Returns an error message or "". */
+  window.ntChangePassword=async function(current,next){
+    if(!session||!session.user)return 'Please log in again.';
+    try{await authCall('token?grant_type=password',{email:session.user.email,password:current})}
+    catch(e){return /invalid login/i.test(String(e.message))?'Your current password isn\u2019t right.':'Couldn\u2019t check your password. Check your internet and try again.'}
+    if(!next)return '';
+    try{
+      var r=await realFetch(SB_URL+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+(await token())},body:JSON.stringify({password:next})});
+      if(!r.ok){var d={};try{d=await r.json()}catch(e){}var m=String(d.msg||d.message||'');return /same/i.test(m)?'Your new password must be different from the old one.':/weak|pwned|leaked/i.test(m)?'That password is too easy to guess. Try a longer one.':(m||'Couldn\u2019t change your password. Try again.')}
+    }catch(e){return 'Couldn\u2019t change your password. Check your internet and try again.'}
+    return '';
+  };
+
   /* Hooks the app calls on Log out and Delete account. */
   window.ntSignOut=async function(){
     try{await flush()}catch(e){}
@@ -259,7 +274,7 @@
       if(mode!=='reset'&&pwd.length<6){say('Password needs at least 6 characters.');return}
       go.disabled=true;var label=go.textContent;go.textContent='Please wait…';
       try{
-        if(mode==='reset'){await authCall('recover',{email:em});say('Done. Check your email for the reset link.',true)}
+        if(mode==='reset'){await authCall('recover?redirect_to='+encodeURIComponent(SITE_URL),{email:em});say('Done. Check your email for the reset link.',true)}
         else if(mode==='up'){
           var d=await authCall('signup',{email:em,password:pwd});
           if(d.access_token){saveSession(d);await enter(d.user,pwd);return}
@@ -277,7 +292,49 @@
     render();if(note)say(note);
   }
 
+
+  /* Links from emails (confirm sign-up, reset password) land here with the login in the address. */
+  function readEmailLink(){
+    var h=location.hash.replace(/^#/,'');if(!h)return null;
+    var p={};h.split('&').forEach(function(x){var i=x.indexOf('=');if(i>0)p[decodeURIComponent(x.slice(0,i))]=decodeURIComponent(x.slice(i+1).replace(/\+/g,' '))});
+    if(!p.access_token&&!p.error&&!p.error_description)return null;
+    try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+    return p;
+  }
+  async function userFor(tok){var r=await realFetch(SB_URL+'/auth/v1/user',{headers:{apikey:SB_KEY,Authorization:'Bearer '+tok}});if(!r.ok)throw new Error('That link has expired.');return r.json()}
+  function showNewPassword(){
+    var root=document.getElementById('root');
+    root.innerHTML='<style>'+css+'</style><form class="ntl" novalidate><h1>Nourish<br>&amp;Thrive</h1><p>Choose a new password for '+(session&&session.user?session.user.email.replace(/[<>&"]/g,''):'your account')+'.</p>'+
+      '<label for="ntl-n1">New password</label><input id="ntl-n1" type="password" autocomplete="new-password">'+
+      '<label for="ntl-n2">Type it again</label><input id="ntl-n2" type="password" autocomplete="new-password">'+
+      '<button class="go" type="submit" id="ntl-go">Save new password</button><div id="ntl-msg"></div></form>';
+    var f=root.querySelector('form'),go=root.querySelector('#ntl-go'),msg=root.querySelector('#ntl-msg');
+    function say(t,ok){msg.innerHTML='<div class="msg '+(ok?'ok':'err')+'"></div>';msg.firstChild.textContent=t}
+    f.onsubmit=async function(ev){
+      ev.preventDefault();var a=root.querySelector('#ntl-n1').value,b=root.querySelector('#ntl-n2').value;
+      if(a.length<6){say('Password needs at least 6 characters.');return}
+      if(a!==b){say('The two passwords don\u2019t match.');return}
+      go.disabled=true;go.textContent='Saving…';
+      try{
+        var r=await realFetch(SB_URL+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+(await token())},body:JSON.stringify({password:a})});
+        if(!r.ok){var d={};try{d=await r.json()}catch(e){}throw new Error(/same/i.test(String(d.msg||d.message))?'Your new password must be different from the old one.':(d.msg||d.message||'Couldn\u2019t save your password.'))}
+        say('Password saved. You can now log in with it in the app.',true);
+        setTimeout(function(){enter(session.user,a)},1200);
+      }catch(e){say(e.message);go.disabled=false;go.textContent='Save new password'}
+    };
+  }
+
   async function boot(){
+    var link=readEmailLink();
+    if(link){
+      if(link.access_token){
+        try{var u=await userFor(link.access_token);saveSession({access_token:link.access_token,refresh_token:link.refresh_token,expires_in:Number(link.expires_in)||3600,user:u});
+          if(link.type==='recovery'){showNewPassword();return}
+          await enter(u,null);return;
+        }catch(e){saveSession(null);showLogin('That link has expired. Log in, or tap “Forgot password?” to get a new link.');return}
+      }
+      showLogin(/expired|invalid/i.test(link.error_description||'')?'That link has expired. Tap “Forgot password?” to get a new one.':(link.error_description||'That link didn’t work.'));return;
+    }
     if(session&&session.user){
       try{await token();await enter(session.user,null);return}
       catch(e){

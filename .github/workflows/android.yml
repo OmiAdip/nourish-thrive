@@ -3,6 +3,15 @@ name: Build Android app
 on:
   push:
     branches: [main]
+    paths:
+      - 'App.js'
+      - 'index.js'
+      - 'app.json'
+      - 'eas.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'assets/**'
+      - 'web/**'
   workflow_dispatch:
 
 concurrency:

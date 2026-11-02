@@ -336,7 +336,7 @@ var SLOT={B:'Breakfast',L:'Lunch',D:'Dinner',S:'Snack'};
 var MOOD=['','😞','😕','😐','🙂','😄'];
 var WORDS={k:'Calories',kcal:'Calories',p:'Protein (g)',c:'Carbs (g)',f:'Fat (g)',n:'Name',name:'Name',s:'Meal',slot:'Meal',d:'Day',date:'Date',iso:'Date',secs:'Time',mins:'Minutes',win:'Win',struggle:'Struggle',mood:'Mood',energy:'Energy',sleep:'Sleep',cravings:'Cravings',weight:'Weight (kg)',note:'Note',text:'Text',feel:'Feeling',crave:'Craving',hour:'Hour',water:'Water (glasses)',steps:'Steps',reflection:'Reflection',nextFocus:'Next focus',week:'Week',fiber:'Fibre (g)',sugar:'Sugar (g)',salt:'Salt (g)',title:'Title',statement:'Statement',at:'When',target:'Target (h)',hours:'Hours',start:'Start',end:'End'};
 var HIDE_COLS={id:1,e:1,hue:1,flags:1,pbs:1,sets:1,ing:1,steps:1,wid:1};
-var SETTINGS_KEYS={'locale-confirmed':'Chose their country','reminders-added':'Added reminders to calendar','squad-visited':'Visited the Squad','session':'Logged in on phone','plan-shop-ticks':'Shopping list ticks','user-locale':'Country and shops','account':'App account','fav-recipes':'Favourite recipes','fav-workouts':'Favourite workouts','journey-claims':'Rewards claimed','journey-challenge':'Joined challenge','journey-history':'Challenge history','plan-eaten':'Meal plan ticks','food-library':'Saved foods'};
+var SETTINGS_KEYS={'locale-confirmed':'Chose their country','reminders-added':'Added reminders to calendar','squad-visited':'Visited the Squad','session':'Logged in on phone','plan-shop-ticks':'Shopping list ticks','user-locale':'Country and shops','account':'App account','fav-recipes':'Favourite recipes','fav-workouts':'Favourite workouts','journey-claims':'Rewards claimed','journey-challenge':'Joined challenge','journey-history':'Challenge history','plan-eaten':'Meal plan ticks','food-library':'Saved foods','coach-plan':'Plan assigned by coach'};
 
 function words(k){if(WORDS[k])return WORDS[k];var t=String(k).replace(/[-_]/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2');return t.charAt(0).toUpperCase()+t.slice(1)}
 function isDateStr(v){return typeof v==='string'&&/^\d{4}-\d{2}-\d{2}(T|$)/.test(v)}
@@ -910,7 +910,8 @@ async function assignPlanUI(M,el){
     var plan={a:{daysN:p.daysN,days:DAYS_FOR[p.daysN]||DAYS_FOR[3],mins:p.mins,place:p.place,level:p.level,kit:arr(a.kit).length?a.kit:(p.place==='gym'?['gym']:['none']),care:arr(a.care),meno:!!a.meno},
       start:$('#as').value||mondayISO(),blockWeeks:p.weeks,stepsGoal:p.stepsGoal,swaps:tp.swaps||{},made:new Date().toISOString(),coachSet:true,template:p.name};
     this.disabled=true;
-    try{await db.userSet(M.uid,'training-plan',plan);M.data['training-plan']=plan;toast('Plan assigned');drawTab(M,'training')}catch(e){toast(e.message);this.disabled=false}
+    var at=new Date().toISOString();plan.coachAppliedAt=at;
+    try{await db.userSet(M.uid,'coach-plan',{plan:plan,assignedAt:at,by:session.user.email});await db.userSet(M.uid,'training-plan',plan);M.data['training-plan']=plan;M.data['coach-plan']={plan:plan,assignedAt:at};toast('Plan assigned. It shows in their app within a few minutes, or straight away when they next open it.');drawTab(M,'training')}catch(e){toast(e.message);this.disabled=false}
   };
 }
 

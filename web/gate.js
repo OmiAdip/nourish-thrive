@@ -98,18 +98,21 @@
 
   async function pullFromCloud(user){
     if(Object.keys(dirty).length&&lsGet(OWNER_KEY)===user.id)await flush();
-    var rows=await rest('GET','user_data?select=key,value');
+    var rows=await rest('GET','user_data?select=key,value,updated_at');
     if(lsGet(OWNER_KEY)!==user.id){
       var old=[];try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&(k.indexOf('nt:')===0||k.indexOf('nt-')===0))old.push(k)}}catch(e){}
       old.forEach(function(k){try{rawRemove.call(localStorage,k)}catch(e){}});try{rawRemove.call(localStorage,'ntavatar')}catch(e){}window.ntAvatarUrl='';
       dirty={};saveDirty();
     }
+    var newest=lsGet('ntlastpull')||'';
     (rows||[]).forEach(function(r){
+      if(r.updated_at&&r.updated_at>newest)newest=r.updated_at;
       if(dirty[r.key])return;
       var v=typeof r.value==='string'?r.value:JSON.stringify(r.value);
       origSetSilent('nt:'+r.key,v);
     });
     lsSet(OWNER_KEY,user.id);
+    if(newest)rawSet.call(localStorage,'ntlastpull',newest);
   }
   function origSetSilent(k,v){try{rawSet.call(localStorage,k,v)}catch(e){}}
 
@@ -128,9 +131,10 @@
   window.ntToast=function(t){
     var old=document.getElementById('nt-toast');if(old)old.remove();
     var d=document.createElement('div');d.id='nt-toast';d.setAttribute('role','status');d.textContent=t;
+    if(arguments[1]&&arguments[1].label){var b=document.createElement('button');b.textContent=arguments[1].label;b.style.cssText='margin-left:12px;border:0;border-radius:999px;background:#5DBC01;color:#0E351D;font:700 12.5px "Plus Jakarta Sans",sans-serif;padding:6px 12px;cursor:pointer';var run=arguments[1].run;b.onclick=function(){run()};d.appendChild(b);d.style.pointerEvents='auto'}
     d.style.cssText='position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:9998;background:#111613;color:#fff;font:600 13.5px/1.35 "Plus Jakarta Sans",system-ui,sans-serif;padding:11px 16px;border-radius:999px;max-width:88vw;text-align:center;box-shadow:0 18px 40px -18px rgba(0,0,0,.45);opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1),transform .5s cubic-bezier(.32,.72,0,1)';
     document.body.appendChild(d);requestAnimationFrame(function(){d.style.opacity='1'});
-    setTimeout(function(){d.style.opacity='0';setTimeout(function(){d.remove()},450)},3800);
+    setTimeout(function(){d.style.opacity='0';setTimeout(function(){d.remove()},450)},arguments[1]&&arguments[1].label?12000:3800);
   };
   var KIND={chat:'coach messages',recipe:'AI recipes',other:'AI requests'};
 
@@ -267,6 +271,47 @@
     avatarChanged('');
   };
 
+
+  /* ---------- changes made by the coach ---------- */
+  // The coach panel saves an assigned plan as "coach-plan". It wins over the phone's copy,
+  // but keeps the member's own exercise swaps.
+  function applyCoachPlan(){
+    var cp;try{cp=JSON.parse(lsGet('nt:coach-plan')||'null')}catch(e){cp=null}
+    if(!cp||!cp.plan||!cp.assignedAt)return false;
+    var cur;try{cur=JSON.parse(lsGet('nt:training-plan')||'null')}catch(e){cur=null}
+    if(cur&&cur.coachAppliedAt&&cur.coachAppliedAt>=cp.assignedAt)return false;
+    var next=Object.assign({},cp.plan,{swaps:(cur&&cur.swaps)||cp.plan.swaps||{},coachAppliedAt:cp.assignedAt,coachSet:true});
+    lsSet('nt:training-plan',JSON.stringify(next));
+    return true;
+  }
+  var lastRefresh=0;
+  async function refreshFromCloud(){
+    if(!session||Date.now()-lastRefresh<45000)return;lastRefresh=Date.now();
+    try{
+      var since=lsGet('ntlastpull')||'1970-01-01T00:00:00Z';
+      var rows=await rest('GET','user_data?select=key,value,updated_at&updated_at=gt.'+encodeURIComponent(since));
+      var changed=false,newest=since;
+      (rows||[]).forEach(function(r){
+        if(r.updated_at>newest)newest=r.updated_at;
+        if(dirty[r.key])return;
+        var v=typeof r.value==='string'?r.value:JSON.stringify(r.value);
+        if(lsGet('nt:'+r.key)!==v){origSetSilent('nt:'+r.key,v);if(r.key!=='coach-plan')changed=true}
+      });
+      rawSet.call(localStorage,'ntlastpull',newest);
+      if(applyCoachPlan())changed=true;
+      if(changed)window.ntToast('Your coach updated your plan',{label:'Refresh',run:function(){location.reload()}});
+    }catch(e){}
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&document.getElementById('nt-app')&&document.getElementById('nt-app').dataset.ran)refreshFromCloud()});
+  setInterval(function(){if(document.visibilityState==='visible')refreshFromCloud()},180000);
+
+  /* Display name: shown in the app and the coach panel. */
+  window.ntSetDisplayName=async function(name){
+    ['profile','account'].forEach(function(k){try{var o=JSON.parse(lsGet('nt:'+k)||'null');if(o&&typeof o==='object'){o.name=name;lsSet('nt:'+k,JSON.stringify(o))}}catch(e){}});
+    await flush();
+    try{await rest('PATCH','profiles?id=eq.'+session.user.id,{display_name:name},{Prefer:'return=minimal'})}catch(e){}
+  };
+
   /* Hooks the app calls on Log out and Delete account. */
   window.ntSignOut=async function(){
     try{await flush()}catch(e){}
@@ -301,6 +346,7 @@
   async function enter(user,password){
     await pullFromCloud(user);
     origSetSilent('nt:session','in');
+    applyCoachPlan();
     if(lsGet('nt:account')===null&&lsGet('nt:profile')!==null){
       origSetSilent('nt:account',JSON.stringify({name:'Member',email:user.email,pw:password||'',joined:new Date().toISOString().slice(0,10)}));
     }else if(password&&lsGet('nt:account')){

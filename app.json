@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Nourish&Thrive",
+    "name": "DropASize",
     "slug": "nourish-thrive",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "backgroundColor": "#F7F5F0",
+    "backgroundColor": "#F4F6F2",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F7F5F0"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": false
@@ -19,12 +19,19 @@
       "package": "com.zoistek.nourishthrive",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#3E6B4F",
+        "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "permissions": ["android.permission.CAMERA"]
-    }
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ]
+    },
+    "plugins": [
+      "expo-notifications"
+    ]
   }
 }

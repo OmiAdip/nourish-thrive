@@ -176,7 +176,9 @@
     return {
       limit:function(n){return colRef(col,n)},
       doc:function(id){return docRef(col+'/'+id)},
-      get:async function(){var rows=await rest('GET','shared_docs?collection=eq.'+enc(col)+'&select=doc_id,data&order=updated_at.desc&limit='+(max||500));return {docs:(rows||[]).map(function(r){return snap(r.doc_id,r)}),size:(rows||[]).length,empty:!(rows||[]).length}}
+      get:async function(){var rows=await rest('GET','shared_docs?collection=eq.'+enc(col)+'&select=doc_id,data&order=updated_at.desc&limit='+(max||500))||[];
+        if(col==='squad'){var cfg=await docRef('config/squads').get(),mem=cfg.exists?(cfg.data().members||{}):{},mine=mem[session.user.id]||'';rows=rows.filter(function(r){return (mem[r.doc_id]||'')===mine})}
+        return {docs:rows.map(function(r){return snap(r.doc_id,r)}),size:rows.length,empty:!rows.length}}
     };
   }
   var dbApi={doc:docRef,collection:function(c){return colRef(c)}};
@@ -272,6 +274,41 @@
   };
 
 
+
+  /* ---------- leaderboard score (last 7 days, shared with other members) ---------- */
+  // 10 for using the app that day, 5 for logging food, 5 for 8+ glasses of water,
+  // 1 per 1,000 steps (max 15), 15 per workout.
+  function weekScore(get){
+    var act=get('active-days',{})||{},hab=get('habits-history',{})||{},steps=get('steps-log',{})||{},ws=get('workout-sessions',[])||[];
+    var score=0,steps7=0,wk=0,streak=0,days=[];
+    for(var i=0;i<7;i++){var d=new Date(Date.now()-i*864e5).toISOString().slice(0,10);days.push(d)}
+    days.forEach(function(d){
+      var food=get('food-log-'+d,[]),w=(Array.isArray(ws)?ws:[]).filter(function(x){return x&&x.date===d}).length,st=Number(steps[d])||0;
+      score+=(act[d]?10:0)+(Array.isArray(food)&&food.length?5:0)+((Number((hab[d]||{}).water)||0)>=8?5:0)+Math.min(15,Math.floor(st/1000))+15*w;
+      steps7+=st;wk+=w;
+    });
+    for(var j=act[days[0]]?0:1;j<365;j++){var dd=new Date(Date.now()-j*864e5).toISOString().slice(0,10);if(act[dd])streak++;else break}
+    return {score:score,steps7:steps7,workouts7:wk,streak:streak};
+  }
+  window.ntWeekScore=weekScore;
+  var lastScore='';
+  async function publishScore(){
+    if(!session)return;
+    var get=function(k,f){try{var v=lsGet('nt:'+k);return v?JSON.parse(v):f}catch(e){return f}};
+    var p=get('profile',{})||{};if(!p.name)return;
+    var doc=Object.assign({name:String(p.name).slice(0,40),avatar:!!window.ntAvatarUrl},weekScore(get));
+    var key=JSON.stringify(doc);if(key===lastScore)return;
+    try{await rest('POST','shared_docs?on_conflict=collection,doc_id',[{collection:'scores',doc_id:session.user.id,data:Object.assign(doc,{updatedAt:new Date().toISOString()})}],{Prefer:'resolution=merge-duplicates,return=minimal'});lastScore=key}catch(e){}
+  }
+  window.ntLeaderboard=async function(){
+    var rows=await rest('GET','shared_docs?collection=eq.scores&select=doc_id,data&limit=2000');
+    var weekAgo=new Date(Date.now()-8*864e5).toISOString();
+    return (rows||[]).map(function(r){return Object.assign({id:r.doc_id,me:session&&r.doc_id===session.user.id},r.data)})
+      .map(function(x){if(!x.updatedAt||x.updatedAt<weekAgo){x.score=0}return x})
+      .sort(function(a,b){return (b.score||0)-(a.score||0)||String(a.name).localeCompare(String(b.name))});
+  };
+  setInterval(function(){if(document.visibilityState==='visible')publishScore()},120000);
+
   /* ---------- changes made by the coach ---------- */
   // The coach panel saves an assigned plan as "coach-plan". It wins over the phone's copy,
   // but keeps the member's own exercise swaps.
@@ -355,6 +392,7 @@
     await Promise.all([loadRole(),loadLibrary(),loadAvatar()]);
     startApp();
     setTimeout(showCoachNotes,1500);
+    setTimeout(publishScore,4000);
   }
 
   var css='.ntl{max-width:420px;margin:0 auto;padding:12vh 20px 40px;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#0F2418}'+
@@ -451,7 +489,12 @@
     };
   }
 
+  function showSplash(){
+    var root=document.getElementById('root');if(!root)return;
+    root.innerHTML='<style>.nts{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:#F5FAF1}.nts img{height:54px;width:auto;opacity:0;transform:translateY(10px) scale(.96);animation:ntsIn .9s cubic-bezier(.32,.72,0,1) .05s forwards}.nts-bar{width:120px;height:4px;border-radius:999px;background:rgba(93,188,1,.15);overflow:hidden;opacity:0;animation:ntsFade .6s ease .5s forwards}.nts-bar i{display:block;width:40%;height:100%;border-radius:999px;background:#5DBC01;animation:ntsRun 1.2s cubic-bezier(.65,0,.35,1) infinite}@keyframes ntsIn{to{opacity:1;transform:none}}@keyframes ntsFade{to{opacity:1}}@keyframes ntsRun{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}@media (prefers-reduced-motion:reduce){.nts img,.nts-bar{animation:none;opacity:1;transform:none}.nts-bar i{animation:none;width:100%}}</style><div class="nts" role="status" aria-label="Loading DropASize"><img src="'+NT_LOGO+'" alt="DropASize"><div class="nts-bar"><i></i></div></div>';
+  }
   async function boot(){
+    showSplash();
     var link=readEmailLink();
     if(link){
       if(link.access_token){

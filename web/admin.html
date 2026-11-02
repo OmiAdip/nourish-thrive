@@ -250,7 +250,7 @@ async function start(){
 
 /* ---------- shell ---------- */
 function shell(inner){
-  var tabs=[['members','Members'],['library','Recipes'],['plans','Training plans'],['community','Community'],['squad','Squad & challenge'],['calls','Calls']];
+  var tabs=[['members','Members'],['library','Recipes'],['plans','Training plans'],['squad','Squads & leaderboard'],['community','Community'],['calls','Calls']];
   app.innerHTML='<header class="top"><div class="top-in"><div class="brand"><img src="'+NT_LOGO+'" alt="DropASize"><small>Coach</small></div>'+
     '<nav class="tabs">'+tabs.map(function(t){return '<button class="tab" data-tab="'+t[0]+'" aria-current="'+(state.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</nav>'+
     '<button class="btn ghost sm" id="mypw">My password</button><button class="btn ghost sm" id="logout">Log out</button></div></header><main class="wrap" id="main">'+inner+'</main>';
@@ -276,6 +276,7 @@ function flags(u){
   if(u.unread_notes)f.push([u.unread_notes+' unread message'+(u.unread_notes>1?'s':''),'berry']);
   if(p.maintenance)f.push(['Maintenance','']);
   if(u.role==='coach')f.push(['Coach','berry']);
+  if(u.plan&&u.plan.weeks)f.push([u.plan.template||u.plan.weeks+'-week plan','']);
   return f;
 }
 async function membersView(){
@@ -895,10 +896,11 @@ function planEditor(plans,idx,done){
 /* Assign a template to one member (used in the member's Training tab). */
 async function assignPlanUI(M,el){
   var plans=await getPlans().catch(function(){return PLAN_DEFAULTS});
-  var tp=obj(M.data['training-plan']);
+  var tp=obj(M.data['training-plan']),cp=obj(M.data['coach-plan']).plan;if(cp&&cp.template)tp=Object.assign({},tp,{template:cp.template,blockWeeks:cp.blockWeeks});
+  var curIdx=plans.findIndex(function(p){return tp.template&&p.name===tp.template});if(curIdx<0)curIdx=plans.findIndex(function(p){return p.weeks===Number(tp.blockWeeks)});
   var box=document.createElement('div');box.className='card';
   box.innerHTML='<span class="eyebrow">Coach controls</span><h2 style="margin:8px 0 4px">Assign a plan</h2><p class="mut small" style="margin:0 0 10px">'+(tp.template?'Currently on: <b>'+esc(tp.template)+'</b> · '+esc(tp.blockWeeks||6)+' weeks':(tp.start?'Currently on the app’s own '+esc(tp.blockWeeks||6)+'-week plan.':'No plan yet.'))+'</p>'+
-    '<div class="fields"><div style="grid-column:span 2"><label class="f" for="ap">Plan</label><select class="i" id="ap">'+plans.map(function(p,i){return '<option value="'+i+'">'+esc(p.name)+' ('+p.weeks+' wks)</option>'}).join('')+'</select></div><div><label class="f" for="as">Starts</label><input class="i" type="date" id="as" value="'+mondayISO()+'"></div></div>'+
+    '<div class="fields"><div style="grid-column:span 2"><label class="f" for="ap">Plan</label><select class="i" id="ap">'+plans.map(function(p,i){return '<option value="'+i+'"'+(i===curIdx?' selected':'')+'>'+esc(p.name)+' ('+p.weeks+' wks)</option>'}).join('')+'</select></div><div><label class="f" for="as">Starts</label><input class="i" type="date" id="as" value="'+mondayISO()+'"></div></div>'+
     '<div class="small mut" id="apd" style="margin-top:8px"></div><div class="row end"><button class="btn" id="apgo">Assign plan</button></div>';
   el.insertBefore(box,el.firstChild);
   function desc(){var p=plans[+$('#ap').value];$('#apd').textContent=p?planLine(p)+(p.notes?' · '+p.notes:''):''}
@@ -915,10 +917,45 @@ async function assignPlanUI(M,el){
   };
 }
 
+
+/* ---------- Squads (coach-made groups) ---------- */
+async function squadsCard(el){
+  var cfg=await db.doc('config','squads')||{};cfg.list=Array.isArray(cfg.list)?cfg.list:[];cfg.members=cfg.members||{};
+  if(!state.users){state.users=await rest('POST','rpc/admin_users',{});await signAvatars(state.users)}
+  var box=document.createElement('div');box.className='card';el.insertBefore(box,el.firstChild);
+  async function save(){cfg.updatedAt=new Date().toISOString();await db.docSet('config','squads',cfg)}
+  function draw(){
+    var count=function(id){return Object.keys(cfg.members).filter(function(k){return cfg.members[k]===id}).length};
+    var opts=function(sel){return '<option value="">No squad</option>'+cfg.list.map(function(q){return '<option value="'+esc(q.id)+'"'+(q.id===sel?' selected':'')+'>'+esc(q.name)+'</option>'}).join('')};
+    box.innerHTML='<span class="eyebrow">Squads</span><h2 style="margin:8px 0 4px">Squads</h2><p class="mut small" style="margin:0 0 12px">Members only see the people in their own squad. Members without a squad see each other.</p>'+
+      '<div class="row"><input class="i" id="sqn" placeholder="New squad name, e.g. January starters" maxlength="40" style="max-width:340px"><button class="btn sm" id="sqa">Create squad</button></div>'+
+      '<div class="plist">'+(cfg.list.length?cfg.list.map(function(q){return '<div class="pitem"><div class="grow"><b>'+esc(q.name)+'</b><div class="small mut">'+count(q.id)+' member'+(count(q.id)===1?'':'s')+'</div></div><button class="btn ghost sm" data-ren="'+esc(q.id)+'">Rename</button><button class="btn danger sm" data-del="'+esc(q.id)+'">Delete</button></div>'}).join(''):'<div class="empty">No squads yet. Create one above.</div>')+'</div>'+
+      '<h3 style="margin:18px 0 8px;font-size:15px">Who’s in which squad</h3><div class="scroll"><table><thead><tr><th>Member</th><th>Squad</th></tr></thead><tbody>'+
+      (state.users||[]).map(function(u){var p=u.profile||{};return '<tr><td><div class="row" style="gap:10px">'+avHtml(u,p.name||u.email,30)+'<div><b>'+esc(p.name||'(no name yet)')+'</b><div class="small mut">'+esc(u.email)+'</div></div></div></td><td><select class="i" data-mem="'+u.id+'" style="min-width:180px">'+opts(cfg.members[u.id]||'')+'</select></td></tr>'}).join('')+'</tbody></table></div>';
+    $('#sqa',box).onclick=async function(){var n=$('#sqn',box).value.trim();if(!n){toast('Give the squad a name');return}cfg.list.push({id:'sq-'+Date.now().toString(36),name:n});try{await save();toast('Squad created');draw()}catch(e){cfg.list.pop();toast(e.message)}};
+    $$('[data-ren]',box).forEach(function(b){b.onclick=async function(){var q=cfg.list.find(function(x){return x.id===b.dataset.ren});var n=prompt('New name for this squad:',q.name);if(!n||!n.trim())return;q.name=n.trim().slice(0,40);try{await save();draw()}catch(e){toast(e.message)}}});
+    $$('[data-del]',box).forEach(function(b){b.onclick=async function(){var id=b.dataset.del;if(!confirm('Delete this squad? Its members will have no squad.'))return;cfg.list=cfg.list.filter(function(x){return x.id!==id});Object.keys(cfg.members).forEach(function(k){if(cfg.members[k]===id)delete cfg.members[k]});try{await save();toast('Deleted');draw()}catch(e){toast(e.message)}}});
+    $$('[data-mem]',box).forEach(function(sel){sel.onchange=async function(){if(sel.value)cfg.members[sel.dataset.mem]=sel.value;else delete cfg.members[sel.dataset.mem];try{await save();toast('Saved');draw()}catch(e){toast(e.message)}}});
+  }
+  draw();
+}
+async function leaderboardCard(el){
+  var box=document.createElement('div');box.className='card';el.appendChild(box);
+  box.innerHTML='<span class="eyebrow">Leaderboard</span><h2 style="margin:8px 0 4px">Leaderboard, last 7 days</h2><input class="i" id="lbq" placeholder="Search name or email" style="max-width:300px;margin:8px 0"><div id="lbl" class="empty">Loading…</div>';
+  var rows=await rest('GET','shared_docs?collection=eq.scores&select=doc_id,data&limit=2000')||[];
+  var users={};(state.users||[]).forEach(function(u){users[u.id]=u});
+  var weekAgo=new Date(Date.now()-8*864e5).toISOString();
+  var list=rows.map(function(r){var d=r.data||{},u=users[r.doc_id]||{};return {u:u,name:d.name||'Member',email:u.email||'',score:d.updatedAt>=weekAgo?d.score||0:0,streak:d.streak||0,w:d.workouts7||0}}).sort(function(a,b){return b.score-a.score});
+  function draw(){var q=$('#lbq',box).value.trim().toLowerCase();var shown=list.map(function(x,i){x.rank=i+1;return x}).filter(function(x){return !q||(x.name+' '+x.email).toLowerCase().indexOf(q)>=0});
+    $('#lbl',box).className='';$('#lbl',box).innerHTML=shown.length?'<div class="scroll"><table><thead><tr><th>#</th><th>Member</th><th>Points</th><th>Streak</th><th>Workouts</th></tr></thead><tbody>'+shown.map(function(x){return '<tr><td><b>'+x.rank+'</b></td><td><div class="row" style="gap:10px">'+avHtml(x.u,x.name,28)+'<div><b>'+esc(x.name)+'</b><div class="small mut">'+esc(x.email)+'</div></div></div></td><td><b>'+x.score+'</b></td><td>'+x.streak+' days</td><td>'+x.w+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">'+(list.length?'No match.':'No scores yet. They appear once members open the new version of the app.')+'</div>'}
+  $('#lbq',box).oninput=draw;draw();
+}
+
 /* ---------- Squad & challenge ---------- */
 var CH_DEFAULT={on:true,title:'8 Week Christmas Challenge',start:'2026-10-28',weeks:8,prize:'£300 cash for the top score',workoutsPerWeek:3,stepsGoal:8000,mindsetDays:4,bonus:{}};
 async function squadView(){
   shell('<div class="card"><h2>Challenge</h2><div id="cf" class="empty">Loading…</div></div><div class="card"><h2>Squad members</h2><p class="mut small" style="margin:0 0 8px">Everyone who joined the Squad. Removing someone takes their entry off the leaderboard; they can rejoin from the app.</p><div id="sq" class="empty">Loading…</div></div>');
+  squadsCard($('#main')).catch(function(e){toast(e.message)});leaderboardCard($('#main')).catch(function(e){toast(e.message)});
   try{
     var cfg=Object.assign({},CH_DEFAULT,await db.doc('config','challenge')||{});
     $('#cf').className='';

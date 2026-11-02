@@ -1,0 +1,40 @@
+name: Find recipe photos
+
+# Run by hand. Searches free photo libraries for every recipe and saves
+# candidates + contact sheets on the "photos" branch for review.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Recipe ids to redo, comma separated (empty = all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get earlier results
+        run: |
+          git fetch origin photos:photos 2>/dev/null && git checkout photos -- tools/photos/out 2>/dev/null || true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pillow==10.4.0
+      - name: Search and download
+        env:
+          ONLY: ${{ github.event.inputs.only }}
+        run: python tools/photos/fetch.py
+      - name: Save to the photos branch
+        run: |
+          mkdir -p /tmp/p && cp -r tools/photos/out /tmp/p/out && cp tools/photos/queries.json /tmp/p/
+          cd /tmp/p && git init -q -b photos
+          git config user.name "github-actions" && git config user.email "github-actions@users.noreply.github.com"
+          mkdir -p tools/photos && mv out queries.json tools/photos/
+          git add -A && git commit -qm "Recipe photo candidates"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" photos

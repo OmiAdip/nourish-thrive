@@ -14,10 +14,13 @@ os.makedirs(OUT, exist_ok=True)
 UA = 'DropASize-recipe-photos/1.0 (https://github.com/OmiAdip/nourish-thrive)'
 ONLY = set(filter(None, os.environ.get('ONLY', '').split(',')))
 
-def get(url, timeout=30):
+def get(url, timeout=12, limit=9_000_000):
     req = urllib.request.Request(url, headers={'User-Agent': UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+        data = r.read(limit + 1)
+    if len(data) > limit:
+        raise ValueError('too big')
+    return data
 
 def openverse(q):
     url = 'https://api.openverse.org/v1/images/?' + urllib.parse.urlencode({
@@ -63,26 +66,31 @@ def main():
     queries = json.load(open(os.path.join(HERE, 'queries.json')))
     path = os.path.join(OUT, 'credits.json')
     credits = json.load(open(path)) if os.path.exists(path) else {}
-    for item in queries:
-        rid = item['id']
-        if ONLY and rid not in ONLY:
-            continue
-        cands = openverse(item['q']); time.sleep(3.2)
-        if len(cands) < 3:
-            cands += commons(item['q']); time.sleep(1)
+    todo = [q for q in queries if not ONLY or q['id'] in ONLY]
+    found = {}
+    for item in todo:                       # searches one by one (API rate limits)
+        cands = openverse(item['q']); time.sleep(1.5)
+        if len(cands) < 4:
+            cands += commons(item['q'])
+        found[item['id']] = cands[:6]
+        print('searched', item['id'], len(cands), flush=True)
+    def fetch_one(rid):
         got = []
-        for c in cands:
+        for c in found[rid]:
             if len(got) >= 3: break
             try:
                 img = crop(get(c['src']))
-            except Exception as e:
+            except Exception:
                 continue
-            n = len(got)
-            img.save(os.path.join(OUT, f'{rid}-{n}.jpg'), 'JPEG', quality=82, optimize=True, progressive=True)
+            img.save(os.path.join(OUT, f'{rid}-{len(got)}.jpg'), 'JPEG', quality=82, optimize=True, progressive=True)
             got.append({k: c[k] for k in ('credit', 'link', 'title')})
-        credits[rid] = got
-        print(rid, len(got))
-        json.dump(credits, open(path, 'w'), indent=1, ensure_ascii=False)
+        return rid, got
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(8) as ex:
+        for rid, got in ex.map(fetch_one, list(found)):
+            credits[rid] = got
+            print('downloaded', rid, len(got), flush=True)
+    json.dump(credits, open(path, 'w'), indent=1, ensure_ascii=False)
     # contact sheets: 12 recipes per sheet, 3 candidates each
     ids = [q['id'] for q in queries]
     for k in range(0, len(ids), 12):

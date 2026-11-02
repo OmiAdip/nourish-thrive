@@ -432,7 +432,7 @@ html,body{background:#F5FAF1}
     });
     try{
       if(ups.length)await rest('POST','user_data?on_conflict=user_id,key',ups,{Prefer:'resolution=merge-duplicates,return=minimal'});
-      for(var i=0;i<dels.length;i++)await rest('DELETE','user_data?key=eq.'+encodeURIComponent(dels[i]));
+      for(var i=0;i<dels.length;i++)await rest('DELETE','user_data?user_id=eq.'+uid+'&key=eq.'+encodeURIComponent(dels[i]));
       keys.forEach(function(k){if(dirty[k])delete dirty[k]});saveDirty();
     }catch(e){setTimeout(schedule,15000)}
     flushing=false;
@@ -459,8 +459,8 @@ html,body{background:#F5FAF1}
 
   async function pullFromCloud(user){
     if(Object.keys(dirty).length&&lsGet(OWNER_KEY)===user.id)await flush();
-    var rows=await rest('GET','user_data?select=key,value,updated_at');
-    if(lsGet(OWNER_KEY)!==user.id){
+    var rows=await rest('GET','user_data?user_id=eq.'+user.id+'&select=key,value,updated_at');
+    if(lsGet(OWNER_KEY)!==user.id||lsGet('ntdataver')!=='2'){rawSet.call(localStorage,'ntdataver','2');
       var old=[];try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&(k.indexOf('nt:')===0||k.indexOf('nt-')===0))old.push(k)}}catch(e){}
       old.forEach(function(k){try{rawRemove.call(localStorage,k)}catch(e){}});try{rawRemove.call(localStorage,'ntavatar')}catch(e){}window.ntAvatarUrl='';
       dirty={};saveDirty();
@@ -559,7 +559,7 @@ html,body{background:#F5FAF1}
     if(notesOpen||!session)return;
     lastNotesCheck=Date.now();
     var notes;
-    try{notes=await rest('GET','coach_notes?read_at=is.null&order=created_at.asc&select=id,body,created_at')}catch(e){return}
+    try{notes=await rest('GET','coach_notes?user_id=eq.'+session.user.id+'&read_at=is.null&order=created_at.asc&select=id,body,created_at')}catch(e){return}
     if(!notes||!notes.length||notesOpen)return;
     notesOpen=true;
     var i=0;
@@ -687,7 +687,7 @@ html,body{background:#F5FAF1}
     if(!session||Date.now()-lastRefresh<45000)return;lastRefresh=Date.now();
     try{
       var since=lsGet('ntlastpull')||'1970-01-01T00:00:00Z';
-      var rows=await rest('GET','user_data?select=key,value,updated_at&updated_at=gt.'+encodeURIComponent(since));
+      var rows=await rest('GET','user_data?user_id=eq.'+session.user.id+'&select=key,value,updated_at&updated_at=gt.'+encodeURIComponent(since));
       var changed=false,newest=since;
       (rows||[]).forEach(function(r){
         if(r.updated_at>newest)newest=r.updated_at;

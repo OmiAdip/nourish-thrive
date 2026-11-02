@@ -101,7 +101,7 @@
     var rows=await rest('GET','user_data?select=key,value');
     if(lsGet(OWNER_KEY)!==user.id){
       var old=[];try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&(k.indexOf('nt:')===0||k.indexOf('nt-')===0))old.push(k)}}catch(e){}
-      old.forEach(function(k){try{rawRemove.call(localStorage,k)}catch(e){}});
+      old.forEach(function(k){try{rawRemove.call(localStorage,k)}catch(e){}});try{rawRemove.call(localStorage,'ntavatar')}catch(e){}window.ntAvatarUrl='';
       dirty={};saveDirty();
     }
     (rows||[]).forEach(function(r){
@@ -235,11 +235,43 @@
     return '';
   };
 
+
+  /* ---------- profile photo ---------- */
+  window.ntAvatarUrl=lsGet('ntavatar')||'';
+  function avatarChanged(u){window.ntAvatarUrl=u||'';try{if(u)rawSet.call(localStorage,'ntavatar',u);else localStorage.removeItem('ntavatar')}catch(e){}try{window.dispatchEvent(new Event('nt-avatar'))}catch(e){}}
+  async function signAvatar(path){
+    var r=await realFetch(SB_URL+'/storage/v1/object/sign/avatars/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({expiresIn:60*60*24*30})});
+    if(!r.ok)return '';var d=await r.json();return d.signedURL?SB_URL+'/storage/v1'+d.signedURL:'';
+  }
+  async function loadAvatar(){
+    try{var rows=await rest('GET','profiles?id=eq.'+session.user.id+'&select=avatar_path');var p=rows&&rows[0]&&rows[0].avatar_path;avatarChanged(p?await signAvatar(p):'')}catch(e){}
+  }
+  async function squareJpeg(file,size){
+    var bmp=await createImageBitmap(file);var c=document.createElement('canvas');c.width=c.height=size;
+    var s=Math.max(size/bmp.width,size/bmp.height),w=bmp.width*s,h=bmp.height*s;var x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(bmp,(size-w)/2,(size-h)/2,w,h);
+    return await new Promise(function(res,rej){c.toBlob(function(b){b?res(b):rej(new Error('Couldn\u2019t read that photo'))},'image/jpeg',.85)});
+  }
+  window.ntSetAvatar=async function(file){
+    var uid=session.user.id,blob=await squareJpeg(file,480),path=uid+'/'+Date.now().toString(36)+'.jpg';
+    var r=await realFetch(SB_URL+'/storage/v1/object/avatars/'+uid+'/'+path.split('/')[1],{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'image/jpeg','x-upsert':'true'},body:blob});
+    if(!r.ok)throw new Error('Upload failed. Please try again.');
+    var old=await rest('GET','profiles?id=eq.'+uid+'&select=avatar_path');old=old&&old[0]&&old[0].avatar_path;
+    await rest('PATCH','profiles?id=eq.'+uid,{avatar_path:path},{Prefer:'return=minimal'});
+    if(old&&old!==path)realFetch(SB_URL+'/storage/v1/object/avatars',{method:'DELETE',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[old]})}).catch(function(){});
+    avatarChanged(await signAvatar(path));
+  };
+  window.ntRemoveAvatar=async function(){
+    var uid=session.user.id,old=await rest('GET','profiles?id=eq.'+uid+'&select=avatar_path');old=old&&old[0]&&old[0].avatar_path;
+    await rest('PATCH','profiles?id=eq.'+uid,{avatar_path:null},{Prefer:'return=minimal'});
+    if(old)realFetch(SB_URL+'/storage/v1/object/avatars',{method:'DELETE',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[old]})}).catch(function(){});
+    avatarChanged('');
+  };
+
   /* Hooks the app calls on Log out and Delete account. */
   window.ntSignOut=async function(){
     try{await flush()}catch(e){}
     try{if(session)await authCall('logout',{},session.access_token)}catch(e){}
-    saveSession(null);location.reload();
+    saveSession(null);try{localStorage.removeItem('ntavatar')}catch(e){}location.reload();
   };
   window.ntDeleteServerData=async function(){
     dirty={};saveDirty();
@@ -274,7 +306,7 @@
     }else if(password&&lsGet('nt:account')){
       try{var a=JSON.parse(lsGet('nt:account'));a.pw=password;a.email=a.email||user.email;origSetSilent('nt:account',JSON.stringify(a))}catch(e){}
     }
-    await Promise.all([loadRole(),loadLibrary()]);
+    await Promise.all([loadRole(),loadLibrary(),loadAvatar()]);
     startApp();
     setTimeout(showCoachNotes,1500);
   }

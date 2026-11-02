@@ -77,7 +77,7 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)
 .err{background:#FBE9E5;color:#9A3422;border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13.5px}
 .empty{color:var(--mut);padding:10px 0}
 svg.chart{width:100%;height:auto;max-height:220px;display:block}
-[hidden]{display:none!important}.btn:not(.ghost):not(.soft):not(.danger){background:#5DBC01;color:#0E351D;box-shadow:0 10px 22px -14px rgba(93,188,1,.95)}
+[hidden]{display:none!important}.avimg{object-fit:cover;background:#E9F6DC}.av{background:#E9F6DC!important;color:#0E351D!important}.btn:not(.ghost):not(.soft):not(.danger){background:#5DBC01;color:#0E351D;box-shadow:0 10px 22px -14px rgba(93,188,1,.95)}
 /* DropASize coach panel */
 body{letter-spacing:-.005em}
 .brand{display:flex;align-items:center;gap:10px}.brand img{height:28px;width:auto;display:block}.brandmark img{height:52px;width:auto;display:block}
@@ -282,7 +282,7 @@ async function membersView(){
   shell('<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Members</h2>'+
     '<input class="i" id="q" placeholder="Search name or email" style="max-width:280px" value="'+esc(state.filter)+'"></div>'+
     '<div id="ms" class="stats" style="margin:14px 0"></div><div id="ml" class="list"><div class="empty">Loading members…</div></div></div>');
-  try{state.users=await rest('POST','rpc/admin_users',{})}catch(e){$('#ml').innerHTML='<div class="err">'+esc(e.message)+'</div>';return}
+  try{state.users=await rest('POST','rpc/admin_users',{});await signAvatars(state.users)}catch(e){$('#ml').innerHTML='<div class="err">'+esc(e.message)+'</div>';return}
   var us=state.users||[];
   var active=us.filter(function(u){return daysSince(u.last_active)<3}).length;
   var quiet=us.filter(function(u){var d=daysSince(u.last_active);return d>=3&&d<999}).length;
@@ -293,7 +293,7 @@ async function membersView(){
     $('#ml').innerHTML=list.length?list.map(function(u){
       var p=u.profile||{},c=u.latest_checkin||{};
       var w=num(c.weight)||num(p.weight),g=num(p.goal);
-      return '<button class="member" data-id="'+u.id+'"><div class="av">'+esc(initials(p.name||u.email))+'</div><div class="grow"><div class="name ell">'+esc(p.name||'(no name yet)')+'</div>'+
+      return '<button class="member" data-id="'+u.id+'">'+avHtml(u,p.name||u.email,40)+'<div class="grow"><div class="name ell">'+esc(p.name||'(no name yet)')+'</div>'+
         '<div class="small mut ell">'+esc(u.email||'')+' · active '+esc(ago(u.last_active))+(w?' · '+w+' kg'+(g?' → goal '+g+' kg':''):'')+'</div>'+
         '<div>'+flags(u).map(function(f){return '<span class="chip '+f[1]+'">'+esc(f[0])+'</span>'}).join('')+'</div></div><span class="mut">›</span></button>';
     }).join(''):'<div class="empty">No members found.</div>';
@@ -303,6 +303,30 @@ async function membersView(){
   draw();
 }
 function stat(v,l){return '<div class="stat"><b>'+esc(v)+'</b><span>'+esc(l)+'</span></div>'}
+
+
+/* ---------- profile photos ---------- */
+async function signAvatars(users){
+  var paths=users.map(function(u){return u.avatar_path}).filter(Boolean);if(!paths.length)return;
+  try{var r=await fetch(SB_URL+'/storage/v1/object/sign/avatars',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({expiresIn:3600*12,paths:paths})});
+    var d=await r.json();var map={};(d||[]).forEach(function(x){if(x.signedURL)map[x.path]=SB_URL+'/storage/v1'+x.signedURL});
+    users.forEach(function(u){u.avatar_url=u.avatar_path?map[u.avatar_path]||'':''});}catch(e){}
+}
+function avHtml(u,name,size){size=size||40;return u&&u.avatar_url?'<img class="av avimg" alt="" src="'+esc(u.avatar_url)+'" style="width:'+size+'px;height:'+size+'px">':'<div class="av" style="width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*.38)+'px">'+esc(initials(name))+'</div>'}
+async function squareJpeg(file,size){var bmp=await createImageBitmap(file);var c=document.createElement('canvas');c.width=c.height=size;var k=Math.max(size/bmp.width,size/bmp.height),w=bmp.width*k,h=bmp.height*k;var x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(bmp,(size-w)/2,(size-h)/2,w,h);return await new Promise(function(res,rej){c.toBlob(function(b){b?res(b):rej(new Error('Couldn’t read that photo'))},'image/jpeg',.85)})}
+async function setMemberPhoto(u,file){
+  var blob=await squareJpeg(file,480),path=u.id+'/'+Date.now().toString(36)+'.jpg';
+  var r=await fetch(SB_URL+'/storage/v1/object/avatars/'+u.id+'/'+path.split('/')[1],{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'image/jpeg','x-upsert':'true'},body:blob});
+  if(!r.ok)throw new Error('Upload failed');
+  await rest('PATCH','profiles?id=eq.'+u.id,{avatar_path:path},{Prefer:'return=minimal'});
+  if(u.avatar_path)fetch(SB_URL+'/storage/v1/object/avatars',{method:'DELETE',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[u.avatar_path]})}).catch(function(){});
+  u.avatar_path=path;await signAvatars([u]);
+}
+async function removeMemberPhoto(u){
+  await rest('PATCH','profiles?id=eq.'+u.id,{avatar_path:null},{Prefer:'return=minimal'});
+  if(u.avatar_path)fetch(SB_URL+'/storage/v1/object/avatars',{method:'DELETE',headers:{apikey:SB_KEY,Authorization:'Bearer '+(await token()),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[u.avatar_path]})}).catch(function(){});
+  u.avatar_path=null;u.avatar_url='';
+}
 
 /* ---------- one member ---------- */
 var COUNTRY={in:'India',gb:'United Kingdom',uk:'United Kingdom',us:'United States',au:'Australia',ca:'Canada',nz:'New Zealand',ie:'Ireland',za:'South Africa',ae:'UAE',sg:'Singapore'};
@@ -365,7 +389,7 @@ async function memberView(uid,tab){
   $('#bk').onclick=function(){state.mtab='overview';go('members')};
   var user,rows,data={},meta={};
   try{
-    if(!state.users)state.users=await rest('POST','rpc/admin_users',{});
+    if(!state.users){state.users=await rest('POST','rpc/admin_users',{});await signAvatars(state.users)}
     user=(state.users||[]).find(function(u){return u.id===uid});
     if(!user){$('#mv').innerHTML='<div class="card err">Member not found.</div>';return}
     rows=await rest('GET','user_data?user_id=eq.'+uid+'&key=neq.progress-photos&select=key,value,updated_at')||[];
@@ -375,7 +399,7 @@ async function memberView(uid,tab){
   }catch(e){$('#mv').innerHTML='<div class="card err">'+esc(e.message)+'</div>';return}
   var M={uid:uid,user:user,data:data,meta:meta};
   var p=obj(data.profile);
-  var head='<div class="card mhead"><div class="row"><div class="av" style="width:52px;height:52px;font-size:20px">'+esc(initials(p.name||user.email))+'</div><div class="grow">'+
+  var head='<div class="card mhead"><div class="row">'+avHtml(user,p.name||user.email,52)+'<div class="grow">'+
     '<h1 style="font-size:24px">'+esc(p.name||'(no name yet)')+'</h1><div class="mut small">'+esc(user.email)+' · joined '+esc(fmtDate(user.joined))+' · active '+esc(ago(user.last_active))+'</div>'+
     '<div>'+flags(user).map(function(f){return '<span class="chip '+f[1]+'">'+esc(f[0])+'</span>'}).join('')+(p.tier?'<span class="chip">'+esc(TIER[p.tier]||p.tier)+'</span>':'')+'</div></div></div>'+
     '<nav class="mtabs" aria-label="Member sections">'+MTABS.map(function(t){return '<button class="mtab" data-mt="'+t[0]+'" aria-current="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join('')+'</nav></div><div id="mbody"></div>';
@@ -543,6 +567,7 @@ function tabAccount(M,el){
   var settings=Object.keys(d).filter(function(k){return SETTINGS_KEYS[k]&&['account','user-locale','plan-eaten','fav-recipes','fav-workouts','food-library','journey-history'].indexOf(k)<0});
   var html='<div class="grid two"><div>'+section('Login details','',kvGrid([['Email',esc(M.user.email)],['Account type',M.user.role==='coach'?'Coach':'Member'],['Joined',esc(fmtDate(M.user.joined))],['Last active',esc(ago(M.user.last_active))],
       ['Country',esc(COUNTRY[loc.country]||loc.country||'')],['Shops',esc(arr(loc.stores).join(', '))],['Currency',esc(loc.currency||'')]]));
+  html+=section('Profile photo','Shown in the app and here. You can add or change it for them.','<div class="row">'+avHtml(M.user,obj(M.data.profile).name||M.user.email,64)+'<label class="btn ghost sm" style="cursor:pointer">Upload photo<input type="file" id="avf" accept="image/*" hidden></label>'+(M.user.avatar_path?'<button class="btn danger sm" id="avr">Remove</button>':'')+'</div>');
   html+=section('Set a new password','Use this if they’re locked out. Tell them the new password yourself; they can change it later in the app under Preferences.',
     '<label class="f" for="np1">New password</label><input class="i" id="np1" type="password" autocomplete="new-password">'+
     '<label class="f" for="np2">Type it again</label><input class="i" id="np2" type="password" autocomplete="new-password">'+
@@ -557,6 +582,8 @@ function tabAccount(M,el){
   html+='</div></div>';
   el.innerHTML=html;
   (async function(){try{var d=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/London'});var u=await rest('GET','ai_usage?user_id=eq.'+M.uid+'&day=eq.'+d+'&select=kind,count')||[];var g={};u.forEach(function(x){g[x.kind]=x.count});$('#aiu').innerHTML=kvGrid([['Coach messages',(g.chat||0)+' / 50'],['AI recipes',(g.recipe||0)+' / 10'],['Other AI',(g.other||0)+' / 40']])}catch(e){$('#aiu').textContent='Couldn’t load usage.'}})();
+  $('#avf').onchange=async function(){var f=this.files[0];this.value='';if(!f)return;try{await setMemberPhoto(M.user,f);toast('Photo updated');drawTab(M,'account')}catch(e){toast(e.message)}};
+  if($('#avr'))$('#avr').onclick=async function(){if(!confirm('Remove this member’s photo?'))return;try{await removeMemberPhoto(M.user);toast('Photo removed');drawTab(M,'account')}catch(e){toast(e.message)}};
   $('#npv').onchange=function(){$('#np1').type=$('#np2').type=this.checked?'text':'password'};
   $('#nps').onclick=async function(){
     var a=$('#np1').value,b=$('#np2').value;

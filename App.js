@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import * as Notifications from 'expo-notifications';
+import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import appHtml from './web/appHtml';
@@ -52,11 +53,28 @@ async function pickPhoto(id, web) {
   }
 }
 
+// Google won't sign in inside a web view, so open it in a secure browser tab
+// and pass the login back to the page when Google returns to dropasize://auth.
+async function googleSignIn(url, web) {
+  let hash = '';
+  try {
+    if (typeof url === 'string' && url.startsWith('https://jzctsfvowmuowfxaiayy.supabase.co/auth/v1/authorize')) {
+      const res = await WebBrowser.openAuthSessionAsync(url, 'dropasize://auth');
+      if (res.type === 'success' && res.url) {
+        const i = res.url.indexOf('#');
+        hash = i >= 0 ? res.url.slice(i + 1) : '';
+      }
+    }
+  } catch {}
+  if (web) web.injectJavaScript(`window.ntOAuth&&window.ntOAuth(${JSON.stringify(hash)});true;`);
+}
+
 async function handleMessage(raw, web) {
   let msg;
   try { msg = JSON.parse(raw); } catch { return; }
   if (!msg || typeof msg.id !== 'string') return;
   if (msg.type === 'pick') { await pickPhoto(msg.id, web); return; }
+  if (msg.type === 'google') { await googleSignIn(msg.url, web); return; }
   if (msg.type === 'cancel') {
     await Notifications.cancelScheduledNotificationAsync(msg.id).catch(() => {});
     return;

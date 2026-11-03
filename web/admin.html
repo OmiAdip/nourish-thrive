@@ -962,10 +962,11 @@ async function reportsView(){
     var users={};(state.users||[]).forEach(function(u){users[u.id]=u});
     var rows=await rest('GET','reports?select=*&order=created_at.desc&limit=500')||[];
     $('#rl').className='';
-    $('#rl').innerHTML=rows.length?rows.map(function(r){var u=users[r.user_id]||{};return '<div class="note"><div class="row" style="justify-content:space-between"><b>'+esc(r.kind==='ai'?'AI answer':r.kind)+'</b><span class="chip '+(r.status==='open'?'amber':'')+'">'+esc(r.status)+'</span></div>'+
+    $('#rl').innerHTML=rows.length?rows.map(function(r){var u=users[r.user_id]||{};return '<div class="note"><div class="row" style="justify-content:space-between"><b>'+esc(r.kind==='ai'?'AI answer':r.kind==='member'?'Member: '+(((users[r.target]||{}).profile||{}).name||r.content||'unknown')+(users[r.target]?' ('+users[r.target].email+')':''):r.kind)+'</b><span class="chip '+(r.status==='open'?'amber':'')+'">'+esc(r.status)+'</span></div>'+
       '<div class="small mut">'+esc((u.profile&&u.profile.name)||u.email||'Member')+' · '+esc(new Date(r.created_at).toLocaleString('en-GB'))+'</div>'+
       (r.reason?'<p style="margin:8px 0 4px"><b>Why:</b> '+esc(r.reason)+'</p>':'')+(r.content?'<details><summary class="small">Reported content</summary><p class="small">'+esc(r.content)+'</p></details>':'')+
-      (r.status==='open'?'<div class="row end"><button class="btn sm" data-rv="'+r.id+'">Mark reviewed</button></div>':'')+'</div>'}).join(''):'<div class="empty">No reports yet.</div>';
+      (r.status==='open'?'<div class="row end">'+(r.kind==='member'&&r.target?'<button class="btn danger sm" data-clr="'+esc(r.target)+'">Remove from leaderboard and squad list</button><a class="btn ghost sm" href="#member-'+esc(r.target)+'">Open member</a>':'')+'<button class="btn sm" data-rv="'+r.id+'">Mark reviewed</button></div>':'')+'</div>'}).join(''):'<div class="empty">No reports yet.</div>';
+    $$('[data-clr]').forEach(function(b){b.onclick=async function(){if(!confirm('Remove this member’s leaderboard and squad entries? They come back when the member next uses the app, so also change their display name or contact them if needed.'))return;try{await db.docDel('scores',b.dataset.clr);await db.docDel('squad',b.dataset.clr);toast('Removed')}catch(e){toast(e.message)}}});
     $$('[data-rv]').forEach(function(b){b.onclick=async function(){try{await rest('PATCH','reports?id=eq.'+b.dataset.rv,{status:'reviewed'},{Prefer:'return=minimal'});reportsView()}catch(e){toast(e.message)}}});
   }catch(e){$('#rl').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
 }

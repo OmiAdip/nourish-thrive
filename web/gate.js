@@ -180,7 +180,7 @@
       limit:function(n){return colRef(col,n)},
       doc:function(id){return docRef(col+'/'+id)},
       get:async function(){var rows=await rest('GET','shared_docs?collection=eq.'+enc(col)+'&select=doc_id,data&order=updated_at.desc&limit='+(max||500))||[];
-        if(col==='squad'){var cfg=await docRef('config/squads').get(),mem=cfg.exists?(cfg.data().members||{}):{},mine=mem[session.user.id]||'';rows=rows.filter(function(r){return (mem[r.doc_id]||'')===mine})}
+        if(col==='squad'){var cfg=await docRef('config/squads').get(),mem=cfg.exists?(cfg.data().members||{}):{},mine=mem[session.user.id]||'';var hid=hiddenIds();rows=rows.filter(function(r){return (mem[r.doc_id]||'')===mine&&hid.indexOf(r.doc_id)<0})}
         return {docs:rows.map(function(r){return snap(r.doc_id,r)}),size:rows.length,empty:!rows.length}}
     };
   }
@@ -306,11 +306,29 @@
   window.ntLeaderboard=async function(){
     var rows=await rest('GET','shared_docs?collection=eq.scores&select=doc_id,data&limit=2000');
     var weekAgo=new Date(Date.now()-8*864e5).toISOString();
-    return (rows||[]).map(function(r){return Object.assign({id:r.doc_id,me:session&&r.doc_id===session.user.id},r.data)})
+    var hid=hiddenIds();
+    return (rows||[]).filter(function(r){return hid.indexOf(r.doc_id)<0}).map(function(r){return Object.assign({id:r.doc_id,me:session&&r.doc_id===session.user.id},r.data)})
       .map(function(x){if(!x.updatedAt||x.updatedAt<weekAgo){x.score=0}return x})
       .sort(function(a,b){return (b.score||0)-(a.score||0)||String(a.name).localeCompare(String(b.name))});
   };
   setInterval(function(){if(document.visibilityState==='visible')publishScore()},120000);
+
+
+  /* ---------- report or hide another member (Google Play user-generated content rules) ---------- */
+  function hiddenIds(){try{return JSON.parse(localStorage.getItem('nt-hidden')||'[]')}catch(e){return []}}
+  window.ntMemberAction=function(m){
+    var w=document.createElement('div');w.className='nt-ai-notice';w.setAttribute('role','dialog');w.setAttribute('aria-modal','true');w.setAttribute('aria-label','Options for '+(m.name||'this member'));
+    var nm=String(m.name||'this member').replace(/[<>&"]/g,'');
+    w.innerHTML='<style>'+AI_CSS+'</style><div class="nt-ai-card"><b>'+nm+'</b><p>Report them if their name or photo is offensive or they are harassing you. Hiding removes them from your leaderboard and squad on this device.</p><div class="nt-ai-btns" style="grid-template-columns:1fr 1fr 1fr"><button type="button" data-a="no">Cancel</button><button type="button" data-a="hide">Hide</button><button type="button" data-a="report">Report</button></div></div>';
+    document.body.appendChild(w);
+    w.onclick=async function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(!a&&e.target!==w)return;w.remove();
+      if(a==='hide'||a==='report'){var h=hiddenIds();if(h.indexOf(m.id)<0){h.push(m.id);localStorage.setItem('nt-hidden',JSON.stringify(h))}}
+      if(a==='report'){var why=prompt('What’s the problem? (optional)','');if(why===null)why='';
+        try{await rest('POST','reports',{user_id:session.user.id,kind:'member',target:m.id,content:String(m.name||'').slice(0,200),reason:why.trim().slice(0,1000)},{Prefer:'return=minimal'});window.ntToast('Reported and hidden. Your coach will review it.')}catch(err){window.ntToast('Couldn\u2019t send the report. Please try again.')}}
+      else if(a==='hide')window.ntToast('Hidden from your leaderboard and squad');
+      if(a==='hide'||a==='report')try{window.dispatchEvent(new Event('nt-hidden'))}catch(x){}
+    };
+  };
 
   /* ---------- changes made by the coach ---------- */
   // The coach panel saves an assigned plan as "coach-plan". It wins over the phone's copy,
@@ -417,6 +435,7 @@
     }else if(password&&lsGet('nt:account')){
       try{var a=JSON.parse(lsGet('nt:account'));a.pw=password;a.email=a.email||user.email;origSetSilent('nt:account',JSON.stringify(a))}catch(e){}
     }
+    window.ntSessionEmail=user.email;
     await Promise.all([loadRole(),loadLibrary(),loadAvatar()]);
     startApp();
     setTimeout(showCoachNotes,1500);

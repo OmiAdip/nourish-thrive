@@ -207,6 +207,7 @@ html,body,#root{max-width:100%;overflow-x:hidden}
 .ntx-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 2px 2px;flex-wrap:wrap}
 .ntx-bar button{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:#EEF6E6;color:#0E351D;font:700 12px 'Plus Jakarta Sans',sans-serif;padding:7px 12px;cursor:pointer}
 .ntx-bar a{font-size:10.5px;color:#66706A;text-decoration:none}
+.ntf{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ntf figure{margin:0;background:#fff;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(15,36,24,.07);overflow:hidden}.ntf svg{display:block;width:100%;height:auto;max-height:220px}.ntf figcaption{font:700 12px 'Plus Jakarta Sans',sans-serif;color:#0E351D;text-align:center;padding:0 0 8px}
 /* desktop side panel and boot screen */
 .nt-side h2 span{color:var(--nt-brand)}
 </style>
@@ -1604,8 +1605,85 @@ function NtPhotoList(props){
    Only the exercise on screen is loaded. Everything else uses the drawn figure (Tn). */
 var NT_EK=[[/romanian deadlift/,'0118'],[/leg press/,'0127'],[/lying leg curl/,'0117'],[/seated cable row/,'0025'],[/single-arm row|one-arm row/,'0024'],[/lat pulldown/,'0095'],[/band pull-?aparts?/,'0020'],[/bicep curl/,'0224'],[/triceps? rope pushdown/,'0206'],[/cable kickback/,'0112'],[/^(dumbbell )?chest press/,'0055'],[/dumbbell shoulder press/,'0031'],[/^(push-?ups?|press-?ups?)$/,'0077'],[/reverse lunge/,'0129'],[/walking lunge/,'0121'],[/step-?ups?/,'0137'],[/band squat/,'0155'],[/goblet or barbell squat/,'0122'],[/^goblet squat/,'0130'],[/box squat|chair squats?/,'0136'],[/superman|swimming \(lying/,'0105'],[/knee to opposite elbow/,'0289'],[/calf raises?/,'0281']];
 function ntEkId(name){var n=String(name||'').replace(/ · (left|right)$/,'').trim().toLowerCase();for(var i=0;i<NT_EK.length;i++)if(NT_EK[i][0].test(n))return NT_EK[i][1];return null}
+/* DropASize exercise figure: one shaded vector character, posed by joint angles (0 = up, 90 = forward, 180 = down). */
+var NT_FIG=(function(){
+  var R=Math.PI/180,G=186;
+  function P(p,a,l){return [p[0]+Math.sin(a*R)*l,p[1]-Math.cos(a*R)*l]}
+  function f(n){return Math.round(n*10)/10}
+  function cap(a,b,r1,r2,fill){
+    var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+    return '<path fill="'+fill+'" d="M'+f(a[0]+nx*r1)+' '+f(a[1]+ny*r1)+'L'+f(b[0]+nx*r2)+' '+f(b[1]+ny*r2)+'L'+f(b[0]-nx*r2)+' '+f(b[1]-ny*r2)+'L'+f(a[0]-nx*r1)+' '+f(a[1]-ny*r1)+'Z"/><circle cx="'+f(a[0])+'" cy="'+f(a[1])+'" r="'+r1+'" fill="'+fill+'"/><circle cx="'+f(b[0])+'" cy="'+f(b[1])+'" r="'+r2+'" fill="'+fill+'"/>';
+  }
+  /* smooth closed shape through points (Catmull-Rom) */
+  function blob(pts,fill){
+    var n=pts.length,d='M'+f(pts[0][0])+' '+f(pts[0][1]);
+    for(var i=0;i<n;i++){var p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+      d+='C'+f(p1[0]+(p2[0]-p0[0])/6)+' '+f(p1[1]+(p2[1]-p0[1])/6)+' '+f(p2[0]-(p3[0]-p1[0])/6)+' '+f(p2[1]-(p3[1]-p1[1])/6)+' '+f(p2[0])+' '+f(p2[1]);}
+    return '<path fill="'+fill+'" d="'+d+'Z"/>';
+  }
+  function torso(h,a){
+    /* [position along spine 0..1, back width, front width] */
+    var w=[[0,12,12],[.38,10,10.5],[.72,11,14],[.92,11,11.5]],L=48,b=[],fr=[];
+    w.forEach(function(s){var c=P(h,a,s[0]*L);b.push(P(c,a-90,s[1]));fr.unshift(P(c,a+90,s[2]))});
+    var top=P(h,a,L+5);
+    return {path:blob(b.concat([top],fr),'url(#ntS)'),sh:P(h,a,L-2)};
+  }
+  function shoe(ank,dir,fill){
+    var t=P(ank,dir,17),pts=[[ank[0]-5,ank[1]-4],[ank[0]+2,ank[1]-6],[t[0]-2,t[1]-3],[t[0]+1,t[1]+1],[t[0]-2,t[1]+4],[ank[0]-5,ank[1]+4]];
+    return blob(pts,fill)+'<path d="M'+f(ank[0]-5)+' '+f(ank[1]+3.4)+'L'+f(t[0]-1)+' '+f(t[1]+3.4)+'" stroke="#0E351D" stroke-width="2.2" stroke-linecap="round"/>';
+  }
+  function db(c,vertical){
+    if(vertical)return '<rect x="'+f(c[0]-1.8)+'" y="'+f(c[1]-9)+'" width="3.6" height="18" rx="1.5" fill="#55605A"/>'+[-1,1].map(function(s){return '<rect x="'+f(c[0]-7)+'" y="'+f(c[1]+s*9-3.5)+'" width="14" height="7" rx="2.5" fill="url(#ntD)"/>'}).join('');
+    return '<circle cx="'+f(c[0])+'" cy="'+f(c[1])+'" r="7.5" fill="url(#ntD)"/><circle cx="'+f(c[0])+'" cy="'+f(c[1])+'" r="3.2" fill="#55605A"/>';
+  }
+  function arm(sh,ua,fa,skin,sleeve){
+    var el=P(sh,ua,27),wr=P(el,fa,24),hd=P(wr,fa,6);
+    return {el:el,hand:hd,svg:cap(sh,el,6.2,4.6,skin)+cap(sh,P(sh,ua,12),7.4,6.4,sleeve)+cap(el,wr,4.6,3.4,skin)+cap(wr,hd,3.8,3.2,skin)};
+  }
+  function leg(hip,th,sh,ink){var k=P(hip,180-th,41),a=P(k,180-sh,40);return {knee:k,ankle:a,svg:cap(hip,k,10.5,7,ink)+cap(k,a,7,4.6,ink)}}
+  function draw(p){
+    /* place the body so the near ankle sits on the floor at p.x */
+    var up=leg([0,0],p.th,p.sh,''),hip=[p.x-up.ankle[0],G-6-up.ankle[1]];
+    var L1=leg(hip,p.th,p.sh,'url(#ntL)'),L2=leg([hip[0]-2,hip[1]],p.th2==null?p.th:p.th2,p.sh2==null?p.sh:p.sh2,'#08150E');
+    var T=torso(hip,p.t),neck=P(T.sh,p.t+12,7),hc=P(neck,p.t+(p.hd||0),10);
+    var A2=arm(P(T.sh,p.t-90,1.5),p.ua2==null?p.ua:p.ua2,p.fa2==null?p.fa:p.fa2,'#D9A07C','#3F8A00'),A1=arm(T.sh,p.ua,p.fa,'url(#ntK)','url(#ntS)');
+    var hf=p.t+(p.hd||0),eye=P(hc,hf+78,6.3),nose=P(hc,hf+95,9.6),tail=P(hc,hf-118,11);
+    var s=[
+      '<ellipse cx="'+f((L1.ankle[0]+L2.ankle[0])/2+6)+'" cy="'+(G+1)+'" rx="34" ry="4" fill="rgba(15,36,24,.10)"/>',
+      p.eq==='bench'?'<rect x="112" y="132" width="88" height="10" rx="4" fill="#2E3A33"/><rect x="118" y="142" width="5" height="44" fill="#55605A"/><rect x="189" y="142" width="5" height="44" fill="#55605A"/><rect x="112" y="132" width="88" height="3" rx="1.5" fill="#46534B"/>':'',
+      A2.svg, p.eq==='db'||p.eq==='bench'&&false?db(A2.hand):'',
+      L2.svg, shoe(L2.ankle,p.ft2==null?90:p.ft2,'#C9CFC8'),
+      cap(neck,T.sh,4.4,5,'url(#ntK)'), T.path,
+      cap(hip,P(hip,p.t,10),11,10.8,'url(#ntL)'),
+      '<path d="'+(function(){var a=P(P(hip,p.t,9.5),p.t-90,11.5),b=P(P(hip,p.t,9.5),p.t+90,12);return 'M'+f(a[0])+' '+f(a[1])+'L'+f(b[0])+' '+f(b[1])})()+'" stroke="#5DBC01" stroke-width="2" stroke-linecap="round"/>',
+      L1.svg, shoe(L1.ankle,p.ft==null?90:p.ft,'#F4F6F2'),
+      blob([P(tail,hf-150,3),P(tail,hf-60,4),P(tail,hf+150,9),P(tail,hf-200,8)],'#3B2A20'),
+      '<circle cx="'+f(hc[0])+'" cy="'+f(hc[1])+'" r="10.5" fill="url(#ntK)"/>',
+      blob([P(hc,hf+5,12),P(hc,hf+55,10.4),P(hc,hf-10,7.5),P(hc,hf-130,8.5),P(hc,hf-95,11.5),P(hc,hf-40,12.2)],'#3B2A20'),
+      '<circle cx="'+f(nose[0])+'" cy="'+f(nose[1])+'" r="2.2" fill="#E3A985"/>',
+      '<circle cx="'+f(eye[0])+'" cy="'+f(eye[1])+'" r="1.2" fill="#1C1410"/>',
+      '<circle cx="'+f(P(hc,hf-20,1.5)[0])+'" cy="'+f(P(hc,hf-20,1.5)[1])+'" r="2.4" fill="#D9A07C"/>',
+      p.eq==='goblet'?db([A1.hand[0]+1,A1.hand[1]+5],true):'',
+      A1.svg, p.eq==='db'||p.eq==='bench'?db(A1.hand):''
+    ];
+    return '<svg viewBox="-8 -36 216 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>'+
+      '<linearGradient id="ntS" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="170" y2="190"><stop offset="0" stop-color="#74D21A"/><stop offset="1" stop-color="#4C9E01"/></linearGradient>'+
+      '<linearGradient id="ntL" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="170" y2="190"><stop offset="0" stop-color="#24412F"/><stop offset="1" stop-color="#0F2418"/></linearGradient>'+
+      '<linearGradient id="ntK" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="170" y2="190"><stop offset="0" stop-color="#F3C6A3"/><stop offset="1" stop-color="#DFA982"/></linearGradient>'+
+      '<linearGradient id="ntD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A5550"/><stop offset="1" stop-color="#1E2622"/></linearGradient>'+
+      '</defs>'+s.join('')+'</svg>';
+  }
+  /* exercise name -> [start, finish] poses */
+  var POSES=[
+    [/goblet squat/i,[{x:92,th:0,sh:0,t:0,ua:172,fa:32,ua2:176,fa2:30,eq:'goblet'},{x:96,th:78,sh:-30,t:38,hd:-30,ua:158,fa:36,ua2:162,fa2:34,eq:'goblet'}]],
+    [/dumbbell shoulder press/i,[{x:94,th:0,sh:0,t:0,ua:160,fa:8,ua2:165,fa2:6,eq:'db'},{x:94,th:0,sh:0,t:0,ua:4,fa:2,ua2:-2,fa2:-2,eq:'db'}]],
+    [/single-arm (dumbbell )?row/i,[{x:70,th:25,sh:-5,th2:-22,sh2:-22,t:76,hd:-60,ua:180,fa:180,ua2:128,fa2:170,eq:'bench'},{x:70,th:25,sh:-5,th2:-22,sh2:-22,t:76,hd:-60,ua:-112,fa:182,ua2:128,fa2:170,eq:'bench'}]]
+  ];
+  return {draw:draw,poses:function(n){n=String(n||'');for(var i=0;i<POSES.length;i++)if(POSES[i][0].test(n))return POSES[i][1];return null}};
+})();
 function NtExercise(props){
-  var h=React.createElement,id=ntEkId(props.name);
+  var h=React.createElement,id=ntEkId(props.name),fp=NT_FIG.poses(props.name);
+  if(fp)return h('div',{className:'ntf',role:'img','aria-label':props.name+': start and finish position'},fp.map(function(p,i){return h('figure',{key:i},h('div',{dangerouslySetInnerHTML:{__html:NT_FIG.draw(p)}}),h('figcaption',null,i?'Finish':'Start'))}));
   var reduce=false;try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
   var a=React.useState(reduce),paused=a[0],setPaused=a[1],b=React.useState(false),endPos=b[0],setEnd=b[1];
   if(!id)return h(props.Fallback,{name:props.name,height:props.height});

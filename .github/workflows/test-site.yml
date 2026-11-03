@@ -28,6 +28,7 @@ jobs:
           cp web/index.html /tmp/site/index.html
           mkdir -p /tmp/site/admin
           cp web/admin.html /tmp/site/admin/index.html
+          cp web/pages/*.html /tmp/site/
           touch /tmp/site/.nojekyll
           cd /tmp/site
           git init -q -b gh-pages

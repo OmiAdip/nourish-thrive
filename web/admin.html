@@ -220,7 +220,7 @@ function go(tab,member){state.tab=tab;state.member=member||null;location.hash=me
 window.addEventListener('hashchange',function(){
   var h=location.hash.slice(1);
   if(h.indexOf('member-')===0){if(state.member!==h.slice(7)){state.tab='members';state.member=h.slice(7);render()}}
-  else if(['members','library','plans','community','squad','calls'].indexOf(h)>=0&&(h!==state.tab||state.member)){state.tab=h;state.member=null;render()}
+  else if(['members','library','plans','community','squad','reports'].indexOf(h)>=0&&(h!==state.tab||state.member)){state.tab=h;state.member=null;render()}
 });
 
 /* ---------- login ---------- */
@@ -244,13 +244,13 @@ async function start(){
   }catch(e){saveSession(null);loginView(e.message);return}
   var h=location.hash.slice(1);
   if(h.indexOf('member-')===0){state.tab='members';state.member=h.slice(7)}
-  else if(['members','library','plans','community','squad','calls'].indexOf(h)>=0)state.tab=h;
+  else if(['members','library','plans','community','squad','reports'].indexOf(h)>=0)state.tab=h;
   render();
 }
 
 /* ---------- shell ---------- */
 function shell(inner){
-  var tabs=[['members','Members'],['library','Recipes'],['plans','Training plans'],['squad','Squads & leaderboard'],['community','Community'],['calls','Calls']];
+  var tabs=[['members','Members'],['library','Recipes'],['plans','Training plans'],['squad','Squads & leaderboard'],['community','Community'],['reports','Reports']];
   app.innerHTML='<header class="top"><div class="top-in"><div class="brand"><img src="'+NT_LOGO+'" alt="DropASize"><small>Coach</small></div>'+
     '<nav class="tabs">'+tabs.map(function(t){return '<button class="tab" data-tab="'+t[0]+'" aria-current="'+(state.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</nav>'+
     '<button class="btn ghost sm" id="mypw">My password</button><button class="btn ghost sm" id="logout">Log out</button></div></header><main class="wrap" id="main">'+inner+'</main>';
@@ -265,7 +265,7 @@ function render(){
   if(state.tab==='community')return recipesView();
   if(state.tab==='library')return libraryView();
   if(state.tab==='plans')return plansView();
-  if(state.tab==='calls')return callsView();
+  if(state.tab==='reports')return reportsView();
 }
 
 /* ---------- members list ---------- */
@@ -382,7 +382,7 @@ function kvGrid(pairs){return '<dl class="kv">'+pairs.filter(function(p){return 
 
 var MTABS=[['overview','Overview'],['progress','Progress'],['food','Food'],['training','Training'],['mind','Mind & habits'],['chat','AI coach chat'],['messages','Messages'],['account','Account']];
 var KNOWN={};['profile','checkins','daily-target','training-plan','meal-plan-week','plan-eaten','workout-sessions','workout-history','move-diary','steps-log','reflections','habits-history','coach-chat','active-days','progress-photos'].forEach(function(k){KNOWN[k]=1});
-var MIND_KEYS=[['craving-log','Cravings','When cravings hit and how they felt.'],['waves','Hunger waves ridden out',''],['beliefs','Beliefs work',''],['nsv-wins','Non-scale wins',''],['proud-log','Proud moments',''],['ritual-log','Morning and night rituals',''],['weekly-commitment','Weekly commitment',''],['weekly-insights','Weekly insights',''],['symptom-log','Symptoms',''],['fasting-history','Fasting','Completed fasts.'],['fasting-current','Fast in progress',''],['journey-history','Challenge history','']];
+var MIND_KEYS=[['craving-log','Cravings','When cravings hit and how they felt.'],['waves','Hunger waves ridden out',''],['beliefs','Beliefs work',''],['nsv-wins','Non-scale wins',''],['proud-log','Proud moments',''],['ritual-log','Morning and night rituals',''],['weekly-commitment','Weekly commitment',''],['weekly-insights','Weekly insights',''],['symptom-log','Symptoms',''],['fasting-current','Fast in progress',''],['journey-history','Challenge history','']];
 
 async function memberView(uid,tab){
   tab=tab||state.mtab||'overview';state.mtab=tab;
@@ -527,6 +527,8 @@ function tabMind(M,el){
   var hh=obj(d['habits-history']);
   if(Object.keys(hh).length)html+=section('Daily habits','Water is in glasses (goal 12 a day).','<div class="scroll"><table><thead><tr><th>Date</th><th>Water</th><th>Other habits</th></tr></thead><tbody>'+
     Object.keys(hh).sort().reverse().slice(0,30).map(function(x){var v=obj(hh[x]),o=Object.keys(v).filter(function(k){return k!=='water'&&v[k]});return '<tr><td>'+esc(fmtDate(x))+'</td><td>'+(v.water?'💧 '+v.water:'<span class="mut">–</span>')+'</td><td>'+(o.length?esc(o.map(words).join(', ')):'<span class="mut">–</span>')+'</td></tr>'}).join('')+'</tbody></table></div>');
+  var fh=arr(d['fasting-history']);
+  if(fh.length){var tot=fh.reduce(function(a,x){return a+(num(x.hours)||0)},0);html+=section('Fasting','',kvGrid([['Fasts completed',String(fh.length)],['Total hours fasted',(Math.round(tot*10)/10)+' h'],['Average fast',(Math.round(tot/fh.length*10)/10)+' h'],['Longest fast',Math.max.apply(null,fh.map(function(x){return num(x.hours)||0}))+' h']])+'<div style="margin-top:12px">'+pretty(fh)+'</div>')}
   var shown=0;
   MIND_KEYS.forEach(function(m){if(d[m[0]]!==undefined){html+=section(m[1],m[2],pretty(d[m[0]]));shown++}});
   // anything else the app saved that isn't shown elsewhere
@@ -573,7 +575,7 @@ function tabAccount(M,el){
     '<label class="f" for="np1">New password</label><input class="i" id="np1" type="password" autocomplete="new-password">'+
     '<label class="f" for="np2">Type it again</label><input class="i" id="np2" type="password" autocomplete="new-password">'+
     '<label class="row small" style="margin-top:8px;gap:8px"><input type="checkbox" id="npv"> Show password</label><div class="row end"><button class="btn" id="nps">Set password</button></div>');
-  html+=section('AI use today','Daily allowance: 50 coach messages, 10 AI recipes, 40 other AI requests. Resets at midnight UK time.','<div id="aiu" class="small mut">Loading…</div>');
+  html+=section('AI use today','Daily allowance: 20 coach messages, 5 AI recipes, 15 other AI requests. Resets at midnight UK time.','<div id="aiu" class="small mut">Loading…</div>');
   html+='</div><div>';
   html+=section('App settings','',settings.length?kvGrid(settings.map(function(k){var v=d[k];if(k==='plan-shop-ticks'){var t=obj(v),n=Object.keys(t).length,y=Object.keys(t).filter(function(x){return t[x]}).length;return [SETTINGS_KEYS[k],y+' of '+n+' items ticked']}return [SETTINGS_KEYS[k],typeof v==='object'?show(v):(String(v)==='1'||v===true||v==='in'?'Yes':esc(String(v)))]})):'<div class="empty">Nothing yet.</div>');
   html+='<div class="card"><details><summary class="adv">Advanced: edit saved data directly</summary><p class="mut small">For fixing problems only. Wrong changes can break that part of their app.</p>'+
@@ -582,7 +584,7 @@ function tabAccount(M,el){
     '<textarea class="i code" id="rv" spellcheck="false"></textarea><div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn danger sm" id="rd">Delete</button><button class="btn" id="rs">Save changes</button></div></div></details></div>';
   html+='</div></div>';
   el.innerHTML=html;
-  (async function(){try{var d=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/London'});var u=await rest('GET','ai_usage?user_id=eq.'+M.uid+'&day=eq.'+d+'&select=kind,count')||[];var g={};u.forEach(function(x){g[x.kind]=x.count});$('#aiu').innerHTML=kvGrid([['Coach messages',(g.chat||0)+' / 50'],['AI recipes',(g.recipe||0)+' / 10'],['Other AI',(g.other||0)+' / 40']])}catch(e){$('#aiu').textContent='Couldn’t load usage.'}})();
+  (async function(){try{var d=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/London'});var u=await rest('GET','ai_usage?user_id=eq.'+M.uid+'&day=eq.'+d+'&select=kind,count')||[];var g={};u.forEach(function(x){g[x.kind]=x.count});$('#aiu').innerHTML=kvGrid([['Coach messages',(g.chat||0)+' / 20'],['AI recipes',(g.recipe||0)+' / 5'],['Other AI',(g.other||0)+' / 15']])}catch(e){$('#aiu').textContent='Couldn’t load usage.'}})();
   $('#avf').onchange=async function(){var f=this.files[0];this.value='';if(!f)return;try{await setMemberPhoto(M.user,f);toast('Photo updated');drawTab(M,'account')}catch(e){toast(e.message)}};
   if($('#avr'))$('#avr').onclick=async function(){if(!confirm('Remove this member’s photo?'))return;try{await removeMemberPhoto(M.user);toast('Photo removed');drawTab(M,'account')}catch(e){toast(e.message)}};
   $('#npv').onchange=function(){$('#np1').type=$('#np2').type=this.checked?'text':'password'};
@@ -951,8 +953,25 @@ async function leaderboardCard(el){
   $('#lbq',box).oninput=draw;draw();
 }
 
+
+/* ---------- Reports from members (AI answers, people, recipes) ---------- */
+async function reportsView(){
+  shell('<div class="card"><span class="eyebrow">Safety</span><h2 style="margin:8px 0 4px">Reports</h2><p class="mut small" style="margin:0 0 12px">Members can report AI answers from the app. Review each one, adjust the coach’s guidance if needed, then mark it reviewed. Google Play expects these reports to be used to improve moderation.</p><div id="rl" class="empty">Loading…</div></div>');
+  try{
+    if(!state.users){state.users=await rest('POST','rpc/admin_users',{});await signAvatars(state.users)}
+    var users={};(state.users||[]).forEach(function(u){users[u.id]=u});
+    var rows=await rest('GET','reports?select=*&order=created_at.desc&limit=500')||[];
+    $('#rl').className='';
+    $('#rl').innerHTML=rows.length?rows.map(function(r){var u=users[r.user_id]||{};return '<div class="note"><div class="row" style="justify-content:space-between"><b>'+esc(r.kind==='ai'?'AI answer':r.kind)+'</b><span class="chip '+(r.status==='open'?'amber':'')+'">'+esc(r.status)+'</span></div>'+
+      '<div class="small mut">'+esc((u.profile&&u.profile.name)||u.email||'Member')+' · '+esc(new Date(r.created_at).toLocaleString('en-GB'))+'</div>'+
+      (r.reason?'<p style="margin:8px 0 4px"><b>Why:</b> '+esc(r.reason)+'</p>':'')+(r.content?'<details><summary class="small">Reported content</summary><p class="small">'+esc(r.content)+'</p></details>':'')+
+      (r.status==='open'?'<div class="row end"><button class="btn sm" data-rv="'+r.id+'">Mark reviewed</button></div>':'')+'</div>'}).join(''):'<div class="empty">No reports yet.</div>';
+    $$('[data-rv]').forEach(function(b){b.onclick=async function(){try{await rest('PATCH','reports?id=eq.'+b.dataset.rv,{status:'reviewed'},{Prefer:'return=minimal'});reportsView()}catch(e){toast(e.message)}}});
+  }catch(e){$('#rl').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+}
+
 /* ---------- Squad & challenge ---------- */
-var CH_DEFAULT={on:true,title:'8 Week Christmas Challenge',start:'2026-10-28',weeks:8,prize:'£300 cash for the top score',workoutsPerWeek:3,stepsGoal:8000,mindsetDays:4,bonus:{}};
+var CH_DEFAULT={on:true,title:'8 Week Christmas Challenge',start:'2026-10-28',weeks:8,prize:'',workoutsPerWeek:3,stepsGoal:8000,mindsetDays:4,bonus:{}};
 async function squadView(){
   shell('<div class="card"><h2>Challenge</h2><div id="cf" class="empty">Loading…</div></div><div class="card"><h2>Squad members</h2><p class="mut small" style="margin:0 0 8px">Everyone who joined the Squad. Removing someone takes their entry off the leaderboard; they can rejoin from the app.</p><div id="sq" class="empty">Loading…</div></div>');
   squadsCard($('#main')).catch(function(e){toast(e.message)});leaderboardCard($('#main')).catch(function(e){toast(e.message)});
@@ -962,7 +981,7 @@ async function squadView(){
     $('#cf').innerHTML='<label class="row small" style="gap:8px"><input type="checkbox" id="con"'+(cfg.on?' checked':'')+'> Challenge is running</label>'+
       '<label class="f" for="ct">Title</label><input class="i" id="ct" value="'+esc(cfg.title)+'">'+
       '<div class="fields"><div><label class="f" for="cs">Start date</label><input class="i" id="cs" type="date" value="'+esc(cfg.start)+'"></div>'+fld('cw','Weeks',cfg.weeks)+fld('cwo','Workouts / week',cfg.workoutsPerWeek)+fld('cst','Steps goal / day',cfg.stepsGoal)+fld('cm','Mindset days / week',cfg.mindsetDays)+'</div>'+
-      '<label class="f" for="cp">Prize</label><input class="i" id="cp" value="'+esc(cfg.prize)+'">'+
+      '<label class="f" for="cp">Prize (leave empty unless you publish official contest rules)</label><input class="i" id="cp" value="'+esc(cfg.prize)+'">'+
       '<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="csv">Save challenge</button></div>';
     $('#csv').onclick=async function(){
       var n=Object.assign({},cfg,{on:$('#con').checked,title:$('#ct').value.trim()||cfg.title,start:$('#cs').value||cfg.start,weeks:num($('#cw').value)||cfg.weeks,workoutsPerWeek:num($('#cwo').value)||0,stepsGoal:num($('#cst').value)||0,mindsetDays:num($('#cm').value)||0,prize:$('#cp').value.trim()});

@@ -25,9 +25,17 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "permissions": [
+        "android.permission.POST_NOTIFICATIONS"
+      ],
+      "blockedPermissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
         "android.permission.CAMERA",
-        "android.permission.POST_NOTIFICATIONS",
-        "android.permission.SCHEDULE_EXACT_ALARM"
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW"
       ]
     },
     "plugins": [

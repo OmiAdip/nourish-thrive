@@ -4,6 +4,8 @@
   "main": "index.js",
   "dependencies": {
     "expo": "~58.0.21",
+    "expo-image-manipulator": "~58.0.16",
+    "expo-image-picker": "~58.0.10",
     "expo-notifications": "~58.1.7",
     "expo-status-bar": "~58.0.4",
     "react": "19.3.0",

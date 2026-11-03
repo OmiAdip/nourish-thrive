@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import * as Notifications from 'expo-notifications';
+import * as ImagePicker from 'expo-image-picker';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import appHtml from './web/appHtml';
 
 // The app's own address inside the phone. It never loads from the internet;
@@ -33,10 +35,28 @@ async function ensurePermission() {
   return asked.granted;
 }
 
-async function handleMessage(raw) {
+// Photos come from Android's system photo picker: no gallery or camera permission needed.
+async function pickPhoto(id, web) {
+  const send = (dataUrl) => web && web.injectJavaScript(`window.ntPicked&&window.ntPicked(${JSON.stringify(id)},${JSON.stringify(dataUrl)});true;`);
+  try {
+    const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 1 });
+    if (res.canceled || !res.assets || !res.assets[0]) return send(null);
+    const a = res.assets[0];
+    const ctx = ImageManipulator.manipulate(a.uri);
+    if ((a.width || 0) > 1600) ctx.resize({ width: 1600 });
+    const img = await ctx.renderAsync();
+    const out = await img.saveAsync({ format: SaveFormat.JPEG, compress: 0.75, base64: true });
+    send('data:image/jpeg;base64,' + out.base64);
+  } catch {
+    send(null);
+  }
+}
+
+async function handleMessage(raw, web) {
   let msg;
   try { msg = JSON.parse(raw); } catch { return; }
   if (!msg || typeof msg.id !== 'string') return;
+  if (msg.type === 'pick') { await pickPhoto(msg.id, web); return; }
   if (msg.type === 'cancel') {
     await Notifications.cancelScheduledNotificationAsync(msg.id).catch(() => {});
     return;
@@ -85,7 +105,7 @@ export default function App() {
           allowsInlineMediaPlayback
           setSupportMultipleWindows={false}
           overScrollMode="never"
-          onMessage={(e) => { handleMessage(e.nativeEvent.data).catch(() => {}); }}
+          onMessage={(e) => { handleMessage(e.nativeEvent.data, webRef.current).catch(() => {}); }}
           onNavigationStateChange={(s) => { canGoBack.current = s.canGoBack; }}
           onShouldStartLoadWithRequest={(req) => {
             if (isOwnPage(req.url)) return true;

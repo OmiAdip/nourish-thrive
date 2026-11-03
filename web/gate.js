@@ -245,6 +245,25 @@
   };
 
 
+
+  /* ---------- photos: in the Android app, file inputs open the system photo picker ---------- */
+  if(window.ReactNativeWebView){
+    var pending={},seq=0;
+    document.addEventListener('click',function(e){
+      var el=e.target;if(!el||el.tagName!=='INPUT'||el.type!=='file'||el.disabled)return;
+      e.preventDefault();var id='p'+(++seq);pending[id]=el;
+      window.ReactNativeWebView.postMessage(JSON.stringify({type:'pick',id:id}));
+    },true);
+    window.ntPicked=function(id,dataUrl){
+      var el=pending[id];delete pending[id];if(!el||!dataUrl)return;
+      try{
+        var b=atob(dataUrl.split(',')[1]),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
+        var f=new File([u],'photo.jpg',{type:'image/jpeg'}),dt=new DataTransfer();dt.items.add(f);el.files=dt.files;
+        el.dispatchEvent(new Event('change',{bubbles:true}));el.dispatchEvent(new Event('input',{bubbles:true}));
+      }catch(err){window.ntToast&&window.ntToast('Couldn\u2019t use that photo. Please try another.')}
+    };
+  }
+
   /* ---------- profile photo ---------- */
   window.ntAvatarUrl=lsGet('ntavatar')||'';
   function avatarChanged(u){window.ntAvatarUrl=u||'';try{if(u)rawSet.call(localStorage,'ntavatar',u);else localStorage.removeItem('ntavatar')}catch(e){}try{window.dispatchEvent(new Event('nt-avatar'))}catch(e){}}

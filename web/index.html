@@ -207,7 +207,7 @@ html,body,#root{max-width:100%;overflow-x:hidden}
 .ntx-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 2px 2px;flex-wrap:wrap}
 .ntx-bar button{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:#EEF6E6;color:#0E351D;font:700 12px 'Plus Jakarta Sans',sans-serif;padding:7px 12px;cursor:pointer}
 .ntx-bar a{font-size:10.5px;color:#66706A;text-decoration:none}
-.ntf{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ntf figure{margin:0;background:#fff;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(15,36,24,.07);overflow:hidden}.ntf svg{display:block;width:100%;height:auto;max-height:220px}.ntf figcaption{font:700 12px 'Plus Jakarta Sans',sans-serif;color:#0E351D;text-align:center;padding:0 0 8px}
+.ntxf{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ntxf figure{margin:0;background:#fff;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(15,36,24,.07);overflow:hidden}.ntxf svg{display:block;width:100%;height:auto;max-height:220px}.ntxf figcaption{font:700 12px 'Plus Jakarta Sans',sans-serif;color:#0E351D;text-align:center;padding:0 0 8px}
 /* desktop side panel and boot screen */
 .nt-side h2 span{color:var(--nt-brand)}
 </style>
@@ -1683,7 +1683,7 @@ var NT_FIG=(function(){
 })();
 function NtExercise(props){
   var h=React.createElement,id=ntEkId(props.name),fp=NT_FIG.poses(props.name);
-  if(fp)return h('div',{className:'ntf',role:'img','aria-label':props.name+': start and finish position'},fp.map(function(p,i){return h('figure',{key:i},h('div',{dangerouslySetInnerHTML:{__html:NT_FIG.draw(p)}}),h('figcaption',null,i?'Finish':'Start'))}));
+  if(fp)return h('div',{className:'ntxf',role:'img','aria-label':props.name+': start and finish position'},fp.map(function(p,i){return h('figure',{key:i},h('div',{dangerouslySetInnerHTML:{__html:NT_FIG.draw(p)}}),h('figcaption',null,i?'Finish':'Start'))}));
   var reduce=false;try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
   var a=React.useState(reduce),paused=a[0],setPaused=a[1],b=React.useState(false),endPos=b[0],setEnd=b[1];
   if(!id)return h(props.Fallback,{name:props.name,height:props.height});

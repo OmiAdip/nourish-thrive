@@ -1,26 +1,213 @@
 [
  {
-  "app_exercise": "Goblet squat",
+  "app_exercise": "Romanian deadlift",
   "files": [
-   "goblet-squat-a.svg",
-   "goblet-squat-b.svg"
+   "ek-0118-a.svg",
+   "ek-0118-b.svg"
   ],
-  "source_title": "Squats using Dumbbells",
+  "source_title": "Romanian Dead Lift",
   "source_files": [
-   "https://github.com/everkinetic/data/blob/master/dist/svg/0130-relaxation.svg",
-   "https://github.com/everkinetic/data/blob/master/dist/svg/0130-tension.svg"
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0118-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0118-tension.svg"
   ],
   "author": "Everkinetic (everkinetic.com)",
-  "licence": "CC BY-SA 3.0 Unported (republished in the everkinetic/data repository under CC BY-SA 4.0)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
   "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
-  "changes": "Two still illustrations combined into a looping crossfade animation; placed in a standard 4:3 frame."
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Leg press",
+  "files": [
+   "ek-0127-a.svg",
+   "ek-0127-b.svg"
+  ],
+  "source_title": "Leg Press",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0127-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0127-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Lying leg curl",
+  "files": [
+   "ek-0117-a.svg",
+   "ek-0117-b.svg"
+  ],
+  "source_title": "Lying Leg Curl Machine",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0117-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0117-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Seated cable row",
+  "files": [
+   "ek-0025-a.svg",
+   "ek-0025-b.svg"
+  ],
+  "source_title": "Seated Cable Rows",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0025-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0025-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Single-arm row",
+  "files": [
+   "ek-0024-a.svg",
+   "ek-0024-b.svg"
+  ],
+  "source_title": "Rear Deltoid Row Dumbbell",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0024-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0024-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Lat pulldown",
+  "files": [
+   "ek-0095-a.svg",
+   "ek-0095-b.svg"
+  ],
+  "source_title": "Underhand Pull down",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0095-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0095-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Band pull-apart",
+  "files": [
+   "ek-0020-a.svg",
+   "ek-0020-b.svg"
+  ],
+  "source_title": "Back Fly's with Exercise Band",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0020-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0020-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Bicep curl",
+  "files": [
+   "ek-0224-a.svg",
+   "ek-0224-b.svg"
+  ],
+  "source_title": "Biceps Curl with Dumbbell",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0224-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0224-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Triceps rope pushdown",
+  "files": [
+   "ek-0206-a.svg",
+   "ek-0206-b.svg"
+  ],
+  "source_title": "Triceps Pushdown with Rope and Cable",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0206-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0206-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Cable kickback",
+  "files": [
+   "ek-0112-a.svg",
+   "ek-0112-b.svg"
+  ],
+  "source_title": "One Legged Cable Kickback",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0112-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0112-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Dumbbell chest press / Chest press",
+  "files": [
+   "ek-0055-a.svg",
+   "ek-0055-b.svg"
+  ],
+  "source_title": "Bench Press Dumbbell",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0055-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0055-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Dumbbell shoulder press",
+  "files": [
+   "ek-0031-a.svg",
+   "ek-0031-b.svg"
+  ],
+  "source_title": "Incline Shoulder Press Dumbbell",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0031-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0031-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
  },
  {
   "app_exercise": "Push-up",
   "files": [
-   "push-up-a.svg",
-   "push-up-b.svg"
+   "ek-0077-a.svg",
+   "ek-0077-b.svg"
   ],
   "source_title": "Push Ups",
   "source_files": [
@@ -28,16 +215,16 @@
    "https://github.com/everkinetic/data/blob/master/dist/svg/0077-tension.svg"
   ],
   "author": "Everkinetic (everkinetic.com)",
-  "licence": "CC BY-SA 3.0 Unported (republished in the everkinetic/data repository under CC BY-SA 4.0)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
   "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
-  "changes": "Two still illustrations combined into a looping crossfade animation; placed in a standard 4:3 frame."
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
  },
  {
   "app_exercise": "Reverse lunge",
   "files": [
-   "reverse-lunge-a.svg",
-   "reverse-lunge-b.svg"
+   "ek-0129-a.svg",
+   "ek-0129-b.svg"
   ],
   "source_title": "Rear Lunges with Dumbbell",
   "source_files": [
@@ -45,33 +232,118 @@
    "https://github.com/everkinetic/data/blob/master/dist/svg/0129-tension.svg"
   ],
   "author": "Everkinetic (everkinetic.com)",
-  "licence": "CC BY-SA 3.0 Unported (republished in the everkinetic/data repository under CC BY-SA 4.0)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
   "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
-  "changes": "Two still illustrations combined into a looping crossfade animation; placed in a standard 4:3 frame."
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
  },
  {
-  "app_exercise": "Overhead press",
+  "app_exercise": "Walking lunges",
   "files": [
-   "overhead-press-a.svg",
-   "overhead-press-b.svg"
+   "ek-0121-a.svg",
+   "ek-0121-b.svg"
   ],
-  "source_title": "Seated Military Press",
+  "source_title": "Walking Lunges",
   "source_files": [
-   "https://github.com/everkinetic/data/blob/master/dist/svg/0004-relaxation.svg",
-   "https://github.com/everkinetic/data/blob/master/dist/svg/0004-tension.svg"
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0121-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0121-tension.svg"
   ],
   "author": "Everkinetic (everkinetic.com)",
-  "licence": "CC BY-SA 3.0 Unported (republished in the everkinetic/data repository under CC BY-SA 4.0)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
   "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
-  "changes": "Two still illustrations combined into a looping crossfade animation; placed in a standard 4:3 frame."
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
  },
  {
-  "app_exercise": "Superman",
+  "app_exercise": "Step-ups",
   "files": [
-   "superman-a.svg",
-   "superman-b.svg"
+   "ek-0137-a.svg",
+   "ek-0137-b.svg"
+  ],
+  "source_title": "Step Ups with Dumbbells",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0137-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0137-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Band squat",
+  "files": [
+   "ek-0155-a.svg",
+   "ek-0155-b.svg"
+  ],
+  "source_title": "Squats with Exercise Bands",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0155-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0155-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Goblet or barbell squat",
+  "files": [
+   "ek-0122-a.svg",
+   "ek-0122-b.svg"
+  ],
+  "source_title": "Barbell Squat",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0122-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0122-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Goblet squat",
+  "files": [
+   "ek-0130-a.svg",
+   "ek-0130-b.svg"
+  ],
+  "source_title": "Squats using Dumbbells",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0130-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0130-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Box squat to chair / Chair squats",
+  "files": [
+   "ek-0136-a.svg",
+   "ek-0136-b.svg"
+  ],
+  "source_title": "Squat to Bench with Dumbbells",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0136-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0136-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Superman / Swimming (lying face down)",
+  "files": [
+   "ek-0105-a.svg",
+   "ek-0105-b.svg"
   ],
   "source_title": "Supermans",
   "source_files": [
@@ -79,9 +351,43 @@
    "https://github.com/everkinetic/data/blob/master/dist/svg/0105-tension.svg"
   ],
   "author": "Everkinetic (everkinetic.com)",
-  "licence": "CC BY-SA 3.0 Unported (republished in the everkinetic/data repository under CC BY-SA 4.0)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
   "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
-  "changes": "Two still illustrations combined into a looping crossfade animation; placed in a standard 4:3 frame."
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Knee to opposite elbow",
+  "files": [
+   "ek-0289-a.svg",
+   "ek-0289-b.svg"
+  ],
+  "source_title": "Cross Body Crunch",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0289-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0289-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
+ },
+ {
+  "app_exercise": "Calf raises",
+  "files": [
+   "ek-0281-a.svg",
+   "ek-0281-b.svg"
+  ],
+  "source_title": "Standing Barbell Calf Raise",
+  "source_files": [
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0281-relaxation.svg",
+   "https://github.com/everkinetic/data/blob/master/dist/svg/0281-tension.svg"
+  ],
+  "author": "Everkinetic (everkinetic.com)",
+  "licence": "CC BY-SA 3.0 Unported (also republished in everkinetic/data under CC BY-SA 4.0)",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "attribution": "Illustration: Everkinetic, CC BY-SA 3.0. Animated by DropASize.",
+  "changes": "Start and end illustrations combined into a looping crossfade animation in a standard 4:3 frame."
  }
 ]

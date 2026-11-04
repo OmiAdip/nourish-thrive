@@ -83,6 +83,7 @@ for line in todo:
             break
         except urllib.error.HTTPError as e:
             msg = e.read().decode("utf8", "replace")
+            open(os.path.join(DIR, "last-error.txt"), "w").write(f"{e.code} {msg[:1500]}\n")  # shortcut: debug aid, logs are hard to reach
             if e.code == 429:
                 if re.search(r"per ?day|PerDay|daily", msg, re.I) or attempt == 3:
                     print("Daily limit reached. Run this again tomorrow to carry on.")

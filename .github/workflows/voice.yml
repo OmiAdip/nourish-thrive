@@ -1,0 +1,56 @@
+name: Record Mind voice (Gemini)
+
+# Run from the Actions tab. Records Mind lines that don't have audio yet, saves the MP3s
+# to web/voice/ on the branch you run it on, then refreshes the test website.
+# Free Gemini keys have a small daily limit: just run it again the next day to continue.
+on:
+  workflow_dispatch:
+    inputs:
+      voice:
+        description: 'Voice name from AI Studio'
+        default: 'Fola'
+      max_lines:
+        description: 'Most lines to record this run (0 = as many as allowed)'
+        default: '0'
+      redo:
+        description: 'Re-record everything (yes/no), e.g. after changing the voice'
+        default: 'no'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: voice
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make sure ffmpeg is there
+        run: which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - name: List the lines
+        run: |
+          if [ "${{ inputs.redo }}" = "yes" ]; then rm -f web/voice/*.mp3; echo '{}' > web/voice/manifest.json; fi
+          node tools/voice/lines.js
+      - name: Record
+        env:
+          GEMINI_API_KEY: ${{ secrets.VOICE }}
+          VOICE_NAME: ${{ inputs.voice }}
+          MAX_LINES: ${{ inputs.max_lines }}
+        run: python3 tools/voice/generate.py
+      - name: Save the recordings
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add web/voice
+          git diff --cached --quiet && { echo "Nothing new."; exit 0; }
+          git commit -qm "Voice: record Mind lines"
+          git push -q
+          gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ github.token }}

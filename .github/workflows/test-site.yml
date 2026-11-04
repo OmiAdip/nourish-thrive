@@ -29,6 +29,7 @@ jobs:
           mkdir -p /tmp/site/admin
           cp web/admin.html /tmp/site/admin/index.html
           cp -r web/pages/. /tmp/site/
+          if [ -d web/voice ]; then mkdir -p /tmp/site/voice && cp web/voice/manifest.json /tmp/site/voice/ && (cp web/voice/*.mp3 /tmp/site/voice/ 2>/dev/null || true); fi
           touch /tmp/site/.nojekyll
           cd /tmp/site
           git init -q -b gh-pages

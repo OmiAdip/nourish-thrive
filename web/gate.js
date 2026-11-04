@@ -619,3 +619,121 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
+
+/* Calm voice guide for the Mind tools: picks a soft female English voice on each device,
+   speaks slowly with gentle pauses, and can be switched off by the user (nt:voice-guide = "off").
+   In the Android app (react-native-webview has no speech), lines are sent to the app with
+   postMessage({type:'nt-voice',...}) for expo-speech to read out. */
+(function(){
+  var KEY='nt:voice-guide';
+  var synth=window.speechSynthesis||null;
+  var bridge=!synth&&window.ReactNativeWebView&&window.ReactNativeWebView.postMessage?window.ReactNativeWebView:null;
+  var FEMALE=/female|woman|serena|kate|stephanie|martha|moira|fiona|tessa|karen|samantha|victoria|allison|\bava\b|susan|\bzoe\b|catherine|hazel|libby|sonia|maisie|\bmia\b|abbi|bella|hollie|olivia|emma|\baria\b|jenny|michelle|natasha|clara|veena|isha|neerja|heera|kalpana|lekha|\bamy\b|joanna|salli|kimberly|\bivy\b|kendra|nicole|emily|ellie|\bsara\b|nora|zira|\beva\b|linda|heather|kathy|vicki|x-(gba|gbc|gbg|sfg|iob|iog|tpc|tpf|ahp|cxx)/i;
+  var MALE=/\bmale\b|daniel|arthur|oliver|\bfred\b|\balex\b|aaron|rishi|george|ryan|thomas|\bguy\b|brian|matthew|justin|joey|\bravi\b|prabhat|\bdavid\b|\bmark\b|james|william|\btom\b|reed|rocko|eddy|grandpa|ralph|albert|bruce|junior|gordon|lee\b|x-(gbb|gbd|rjs|iol|iom|tpd|ene|end)/i;
+  var CUES={'breathe in':'Breathe in','hold':'Hold','breathe out':'And breathe out','hold softly':'Hold softly','slow exhale':'Slowly, breathe out','little top-up sip':'One more little sip','looong exhale':'Long, slow breath out','looooong slow exhale':'Long, slow breath out'};
+  var KEEP={NLP:1,EFT:1,GP:1,UK:1,CBT:1,OK:1};
+  var voice=null,isFemale=false,token=0,busy=false,timer=null;
+
+  function enabled(){try{return localStorage.getItem(KEY)!=='off'}catch(e){return true}}
+  function setEnabled(on){try{localStorage.setItem(KEY,on?'on':'off')}catch(e){}if(!on)stop()}
+
+  function score(v){
+    var n=(v.name||'')+' '+(v.voiceURI||''),l=(v.lang||'').replace('_','-').toLowerCase(),s=0;
+    if(l.indexOf('en')!==0)return -999;
+    if(FEMALE.test(n))s+=50;
+    if(MALE.test(n))s-=100;
+    if(l==='en-gb')s+=12;else if(l==='en-in')s+=8;else if(l==='en-ie'||l==='en-au'||l==='en-nz')s+=6;else if(l==='en-us')s+=4;
+    if(/natural|neural|online|premium|enhanced/i.test(n))s+=10;
+    if(v.default)s+=1;
+    return s;
+  }
+  function pick(){
+    if(!synth)return;
+    var list=[];try{list=synth.getVoices()||[]}catch(e){}
+    var best=null,bs=-999;
+    list.forEach(function(v){var s=score(v);if(s>bs){bs=s;best=v}});
+    if(best&&bs>-999){voice=best;isFemale=bs>=40}
+  }
+  if(synth){pick();try{synth.addEventListener('voiceschanged',pick)}catch(e){synth.onvoiceschanged=pick}}
+
+  function clean(t){
+    return String(t==null?'':t)
+      .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\uFE0F\u200D]/gu,'')
+      .replace(/\s*(\u2192|->)\s*/g,', then ')
+      .replace(/\s*[\u2014\u2013\u00B7]\s*/g,', ')
+      .replace(/["\u201C\u201D]/g,'')
+      .replace(/\b[A-Z]{2,}\b/g,function(w){return KEEP[w]?w:w.toLowerCase()})
+      .replace(/\s+/g,' ').trim();
+  }
+  /* Split each line on "..." so the voice takes a soft breath there. */
+  function parts(lines,gap){
+    var arr=Array.isArray(lines)?lines:[lines],out=[];
+    arr.forEach(function(line,i){
+      var bits=String(line==null?'':line).split(/\s*(?:\.\.\.|\u2026)\s*/);
+      bits.forEach(function(b,j){
+        b=clean(b);if(!b)return;
+        out.push({t:b,pause:j<bits.length-1?500:(i<arr.length-1?gap:0)});
+      });
+    });
+    return out;
+  }
+  function stop(){
+    token++;busy=false;clearTimeout(timer);
+    if(synth){try{synth.cancel()}catch(e){}}
+    if(bridge){try{bridge.postMessage(JSON.stringify({type:'nt-voice',action:'stop'}))}catch(e){}}
+  }
+  function say(text,rate,done){
+    if(synth){
+      var u=new SpeechSynthesisUtterance(text);
+      if(voice){u.voice=voice;u.lang=voice.lang}else u.lang='en-GB';
+      u.rate=rate;u.pitch=isFemale?1.02:1.15;u.volume=1;
+      var fired=false;function fin(){if(!fired){fired=true;done()}}
+      u.onend=fin;u.onerror=fin;
+      try{synth.resume()}catch(e){}
+      synth.speak(u);
+      /* safety net in case a browser never fires onend */
+      setTimeout(fin,Math.max(4000,text.length*140/rate));
+    }else if(bridge){
+      try{bridge.postMessage(JSON.stringify({type:'nt-voice',action:'speak',text:text,rate:rate,pitch:1.02,language:'en-GB'}))}catch(e){}
+      setTimeout(done,Math.max(900,text.length*72/rate));
+    }else done();
+  }
+  /* speak(lines,{onend,gap,rate,soft,force}) -> true if it started speaking */
+  function speak(lines,o){
+    o=o||{};
+    if(!synth&&!bridge)return false;
+    if(!o.force&&!enabled())return false;
+    if(o.soft&&busy)return false;
+    var list=parts(lines,o.gap==null?900:o.gap);
+    if(!list.length)return false;
+    stop();
+    var my=++token,i=0,rate=o.rate||0.86;busy=true;
+    /* a short beat after cancel(): Chrome can drop an utterance queued in the same tick */
+    timer=setTimeout(function next(){
+      if(my!==token)return;
+      if(i>=list.length){busy=false;if(o.onend)o.onend();return}
+      var p=list[i++];
+      say(p.t,rate,function(){if(my!==token)return;timer=setTimeout(next,p.pause)});
+    },80);
+    return true;
+  }
+  /* Speak an intro, then run cb. Returns false (and does nothing) when the voice is off,
+     so the caller can start straight away. */
+  function lead(lines,cb){return speak(lines,{onend:cb,gap:700})}
+  /* Short breathing cue: interrupts whatever is playing. */
+  function cue(label){
+    var k=String(label||'').toLowerCase().trim();
+    return speak(CUES[k]||label,{rate:0.82,gap:0});
+  }
+  /* iOS only allows speech after a tap: unlock it on the first touch anywhere. */
+  if(synth){
+    var unlock=function(){
+      document.removeEventListener('pointerdown',unlock,true);
+      try{var u=new SpeechSynthesisUtterance(' ');u.volume=0;synth.speak(u)}catch(e){}
+    };
+    document.addEventListener('pointerdown',unlock,true);
+  }
+  window.ntVoice={speak:speak,lead:lead,cue:cue,stop:stop,enabled:enabled,setEnabled:setEnabled,
+    supported:function(){return !!(synth||bridge)},speaking:function(){return busy},
+    voiceName:function(){return voice?voice.name:''}};
+})();

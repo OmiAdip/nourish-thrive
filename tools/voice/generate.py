@@ -1,15 +1,14 @@
 """Records the Mind tab's lines with Gemini text-to-speech and saves them as MP3s in web/voice/.
 Skips lines already recorded, and stops cleanly when the daily free limit is reached,
 so you can simply run it again the next day.
-Env: GEMINI_API_KEY, VOICE_NAME (default Fola), VOICE_STYLE, TTS_MODEL (optional), MAX_LINES (optional)."""
-import base64, json, os, re, subprocess, sys, time, urllib.request, urllib.error
+Env: GEMINI_API_KEY, VOICE_NAME (default Fola), VOICE_STYLE, TTS_MODEL (default gemini-3.8-flash-tts), MAX_LINES."""
+import base64, json, os, re, subprocess, sys, time, urllib.parse, urllib.request, urllib.error
 
 KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 VOICE = os.environ.get("VOICE_NAME", "").strip() or "Fola"
-STYLE = os.environ.get("VOICE_STYLE", "").strip() or (
-    "Read the following in a warm, soft, calm and caring female voice, slowly and gently, "
-    "like a kind meditation guide. Read only the words after the colon")
-MODEL = os.environ.get("TTS_MODEL", "").strip()
+# Gemini 3.8 TTS reads the text word for word; delivery goes in a short separate style field.
+STYLE = os.environ.get("VOICE_STYLE", "").strip() or "calm, soft and warm, speaking slowly and gently"
+MODEL = os.environ.get("TTS_MODEL", "").strip() or "gemini-3.8-flash-tts"
 MAX = int(os.environ.get("MAX_LINES", "0") or 0)
 DIR = os.path.join(os.path.dirname(__file__), "..", "..", "web", "voice")
 API = "https://generativelanguage.googleapis.com/v1beta/"
@@ -23,32 +22,38 @@ def call(url, body=None):
     with urllib.request.urlopen(req, timeout=180) as r:
         return json.loads(r.read())
 
-def pick_model():
-    if MODEL:
-        return MODEL
-    names = []
-    url = API + "models?pageSize=1000"
-    for m in call(url).get("models", []):
-        if "generateContent" in m.get("supportedGenerationMethods", []) and "tts" in m["name"].lower():
-            names.append(m["name"].split("/", 1)[1])
-    if not names:
-        sys.exit("No text-to-speech model is available to this key.")
-    print("Speech models on this key:", ", ".join(names))
-    # newest flash TTS first (cheapest, best free limits), then any other
-    names.sort(key=lambda n: ("flash" not in n, "preview" in n, [-int(x) for x in re.findall(r"\d+", n)]))
-    return names[0]
+def resolve_voice(name):
+    """'Fola' may be a display name from the Voice Library: look up the id to send."""
+    if name.startswith("voice"):
+        return name
+    try:
+        out = call(API + "voices?" + urllib.parse.urlencode({"search": name, "page_size": 100}))
+        for v in out.get("voices", []):
+            if (v.get("display_name") or v.get("displayName") or "").strip().lower() == name.lower():
+                vid = v.get("id") or v.get("name", "").split("/")[-1]
+                print(f"Voice '{name}': id {vid} ({v.get('language_code') or v.get('languageCode')}, "
+                      f"{v.get('accent')}, {v.get('gender')}) {v.get('description', '')[:80]}")
+                return vid
+        print(f"Voice '{name}' not found in the library search; sending the name as given.")
+    except Exception as e:
+        print("Voice lookup skipped:", e)
+    return name
 
-def tts(model, text):
-    body = {"contents": [{"parts": [{"text": STYLE + ": " + text}]}],
-            "generationConfig": {"responseModalities": ["AUDIO"],
-                                 "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": VOICE}}}}}
-    out = call(API + "models/" + model + ":generateContent", body)
-    for part in out["candidates"][0]["content"]["parts"]:
-        inline = part.get("inlineData") or part.get("inline_data")
-        if inline:
-            rate = re.search(r"rate=(\d+)", inline.get("mimeType", "")) 
-            return base64.b64decode(inline["data"]), int(rate.group(1)) if rate else 24000
-    raise RuntimeError("no audio in reply: " + json.dumps(out)[:300])
+def tts(voice, text):
+    body = {"model": MODEL,
+            "input": [{"type": "user_input", "content": [{"type": "text", "text": text,
+                       "annotations": [{"type": "speech_metadata", "style": STYLE}]}]}],
+            "response_format": {"type": "audio", "mime_type": "audio/l16", "sample_rate": 24000},
+            "generation_config": {"speech_config": [{"voice": voice}]}}
+    out = call(API + "interactions", body)
+    data = None
+    for step in out.get("steps", []):
+        for c in step.get("content", []) or []:
+            if c.get("type") == "audio" and c.get("data"):
+                data = c["data"]
+    if not data:
+        raise RuntimeError("no audio in reply: " + json.dumps(out)[:400])
+    return base64.b64decode(data), 24000
 
 def to_mp3(pcm, rate, path):
     # trim silence at both ends, gentle fades, mono 64k MP3 (small and plays everywhere)
@@ -65,8 +70,8 @@ todo = [l for l in lines if not manifest.get(l["key"])]
 print(f"{len(lines)} lines, {len(lines) - len(todo)} recorded, {len(todo)} to go. Voice: {VOICE}")
 if not todo:
     sys.exit(0)
-model = pick_model()
-print("Using model:", model)
+voice = resolve_voice(VOICE)
+print("Using model:", MODEL, "| style:", STYLE)
 
 done = 0
 for line in todo:
@@ -74,7 +79,7 @@ for line in todo:
         break
     for attempt in range(4):
         try:
-            pcm, rate = tts(model, line["text"])
+            pcm, rate = tts(voice, line["text"])
             break
         except urllib.error.HTTPError as e:
             msg = e.read().decode("utf8", "replace")

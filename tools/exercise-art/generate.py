@@ -62,7 +62,15 @@ def draw(model, refs, prompt):
             return im.resize((600, 600), Image.LANCZOS)
     raise RuntimeError("no image in reply: " + json.dumps(out)[:400])
 
-def save(im, p): im.save(p, "WEBP", quality=82, method=6)
+FLOOR = 536  # floor-line row in goblet-squat-*.webp at 600px; the model drifts, so we shift to match
+def align(im):
+    g = im.convert("L"); w, h = g.size; px = g.load()
+    dark = [sum(px[x, y] < 110 for x in range(0, w, 2)) for y in range(h // 2, h)]
+    r = h // 2 + dark.index(max(dark))
+    if max(dark) < w // 6: return im  # no clear floor line found: leave as drawn
+    out = Image.new("RGB", (w, h), "white"); out.paste(im, (0, FLOOR - r)); return out
+
+def save(im, p): align(im).save(p, "WEBP", quality=82, method=6)
 
 def generate():
     if not KEY: sys.exit("No API key: add the repository secret VOICE (Google AI Studio key).")

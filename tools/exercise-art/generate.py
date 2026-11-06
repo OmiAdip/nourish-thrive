@@ -14,11 +14,13 @@ API = "https://generativelanguage.googleapis.com/v1beta/"
 PRICE_IN, PRICE_OUT = 0.50e-6, 60e-6  # $/token (Gemini API standard price list); a 1K image is ~1120 output tokens = ~$0.067
 STYLE = ("Match the reference images exactly: the same bald athletic man with a simple face, the same clean black "
          "line art with light grey shading, lime-green shorts, white trainers, plain white background, the same body "
-         "size in the frame and the same thin black floor line at the same height near the bottom. Any equipment is "
+         "size in the frame and the same thin black floor line at the same height, about 89% of the way down the image, "
+         "with feet, hands or knees resting on it. The man faces to the right. Any equipment is "
          "drawn in the same simple line style. Side view unless stated. Square image. No text, labels or arrows.")
 
 def slug(n): return re.sub(r"[^a-z0-9]+", "-", n.lower()).strip("-")
-def path(f, part): return os.path.join(DIR, f"{f}-{part}.webp")
+def name(f, part): return f if f == "rest" else f"{f}-{part}"  # the rest screen is plain rest.webp
+def path(f, part): return os.path.join(DIR, name(f, part) + ".webp")
 def b64(p): return base64.b64encode(open(p, "rb").read()).decode()
 
 def call(url, body=None):
@@ -85,7 +87,7 @@ def write_art():
     """NT_ART: exercise name slug -> [before, after] (one file = static hold), only for images that exist."""
     art = {}
     for s in SETS:
-        files = [f"{s['file']}-{p}" for p in (("before",) if s.get("hold") else ("before", "after"))]
+        files = [name(s['file'], p) for p in (("before",) if s.get("hold") else ("before", "after"))]
         if all(os.path.exists(os.path.join(DIR, x + ".webp")) for x in files):
             for n in s["names"]: art[slug(n)] = files
     p = os.path.join(ROOT, "web", "index.html"); h = open(p).read()

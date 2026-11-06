@@ -66,7 +66,7 @@ const names=new Set([
   ...[...html.matchAll(/\{n:o\?"((?:[^"\\]|\\.)+)":"((?:[^"\\]|\\.)+)",/g)].flatMap(m=>[unq(m[1]),unq(m[2])]),  // LISS picks by gym/home
   ...eval(html.match(/fi=(\["Push-up".*?\])/)[1])  // Create your own / Log a workout pick list
 ].filter(n=>!/^(rest|round rest)/i.test(n)));
-const W=["Start the exercise.","Stop the exercise.","Take a rest.",...[...names].map(n=>"Start the exercise: "+spoken(n)+".")];
+const W=["Voice guide on. Let's get moving!","Start the exercise.","Stop the exercise.","Take a rest.",...[...names].map(n=>"Start the exercise: "+spoken(n)+".")];
 
 const out=new Map(),coach=new Set();
 V._parts(W,0).forEach(p=>{if(!out.has(p.k)){out.set(p.k,p.t);coach.add(p.k)}});  // first, so they record first

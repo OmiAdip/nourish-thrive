@@ -4,7 +4,12 @@ name: Draw exercise images (Nano Banana 2)
 # that don't exist yet, in the style of goblet-squat-before/-after.webp, saves them as WebP in
 # web/pages/exercises/, links them in the app, then refreshes the test website.
 # Safe to re-run: finished images are skipped.
+# Also runs on a push to test that changes tools/exercise-art/only.txt (sets to draw; empty = all missing),
+# because Run workflow only appears once this file is on the default branch.
 on:
+  push:
+    branches: [test]
+    paths: ['tools/exercise-art/only.txt']
   workflow_dispatch:
     inputs:
       only:
@@ -30,7 +35,9 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.VOICE }}
           ONLY: ${{ inputs.only }}
-        run: python3 tools/exercise-art/generate.py
+        run: |
+          [ "$GITHUB_EVENT_NAME" = push ] && export ONLY="$(cat tools/exercise-art/only.txt)"
+          python3 tools/exercise-art/generate.py
       - name: Save the images
         if: always()
         run: |

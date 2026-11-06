@@ -1535,6 +1535,7 @@ var NT_FAST_STAGES=[
   {h:20,t:'Deep in the fast',d:'Keep sipping water. Stop your fast if you feel dizzy, faint or unwell.'},
   {h:24,t:'Beyond a full day',d:'Fasting longer than this isn\u2019t recommended without medical supervision. Please think about breaking your fast.'}
 ];
+function ntFastSoFar(hrs){return hrs>24?'You\u2019ve been fasting for more than 24 hours. That can be dangerous and we don\u2019t recommend it. Please think about breaking your fast, and get medical help if you feel dizzy, faint or unwell.':'You\u2019ve been fasting for over 18 hours. Long fasts can be dangerous and we don\u2019t recommend them. Stop if you feel dizzy, faint or unwell.'}
 function ntFastWarn(hrs){return hrs>24?'Fasting for more than 24 hours can be dangerous and we don\u2019t recommend it. Only do this with your GP\u2019s supervision, and stop straight away if you feel dizzy, faint or unwell.':'Long fasts can be dangerous and we don\u2019t recommend them. Anything over 18 hours is for experienced fasters only. Check with your GP first, and stop if you feel dizzy, faint or unwell.'}
 function ntFmtDur(ms){ms=Math.max(0,ms);var h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3);return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s}
 function ntFmtTime(t){return new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+(new Date(t).toDateString()!==new Date().toDateString()?' '+new Date(t).toLocaleDateString('en-GB',{weekday:'short'}):'')}
@@ -1551,7 +1552,7 @@ function NtFast(){
   var h=React.createElement,us=React.useState,ue=React.useEffect;
   var a=us(function(){return ntRead('fasting-current',null)}),cur=a[0],setCur=a[1];
   var b=us(16),pick0=b[0],setPick=b[1];var cu=us(''),custom=cu[0],setCustom=cu[1];var ag=us(false),already=ag[0],setAlready=ag[1];var ah=us(''),ago=ah[0],setAgo=ah[1];
-  var pick=pick0==='custom'?Math.round(Number(custom)):pick0,pickOk=pick>=1&&pick<=72,agoH=already?Number(ago):0,agoOk=!already||(ago!==''&&agoH>=0&&agoH<=72);
+  var pick=pick0==='custom'?Math.round(Number(custom)):pick0,pickOk=pick>=1&&pick<=72,agoH=already?Number(ago):0,agoOk=!already||(ago!==''&&isFinite(agoH)&&agoH>=0);
   var c=us(Date.now()),now=c[0],setNow=c[1];
   var dd=us(false),open=dd[0],setOpen=dd[1];
   ue(function(){var id=setInterval(function(){setNow(Date.now());var v=ntRead('fasting-current',null);if(JSON.stringify(v)!==JSON.stringify(cur))setCur(v)},1000);return function(){clearInterval(id)}},[cur]);
@@ -1591,9 +1592,10 @@ function NtFast(){
         h('input',{type:'checkbox',checked:already,onChange:function(e){setAlready(e.target.checked)},style:{width:20,height:20,accentColor:'#3A8A0C'}}),'I\u2019ve already been fasting'),
       already?h('div',{style:{marginTop:8}},
         h('label',{className:'ntf-hint',style:{display:'block',margin:'0 2px'}},'For how many hours?',
-          h('input',{type:'number',inputMode:'decimal',min:0,max:72,step:0.5,value:ago,placeholder:'e.g. 3',onChange:function(e){setAgo(e.target.value.replace(/[^0-9.]/g,'').slice(0,4))},
+          h('input',{type:'number',inputMode:'decimal',min:0,step:0.5,value:ago,placeholder:'e.g. 3',onChange:function(e){setAgo(e.target.value.replace(/[^0-9.]/g,''))},
             style:{display:'block',width:'100%',boxSizing:'border-box',marginTop:6,padding:'10px 12px',fontSize:16,borderRadius:12,border:'1.5px solid #E6EAE3',fontFamily:'inherit'}})),
-        h('p',{className:'ntf-hint',style:{marginTop:6}},!agoOk?'Enter between 0 and 72 hours.':'Your fast started at '+ntFmtTime(Date.now()-agoH*36e5)+(pickOk&&agoH>=pick?'. That\u2019s already past your goal.':'. The timer starts from '+(Math.round(agoH*10)/10)+' h.'))):null,
+        h('p',{className:'ntf-hint',style:{marginTop:6}},!agoOk?'Enter how many hours you\u2019ve been fasting.':'Your fast started at '+ntFmtTime(Date.now()-agoH*36e5)+(pickOk&&agoH>=pick?'. That\u2019s already past your goal.':'. The timer starts from '+(Math.round(agoH*10)/10)+' h.')),
+        agoOk&&agoH>18?h('div',{role:'note',style:{background:'#FBE9E7',color:'#7A1F14',borderRadius:14,padding:'10px 12px',fontSize:13,lineHeight:1.45,fontWeight:600,marginTop:8}},'\u26A0\uFE0F ',ntFastSoFar(agoH)):null):null,
       h('button',{className:'nt-cta',onClick:start,disabled:!pickOk||!agoOk,style:!pickOk||!agoOk?{opacity:.5}:null},(already&&agoH>0?'Continue my ':'Start ')+(pickOk?pick+'-hour':'')+' fast',h('span',{className:'nt-cta-ico'},h(NtIcon,{name:'timer',size:16}))),
       h(NtFastHistory,null),
       h('p',{className:'ntf-safety'},'Fasting isn’t right for everyone. Don’t fast if you’re pregnant or breastfeeding, under 18, take diabetes medication or have a history of disordered eating, and check with your GP if unsure.')));
@@ -1620,7 +1622,7 @@ function NtFast(){
         h('span',{className:'ntf-dot'},state==='done'?h(NtIcon,{name:'check',size:12,stroke:2}):null),
         h('div',null,h('div',{className:'ntf-st'},h('b',null,s.t),h('span',null,s.h?'from hour '+s.h:'start')),state!=='next'||open?h('p',null,s.d):null));
     })),
-    cur.target>18?h('p',{role:'note',style:{background:'#FBE9E7',color:'#7A1F14',borderRadius:14,padding:'10px 12px',fontSize:12.5,lineHeight:1.45,fontWeight:600,margin:'10px 0 0'}},'\u26A0\uFE0F ',ntFastWarn(cur.target)):null,
+    cur.target>18||hrs>18?h('p',{role:'note',style:{background:'#FBE9E7',color:'#7A1F14',borderRadius:14,padding:'10px 12px',fontSize:12.5,lineHeight:1.45,fontWeight:600,margin:'10px 0 0'}},'\u26A0\uFE0F ',hrs>18?ntFastSoFar(hrs):ntFastWarn(cur.target)):null,
     stages.length>3?h('button',{className:'ntf-more',onClick:function(){setOpen(!open)}},open?'Show less':'See all stages'):null,
     h('p',{className:'ntf-note'},'General information, not medical advice. Everyone’s body is different.'),
     h('button',{className:'nt-cta'+(doneAll?'':' ghost'),onClick:end},doneAll?'End fast and log it':'End fast early',h('span',{className:'nt-cta-ico'},h(NtIcon,{name:doneAll?'check':'flag',size:16})))));

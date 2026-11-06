@@ -83,12 +83,13 @@ def generate():
     for s in todo:
         f, b = s["file"], path(s["file"], "before")
         if not os.path.exists(b):
-            save(draw(model, ref, f"The two reference images show the style. {STYLE} Draw this man: {s['before']}."), b)
+            save(draw(model, ref, f"The two reference images show the style. {STYLE} Exactly one person in the image. Draw this man: {s['before']}."), b)
             print("  drew", os.path.basename(b))
         if not s.get("hold"):
             a = path(f, "after")
             save(draw(model, ref + [b], f"Images 1 and 2 show the style. Image 3 is the start position of an exercise. {STYLE} "
-                      f"Draw the end position: the same man, same camera angle, same scale and floor line, same equipment: {s['after']}."), a)
+                      f"Draw the END position, which must look clearly different from image 3 (do not copy its pose): {s['after']}. "
+                      f"Keep only the man, camera angle, scale, floor line and equipment the same. Exactly one person in the image."), a)
             print("  drew", os.path.basename(a))
 
 def write_art():

@@ -37,21 +37,24 @@ jobs:
         run: |
           if [ "${{ inputs.redo }}" = "yes" ]; then rm -f web/voice/*.mp3; echo '{}' > web/voice/manifest.json; fi
           node tools/voice/lines.js
-      - name: Record
+      - name: Record in batches of 10, saving after each
         env:
           GEMINI_API_KEY: ${{ secrets.VOICE }}
           VOICE_NAME: ${{ inputs.voice }}
-          MAX_LINES: ${{ inputs.max_lines }}
-        run: python3 tools/voice/generate.py
-      - name: Save the recordings
-        if: always()
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add web/voice
-          git diff --cached --quiet && { echo "Nothing new."; exit 0; }
-          git commit -qm "Voice: record lines"
-          git pull -q --rebase && git push -q  # another workflow may have pushed meanwhile
-          gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
-        env:
-          GH_TOKEN: ${{ github.token }}
+          count() { python3 -c "import json;print(sum(1 for v in json.load(open('web/voice/manifest.json')).values() if v))"; }
+          cap=${{ inputs.max_lines }}; total=0
+          while :; do
+            before=$(count)
+            MAX_LINES=10 python3 tools/voice/generate.py || true  # still save what this batch got
+            got=$(( $(count) - before )); total=$(( total + got ))
+            git add web/voice
+            git diff --cached --quiet || { git commit -qm "Voice: record lines"; git pull -q --rebase && git push -q; }
+            # a short batch means the daily limit, an error, or nothing left
+            [ "$got" -lt 10 ] && break
+            [ "$cap" -gt 0 ] && [ "$total" -ge "$cap" ] && break
+          done
+          [ "$total" -gt 0 ] && gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}" || true

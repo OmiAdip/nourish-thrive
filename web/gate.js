@@ -413,7 +413,7 @@
   function aiNotice(){
     return new Promise(function(res){
       var w=document.createElement('div');w.className='nt-ai-notice';w.setAttribute('role','dialog');w.setAttribute('aria-modal','true');w.setAttribute('aria-label','About AI features');
-      w.innerHTML='<style>'+AI_CSS+'</style><div class="nt-ai-card"><b>About the AI features</b><p>The coach chat, recipe ideas, meal plans and food photo or label scans use AI. To answer, we send your message, the photo you choose and the profile details needed (such as your first name, goals and diet) to our AI provider, OpenAI. We don’t send your email address.</p><p>AI answers can be wrong. They are general information, not medical advice. Check nutrition estimates, and talk to your GP before big changes to diet, exercise or medication.</p><a href="'+SITE_URL+'privacy.html" target="_blank" rel="noopener">Read the privacy policy</a><div class="nt-ai-btns"><button type="button" data-a="no">Not now</button><button type="button" data-a="yes">I understand, continue</button></div></div>';
+      w.innerHTML='<style>'+AI_CSS+'</style><div class="nt-ai-card"><b>About the AI features</b><p>The coach chat, recipe ideas, meal plans and food photos use AI. To answer, we send your message, the photo you choose and the profile details needed (such as your first name, goals and diet) to our AI provider, OpenAI. We don’t send your email address.</p><p>AI answers can be wrong. They are general information, not medical advice. Check nutrition estimates, and talk to your GP before big changes to diet, exercise or medication.</p><a href="'+SITE_URL+'privacy.html" target="_blank" rel="noopener">Read the privacy policy</a><div class="nt-ai-btns"><button type="button" data-a="no">Not now</button><button type="button" data-a="yes">I understand, continue</button></div></div>';
       document.body.appendChild(w);
       w.querySelector('[data-a=yes]').focus();
       w.onclick=function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(!a)return;w.remove();if(a==='yes'){rawSet.call(localStorage,'ntaiok','1');res(true)}else res(false)};
@@ -767,6 +767,6 @@
   document.addEventListener('pointerdown',unlock,true);
 
   window.ntVoice={speak:speak,lead:lead,cue:cue,stop:stop,enabled:enabled,setEnabled:setEnabled,
-    supported:function(){return !!(synth||bridge||window.Audio)},speaking:function(){return busy},
+    supported:function(){return !!(synth||bridge||window.Audio)},has:function(t){return !!manifest&&parts(t,0).every(function(p){return !!manifest[p.k]})},speaking:function(){return busy},
     voiceName:function(){return voice?voice.name:''},_parts:parts,_key:key,CUES:CUES};
 })();

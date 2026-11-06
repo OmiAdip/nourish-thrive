@@ -31,7 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Make sure ffmpeg is there
-        run: which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+        timeout-minutes: 8  # an apt lock once hung this step for 15+ min
+        run: which ffmpeg || (sudo apt-get -o DPkg::Lock::Timeout=120 update -qq && sudo apt-get -o DPkg::Lock::Timeout=120 install -y -qq ffmpeg)
       - name: List the lines
         run: |
           if [ "${{ inputs.redo }}" = "yes" ]; then rm -f web/voice/*.mp3; echo '{}' > web/voice/manifest.json; fi

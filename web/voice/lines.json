@@ -1,5 +1,10 @@
 [
  {
+  "key": "1pqtclmg",
+  "text": "Start the exercise.",
+  "style": "coach"
+ },
+ {
   "key": "3amn82f",
   "text": "Stop the exercise.",
   "style": "coach"
@@ -762,6 +767,146 @@
  {
   "key": "1aorej9y",
   "text": "Start the exercise: Easy pace to cool down.",
+  "style": "coach"
+ },
+ {
+  "key": "1o72m8n13",
+  "text": "Start the exercise: Incline walk or steady bike.",
+  "style": "coach"
+ },
+ {
+  "key": "16zphapm",
+  "text": "Start the exercise: Push-up.",
+  "style": "coach"
+ },
+ {
+  "key": "198hp5gq",
+  "text": "Start the exercise: Knee push-up.",
+  "style": "coach"
+ },
+ {
+  "key": "1yp7y3hs",
+  "text": "Start the exercise: Leg extension.",
+  "style": "coach"
+ },
+ {
+  "key": "1ii1jyds",
+  "text": "Start the exercise: Lateral raise.",
+  "style": "coach"
+ },
+ {
+  "key": "bavkfio",
+  "text": "Start the exercise: Face pull.",
+  "style": "coach"
+ },
+ {
+  "key": "15u1v1op",
+  "text": "Start the exercise: Sumo squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1wulaes",
+  "text": "Start the exercise: Russian twist.",
+  "style": "coach"
+ },
+ {
+  "key": "xwryi3m",
+  "text": "Start the exercise: Crunch.",
+  "style": "coach"
+ },
+ {
+  "key": "ygl6m7m",
+  "text": "Start the exercise: Burpee.",
+  "style": "coach"
+ },
+ {
+  "key": "nqf708s",
+  "text": "Start the exercise: Jumping jacks.",
+  "style": "coach"
+ },
+ {
+  "key": "13jeevvo",
+  "text": "Start the exercise: Skipping.",
+  "style": "coach"
+ },
+ {
+  "key": "1n51po310",
+  "text": "Start the exercise: Treadmill incline walk.",
+  "style": "coach"
+ },
+ {
+  "key": "19jc2ovn",
+  "text": "Start the exercise: Cycling.",
+  "style": "coach"
+ },
+ {
+  "key": "1swvl1t",
+  "text": "Start the exercise: Rowing machine.",
+  "style": "coach"
+ },
+ {
+  "key": "19kspzds",
+  "text": "Start the exercise: Stair climber.",
+  "style": "coach"
+ },
+ {
+  "key": "1sqmcc5x",
+  "text": "Start the exercise: Dance or Zumba class.",
+  "style": "coach"
+ },
+ {
+  "key": "1c39w0kp",
+  "text": "Start the exercise: Yoga class.",
+  "style": "coach"
+ },
+ {
+  "key": "14a2tcis",
+  "text": "Start the exercise: Pilates class.",
+  "style": "coach"
+ },
+ {
+  "key": "159scofv",
+  "text": "Start the exercise: Barbell deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "13kah7zq",
+  "text": "Start the exercise: Bench press.",
+  "style": "coach"
+ },
+ {
+  "key": "d10pk2r",
+  "text": "Start the exercise: Cable crunch.",
+  "style": "coach"
+ },
+ {
+  "key": "eq5l1vt",
+  "text": "Start the exercise: Hamstring curl.",
+  "style": "coach"
+ },
+ {
+  "key": "1jsomgnv",
+  "text": "Start the exercise: Abductor machine.",
+  "style": "coach"
+ },
+ {
+  "key": "6jsgs1v",
+  "text": "Start the exercise: Adductor machine.",
+  "style": "coach"
+ },
+ {
+  "key": "173huf0q",
+  "text": "Start the exercise: Hammer curl.",
+  "style": "coach"
+ },
+ {
+  "key": "1dhi9vzs",
+  "text": "Start the exercise: Skull crusher.",
+  "style": "coach"
+ },
+ {
+  "key": "4k49u8o",
+  "text": "Start the exercise: Chest fly.",
   "style": "coach"
  },
  {

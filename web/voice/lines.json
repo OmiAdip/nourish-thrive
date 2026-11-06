@@ -1,5 +1,770 @@
 [
  {
+  "key": "3amn82f",
+  "text": "Stop the exercise.",
+  "style": "coach"
+ },
+ {
+  "key": "ngh1m79",
+  "text": "Take a rest.",
+  "style": "coach"
+ },
+ {
+  "key": "48i83ju",
+  "text": "Start the exercise: March on the spot.",
+  "style": "coach"
+ },
+ {
+  "key": "1cffppxq",
+  "text": "Start the exercise: Arm circles.",
+  "style": "coach"
+ },
+ {
+  "key": "18kpavlv",
+  "text": "Start the exercise: Sit-to-stand squat.",
+  "style": "coach"
+ },
+ {
+  "key": "12q3o2mr",
+  "text": "Start the exercise: Wall press-up.",
+  "style": "coach"
+ },
+ {
+  "key": "1248r3ur",
+  "text": "Start the exercise: Glute bridge.",
+  "style": "coach"
+ },
+ {
+  "key": "1i8nrlnn",
+  "text": "Start the exercise: Bird dog.",
+  "style": "coach"
+ },
+ {
+  "key": "7yat0nx",
+  "text": "Start the exercise: Standing knee lifts.",
+  "style": "coach"
+ },
+ {
+  "key": "a6xmlww",
+  "text": "Start the exercise: Hamstring stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "nr032ny",
+  "text": "Start the exercise: Chest opener stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "xio3uvm",
+  "text": "Start the exercise: Cat, cow.",
+  "style": "coach"
+ },
+ {
+  "key": "xmn4tv11",
+  "text": "Start the exercise: World's greatest stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "1uuwvcqq",
+  "text": "Start the exercise: Hip circles.",
+  "style": "coach"
+ },
+ {
+  "key": "x9r55410",
+  "text": "Start the exercise: Squat to overhead reach.",
+  "style": "coach"
+ },
+ {
+  "key": "17izsgw",
+  "text": "Start the exercise: Standing side bend.",
+  "style": "coach"
+ },
+ {
+  "key": "danivp14",
+  "text": "Start the exercise: Slow march with deep breaths.",
+  "style": "coach"
+ },
+ {
+  "key": "v8ohfvw",
+  "text": "Start the exercise: Bodyweight squats.",
+  "style": "coach"
+ },
+ {
+  "key": "45q1fnp",
+  "text": "Start the exercise: Arm swings.",
+  "style": "coach"
+ },
+ {
+  "key": "14gi7c1o",
+  "text": "Start the exercise: Inchworm.",
+  "style": "coach"
+ },
+ {
+  "key": "100rvj3r",
+  "text": "Start the exercise: Goblet squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1i23gcks",
+  "text": "Start the exercise: Single-arm row.",
+  "style": "coach"
+ },
+ {
+  "key": "1plgbhcw",
+  "text": "Start the exercise: Romanian deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "1m0c1bft",
+  "text": "Start the exercise: Overhead press.",
+  "style": "coach"
+ },
+ {
+  "key": "1t9m727s",
+  "text": "Start the exercise: Reverse lunge.",
+  "style": "coach"
+ },
+ {
+  "key": "urpzemn",
+  "text": "Start the exercise: Dead bug.",
+  "style": "coach"
+ },
+ {
+  "key": "2o6qo4r",
+  "text": "Start the exercise: Quad stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "guigsaq",
+  "text": "Start the exercise: Child's pose.",
+  "style": "coach"
+ },
+ {
+  "key": "17saege13",
+  "text": "Start the exercise: Cross-trainer or brisk walk.",
+  "style": "coach"
+ },
+ {
+  "key": "1747sic10",
+  "text": "Start the exercise: Goblet or barbell squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1rskd2cq",
+  "text": "Start the exercise: Chest press.",
+  "style": "coach"
+ },
+ {
+  "key": "iv4bj8r",
+  "text": "Start the exercise: Lat pulldown.",
+  "style": "coach"
+ },
+ {
+  "key": "ies1pqn",
+  "text": "Start the exercise: Step-ups.",
+  "style": "coach"
+ },
+ {
+  "key": "228ab1s",
+  "text": "Start the exercise: Farmer's carry.",
+  "style": "coach"
+ },
+ {
+  "key": "1gd5simw",
+  "text": "Start the exercise: Hip flexor stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "1vtnr1xz",
+  "text": "Start the exercise: Doorway chest stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "icvda5p",
+  "text": "Start the exercise: Step touch.",
+  "style": "coach"
+ },
+ {
+  "key": "10e73vqs",
+  "text": "Start the exercise: Step-out jacks.",
+  "style": "coach"
+ },
+ {
+  "key": "1wkhkggv",
+  "text": "Start the exercise: Standing punches.",
+  "style": "coach"
+ },
+ {
+  "key": "dv8hpoz",
+  "text": "Start the exercise: Knee to opposite elbow.",
+  "style": "coach"
+ },
+ {
+  "key": "1vl9rd1s",
+  "text": "Start the exercise: Side shuffles.",
+  "style": "coach"
+ },
+ {
+  "key": "aket9az",
+  "text": "Start the exercise: Slow march and breathe.",
+  "style": "coach"
+ },
+ {
+  "key": "1yn8lotr",
+  "text": "Start the exercise: Calf stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "1k79wzp",
+  "text": "Start the exercise: Leg swings.",
+  "style": "coach"
+ },
+ {
+  "key": "1vtcbxix",
+  "text": "Start the exercise: Side-lying leg raise.",
+  "style": "coach"
+ },
+ {
+  "key": "1wdiozoq",
+  "text": "Start the exercise: Clamshells.",
+  "style": "coach"
+ },
+ {
+  "key": "evjwgnv",
+  "text": "Start the exercise: Box squat to chair.",
+  "style": "coach"
+ },
+ {
+  "key": "kbwo1pq",
+  "text": "Start the exercise: Calf raises.",
+  "style": "coach"
+ },
+ {
+  "key": "plqfeju",
+  "text": "Start the exercise: Figure-4 stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "33j1lqw",
+  "text": "Start the exercise: Side plank on knees.",
+  "style": "coach"
+ },
+ {
+  "key": "1e5cnv3w",
+  "text": "Start the exercise: Glute bridge march.",
+  "style": "coach"
+ },
+ {
+  "key": "162a5vco",
+  "text": "Start the exercise: Heel taps.",
+  "style": "coach"
+ },
+ {
+  "key": "v3evhwv",
+  "text": "Start the exercise: Knees-to-chest hug.",
+  "style": "coach"
+ },
+ {
+  "key": "1lkbjoos",
+  "text": "Start the exercise: Jog on the spot.",
+  "style": "coach"
+ },
+ {
+  "key": "1iqfbztq",
+  "text": "Start the exercise: Squat jumps.",
+  "style": "coach"
+ },
+ {
+  "key": "xrhfccw",
+  "text": "Start the exercise: Mountain climbers.",
+  "style": "coach"
+ },
+ {
+  "key": "pm6ssn",
+  "text": "Start the exercise: Burpees.",
+  "style": "coach"
+ },
+ {
+  "key": "1hg8qap",
+  "text": "Start the exercise: High knees.",
+  "style": "coach"
+ },
+ {
+  "key": "1ix5h22x",
+  "text": "Start the exercise: Plank shoulder taps.",
+  "style": "coach"
+ },
+ {
+  "key": "1j7b6axp",
+  "text": "Start the exercise: Walk it off.",
+  "style": "coach"
+ },
+ {
+  "key": "5zgl7y",
+  "text": "Start the exercise: Bike or cross-trainer.",
+  "style": "coach"
+ },
+ {
+  "key": "1wtzjibo",
+  "text": "Start the exercise: Leg press.",
+  "style": "coach"
+ },
+ {
+  "key": "1gl5l5zp",
+  "text": "Start the exercise: Hip thrust.",
+  "style": "coach"
+ },
+ {
+  "key": "px3zx9t",
+  "text": "Start the exercise: Walking lunges.",
+  "style": "coach"
+ },
+ {
+  "key": "3cuc9s",
+  "text": "Start the exercise: Lying leg curl.",
+  "style": "coach"
+ },
+ {
+  "key": "lev8put",
+  "text": "Start the exercise: Cable kickback.",
+  "style": "coach"
+ },
+ {
+  "key": "tdvpxbt",
+  "text": "Start the exercise: Pigeon stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "1rrnohjl",
+  "text": "Start the exercise: Rower.",
+  "style": "coach"
+ },
+ {
+  "key": "1exbwqru",
+  "text": "Start the exercise: Band pull-aparts.",
+  "style": "coach"
+ },
+ {
+  "key": "1k0ncuju",
+  "text": "Start the exercise: Seated cable row.",
+  "style": "coach"
+ },
+ {
+  "key": "1efn17hy",
+  "text": "Start the exercise: Dumbbell chest press.",
+  "style": "coach"
+ },
+ {
+  "key": "j323my11",
+  "text": "Start the exercise: Dumbbell shoulder press.",
+  "style": "coach"
+ },
+ {
+  "key": "8kmx7jp",
+  "text": "Start the exercise: Bicep curl.",
+  "style": "coach"
+ },
+ {
+  "key": "utyshwz",
+  "text": "Start the exercise: Triceps rope pushdown.",
+  "style": "coach"
+ },
+ {
+  "key": "1pkjn6d14",
+  "text": "Start the exercise: Cross-body shoulder stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "wi0q0tx",
+  "text": "Start the exercise: March and arm swings.",
+  "style": "coach"
+ },
+ {
+  "key": "1qrk3ltp",
+  "text": "Start the exercise: Band squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1n0s7hln",
+  "text": "Start the exercise: Band row.",
+  "style": "coach"
+ },
+ {
+  "key": "1vzq67hu",
+  "text": "Start the exercise: Band chest press.",
+  "style": "coach"
+ },
+ {
+  "key": "1dt8inhx",
+  "text": "Start the exercise: Band glute kickback.",
+  "style": "coach"
+ },
+ {
+  "key": "cazvu8t",
+  "text": "Start the exercise: Band pull-apart.",
+  "style": "coach"
+ },
+ {
+  "key": "1jhwhglp",
+  "text": "Start the exercise: Hip hinges.",
+  "style": "coach"
+ },
+ {
+  "key": "7y2fdly",
+  "text": "Start the exercise: Kettlebell deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "mijg8ev",
+  "text": "Start the exercise: Kettlebell swing.",
+  "style": "coach"
+ },
+ {
+  "key": "1hkq9a8k",
+  "text": "Start the exercise: Halo.",
+  "style": "coach"
+ },
+ {
+  "key": "1dwuji6t",
+  "text": "Start the exercise: Suitcase carry.",
+  "style": "coach"
+ },
+ {
+  "key": "1nq875ho",
+  "text": "Start the exercise: Easy walk.",
+  "style": "coach"
+ },
+ {
+  "key": "k4754qp",
+  "text": "Start the exercise: Brisk walk.",
+  "style": "coach"
+ },
+ {
+  "key": "fz5hg3y",
+  "text": "Start the exercise: Easy walk to cool down.",
+  "style": "coach"
+ },
+ {
+  "key": "x7mmo6x",
+  "text": "Start the exercise: Walk at a steady pace.",
+  "style": "coach"
+ },
+ {
+  "key": "1xd6qknp",
+  "text": "Start the exercise: Neck rolls.",
+  "style": "coach"
+ },
+ {
+  "key": "1mjxhmit",
+  "text": "Start the exercise: Shoulder rolls.",
+  "style": "coach"
+ },
+ {
+  "key": "4yj62yr",
+  "text": "Start the exercise: Chair squats.",
+  "style": "coach"
+ },
+ {
+  "key": "1gbchea14",
+  "text": "Start the exercise: Standing hip flexor stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "16q6tuhr",
+  "text": "Start the exercise: Pelvic tilts.",
+  "style": "coach"
+ },
+ {
+  "key": "bc97o1w",
+  "text": "Start the exercise: Single-leg stretch.",
+  "style": "coach"
+ },
+ {
+  "key": "dgfjuqn",
+  "text": "Start the exercise: Toe taps.",
+  "style": "coach"
+ },
+ {
+  "key": "f6lhd3o",
+  "text": "Start the exercise: Swimming.",
+  "style": "coach"
+ },
+ {
+  "key": "1m18jwrz",
+  "text": "Start the exercise: Side-lying leg circles.",
+  "style": "coach"
+ },
+ {
+  "key": "1n0ax9b12",
+  "text": "Start the exercise: Bridge with slow roll-down.",
+  "style": "coach"
+ },
+ {
+  "key": "1sznf5tz",
+  "text": "Start the exercise: Spine twist lying down.",
+  "style": "coach"
+ },
+ {
+  "key": "ckoxyv17",
+  "text": "Start the exercise: Child's pose with slow breathing.",
+  "style": "coach"
+ },
+ {
+  "key": "xh9tcrw",
+  "text": "Start the exercise: Lying spinal twist.",
+  "style": "coach"
+ },
+ {
+  "key": "17rju71t",
+  "text": "Start the exercise: Legs up the wall.",
+  "style": "coach"
+ },
+ {
+  "key": "nts449q",
+  "text": "Start the exercise: Chair squat.",
+  "style": "coach"
+ },
+ {
+  "key": "kbh4c8v",
+  "text": "Start the exercise: Bodyweight squat.",
+  "style": "coach"
+ },
+ {
+  "key": "6xeqkf11",
+  "text": "Start the exercise: Kettlebell goblet squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1gpk5itx",
+  "text": "Start the exercise: Dumbbell sumo squat.",
+  "style": "coach"
+ },
+ {
+  "key": "5uhzax",
+  "text": "Start the exercise: Smith machine squat.",
+  "style": "coach"
+ },
+ {
+  "key": "yl3fjpw",
+  "text": "Start the exercise: Barbell back squat.",
+  "style": "coach"
+ },
+ {
+  "key": "19siuuzu",
+  "text": "Start the exercise: Hip hinge to wall.",
+  "style": "coach"
+ },
+ {
+  "key": "1r46mms15",
+  "text": "Start the exercise: Single-leg Romanian deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "zhglniv",
+  "text": "Start the exercise: Band good morning.",
+  "style": "coach"
+ },
+ {
+  "key": "d9xq6x14",
+  "text": "Start the exercise: Dumbbell Romanian deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "9m8ocdw",
+  "text": "Start the exercise: Cable pull-through.",
+  "style": "coach"
+ },
+ {
+  "key": "v3wl1213",
+  "text": "Start the exercise: Barbell Romanian deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "1q25bsvv",
+  "text": "Start the exercise: Trap-bar deadlift.",
+  "style": "coach"
+ },
+ {
+  "key": "74egz911",
+  "text": "Start the exercise: Step-up onto bottom stair.",
+  "style": "coach"
+ },
+ {
+  "key": "wzi262q",
+  "text": "Start the exercise: Split squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1i01jj0s",
+  "text": "Start the exercise: Lateral lunge.",
+  "style": "coach"
+ },
+ {
+  "key": "cgzkxwu",
+  "text": "Start the exercise: Dumbbell step-up.",
+  "style": "coach"
+ },
+ {
+  "key": "9thdy10",
+  "text": "Start the exercise: Dumbbell reverse lunge.",
+  "style": "coach"
+ },
+ {
+  "key": "1gplbnz",
+  "text": "Start the exercise: Bulgarian split squat.",
+  "style": "coach"
+ },
+ {
+  "key": "1p6kn881d",
+  "text": "Start the exercise: Incline press-up on the kitchen counter.",
+  "style": "coach"
+ },
+ {
+  "key": "1xyoft9r",
+  "text": "Start the exercise: Knee press-up.",
+  "style": "coach"
+ },
+ {
+  "key": "1w8nch4n",
+  "text": "Start the exercise: Press-up.",
+  "style": "coach"
+ },
+ {
+  "key": "15udr1oy",
+  "text": "Start the exercise: Dumbbell floor press.",
+  "style": "coach"
+ },
+ {
+  "key": "17yuac6y",
+  "text": "Start the exercise: Dumbbell bench press.",
+  "style": "coach"
+ },
+ {
+  "key": "1vc80ptx",
+  "text": "Start the exercise: Chest press machine.",
+  "style": "coach"
+ },
+ {
+  "key": "1hhwrf1s",
+  "text": "Start the exercise: Prone Y-T raise.",
+  "style": "coach"
+ },
+ {
+  "key": "dd54r0s",
+  "text": "Start the exercise: Superman pull.",
+  "style": "coach"
+ },
+ {
+  "key": "o8o2fx10",
+  "text": "Start the exercise: Single-arm dumbbell row.",
+  "style": "coach"
+ },
+ {
+  "key": "181qd40t",
+  "text": "Start the exercise: Kettlebell row.",
+  "style": "coach"
+ },
+ {
+  "key": "1g2i2sqz",
+  "text": "Start the exercise: Bent-over dumbbell row.",
+  "style": "coach"
+ },
+ {
+  "key": "11zysf8u",
+  "text": "Start the exercise: Assisted pull-up.",
+  "style": "coach"
+ },
+ {
+  "key": "n8mxqwq",
+  "text": "Start the exercise: Wall slides.",
+  "style": "coach"
+ },
+ {
+  "key": "x3dha7r",
+  "text": "Start the exercise: Pike press-up.",
+  "style": "coach"
+ },
+ {
+  "key": "f6sumax",
+  "text": "Start the exercise: Band overhead press.",
+  "style": "coach"
+ },
+ {
+  "key": "yav77v13",
+  "text": "Start the exercise: Kettlebell overhead press.",
+  "style": "coach"
+ },
+ {
+  "key": "rf9fcnr",
+  "text": "Start the exercise: Arnold press.",
+  "style": "coach"
+ },
+ {
+  "key": "u6er8610",
+  "text": "Start the exercise: Machine shoulder press.",
+  "style": "coach"
+ },
+ {
+  "key": "1l6exu610",
+  "text": "Start the exercise: Single-leg glute bridge.",
+  "style": "coach"
+ },
+ {
+  "key": "7mr6dux",
+  "text": "Start the exercise: Banded glute bridge.",
+  "style": "coach"
+ },
+ {
+  "key": "tm50v7z",
+  "text": "Start the exercise: Dumbbell glute bridge.",
+  "style": "coach"
+ },
+ {
+  "key": "4ot9nwz",
+  "text": "Start the exercise: Banded glute kickback.",
+  "style": "coach"
+ },
+ {
+  "key": "1rq8rqql",
+  "text": "Start the exercise: Plank.",
+  "style": "coach"
+ },
+ {
+  "key": "de8d85r",
+  "text": "Start the exercise: Pallof press.",
+  "style": "coach"
+ },
+ {
+  "key": "fmcy21p",
+  "text": "Start the exercise: Side plank.",
+  "style": "coach"
+ },
+ {
+  "key": "srkxpf18",
+  "text": "Start the exercise: March on the spot holding weights.",
+  "style": "coach"
+ },
+ {
+  "key": "14c3h4gu",
+  "text": "Start the exercise: Fast knee drives.",
+  "style": "coach"
+ },
+ {
+  "key": "mlznkdq",
+  "text": "Start the exercise: Bike sprint.",
+  "style": "coach"
+ },
+ {
+  "key": "1nq7lv7o",
+  "text": "Start the exercise: Easy pace.",
+  "style": "coach"
+ },
+ {
+  "key": "1aorej9y",
+  "text": "Start the exercise: Easy pace to cool down.",
+  "style": "coach"
+ },
+ {
   "key": "l4flk16",
   "text": "Voice guide on. I'll talk you through each technique."
  },

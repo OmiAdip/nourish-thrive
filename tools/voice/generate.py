@@ -1,4 +1,4 @@
-"""Records the Mind tab's lines with Gemini text-to-speech and saves them as MP3s in web/voice/.
+"""Records the Mind tab's and workout player's lines with Gemini text-to-speech and saves them as MP3s in web/voice/.
 Skips lines already recorded, and stops cleanly when the daily free limit is reached,
 so you can simply run it again the next day.
 Env: GEMINI_API_KEY, VOICE_NAME (default Fola), VOICE_STYLE, TTS_MODEL (default gemini-3.8-flash-tts), MAX_LINES."""
@@ -8,6 +8,8 @@ KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 VOICE = os.environ.get("VOICE_NAME", "").strip() or "Fola"
 # Gemini 3.8 TTS reads the text word for word; delivery goes in a short separate style field.
 STYLE = os.environ.get("VOICE_STYLE", "").strip() or "calm, soft and warm, speaking slowly and gently"
+# Workout lines (style "coach" in lines.json): same voice, energetic delivery.
+COACH = "friendly, upbeat and excited, like an encouraging fitness coach, bright and energetic"
 MODEL = os.environ.get("TTS_MODEL", "").strip() or "gemini-3.8-flash-tts"
 MAX = int(os.environ.get("MAX_LINES", "0") or 0)
 DIR = os.path.join(os.path.dirname(__file__), "..", "..", "web", "voice")
@@ -39,10 +41,10 @@ def resolve_voice(name):
         print("Voice lookup skipped:", e)
     return name
 
-def tts(voice, text):
+def tts(voice, text, style):
     body = {"model": MODEL,
             "input": [{"type": "user_input", "content": [{"type": "text", "text": text,
-                       "annotations": [{"type": "speech_metadata", "style": STYLE}]}]}],
+                       "annotations": [{"type": "speech_metadata", "style": style}]}]}],
             "response_format": {"type": "audio", "mime_type": "audio/l16", "sample_rate": 24000},
             "generation_config": {"speech_config": [{"voice": voice}]}}
     out = call(API + "interactions", body)
@@ -79,7 +81,7 @@ for line in todo:
         break
     for attempt in range(4):
         try:
-            pcm, rate = tts(voice, line["text"])
+            pcm, rate = tts(voice, line["text"], COACH if line.get("style") == "coach" else STYLE)
             break
         except urllib.error.HTTPError as e:
             msg = e.read().decode("utf8", "replace")

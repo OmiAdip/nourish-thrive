@@ -1,4 +1,4 @@
-// Lists every line the Mind tab speaks and writes web/voice/lines.json ({key,text}) and
+// Lists every line the Mind tab and the workout player speak and writes web/voice/lines.json ({key,text}) and
 // adds new keys to web/voice/manifest.json as null (= waiting to be recorded).
 // Run: node tools/voice/lines.js   (after changing any Mind text)
 const fs=require('fs'),path=require('path');
@@ -58,9 +58,16 @@ add(["Your thoughts are not facts.","Old beliefs, like I can't do it, were learn
  ["Your new belief.","Make it something you can believe today. A step forward, rather than a giant leap.","Edit the words so they feel like yours."],
  ["Make it stick.","Every morning, it joins your mirror ritual. Say it out loud, looking into your eyes.","Every day, add one piece of proof. Small proof counts... a glass of water, a walk, a kind word to yourself.","When the old thought comes back, notice it, say that's an old thought, and repeat your new belief.","Your new belief is..."]);
 
-const out=new Map();V._parts(L,0).forEach(p=>{if(!out.has(p.k))out.set(p.k,p.t)});
+// Workout coach lines (upbeat style): same text rules as ntSpoken() in web/index.html.
+const spoken=n=>n.replace(/ · (left|right)$/,'').replace(/\s*\(.*?\)/g,'').trim();
+const names=new Set([...html.matchAll(/\{n:"((?:[^"\\]|\\.)+)",(?:s|r|eq):/g)].map(m=>eval('"'+m[1]+'"')).filter(n=>!/^(rest|round rest)/i.test(n)));
+const W=["Stop the exercise.","Take a rest.",...[...names].map(n=>"Start the exercise: "+spoken(n)+".")];
+
+const out=new Map(),coach=new Set();
+V._parts(W,0).forEach(p=>{if(!out.has(p.k)){out.set(p.k,p.t);coach.add(p.k)}});  // first, so they record first
+V._parts(L,0).forEach(p=>{if(!out.has(p.k))out.set(p.k,p.t)});
 const dir=path.join(root,'web/voice');fs.mkdirSync(dir,{recursive:true});
-fs.writeFileSync(path.join(dir,'lines.json'),JSON.stringify([...out].map(([key,text])=>({key,text})),null,1)+'\n');
+fs.writeFileSync(path.join(dir,'lines.json'),JSON.stringify([...out].map(([key,text])=>coach.has(key)?{key,text,style:'coach'}:{key,text}),null,1)+'\n');
 const mp=path.join(dir,'manifest.json');let m={};try{m=JSON.parse(fs.readFileSync(mp,'utf8'))}catch(e){}
 for(const k of out.keys())if(!(k in m))m[k]=null;
 for(const k of Object.keys(m))if(!out.has(k))delete m[k];

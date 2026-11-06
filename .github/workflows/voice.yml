@@ -1,6 +1,6 @@
-name: Record Mind voice (Gemini)
+name: Record voice lines (Gemini)
 
-# Run from the Actions tab. Records Mind lines that don't have audio yet, saves the MP3s
+# Run from the Actions tab. Records Mind and workout lines that don't have audio yet, saves the MP3s
 # to web/voice/ on the branch you run it on, then refreshes the test website.
 # Free Gemini keys have a small daily limit: just run it again the next day to continue.
 on:
@@ -49,7 +49,7 @@ jobs:
           git config user.email "github-actions@users.noreply.github.com"
           git add web/voice
           git diff --cached --quiet && { echo "Nothing new."; exit 0; }
-          git commit -qm "Voice: record Mind lines"
+          git commit -qm "Voice: record lines"
           git push -q
           gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
         env:

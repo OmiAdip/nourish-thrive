@@ -1,0 +1,46 @@
+name: Draw exercise images (Nano Banana 2)
+
+# Run from the Actions tab. Draws the exercise images listed in tools/exercise-art/exercises.json
+# that don't exist yet, in the style of goblet-squat-before/-after.webp, saves them as WebP in
+# web/pages/exercises/, links them in the app, then refreshes the test website.
+# Safe to re-run: finished images are skipped.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Image sets to draw, comma separated (empty = everything still missing)'
+        default: ''
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: exercise-art
+  cancel-in-progress: false
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q pillow==10.4.0
+      - name: Draw
+        env:
+          GEMINI_API_KEY: ${{ secrets.VOICE }}
+          ONLY: ${{ inputs.only }}
+        run: python3 tools/exercise-art/generate.py
+      - name: Save the images
+        if: always()
+        run: |
+          node web/build.js
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add web tools/exercise-art
+          git diff --cached --quiet && { echo "Nothing new."; exit 0; }
+          git commit -qm "Exercises: draw images (Nano Banana 2)"
+          git push -q
+          gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ github.token }}

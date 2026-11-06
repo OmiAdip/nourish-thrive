@@ -47,7 +47,7 @@ jobs:
           git add web tools/exercise-art
           git diff --cached --quiet && { echo "Nothing new."; exit 0; }
           git commit -qm "Exercises: draw images (Nano Banana 2)"
-          git push -q
+          git pull -q --rebase && git push -q  # another workflow may have pushed meanwhile
           gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
         env:
           GH_TOKEN: ${{ github.token }}

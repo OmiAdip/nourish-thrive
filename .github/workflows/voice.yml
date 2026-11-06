@@ -51,7 +51,7 @@ jobs:
           git add web/voice
           git diff --cached --quiet && { echo "Nothing new."; exit 0; }
           git commit -qm "Voice: record lines"
-          git push -q
+          git pull -q --rebase && git push -q  # another workflow may have pushed meanwhile
           gh workflow run test-site.yml --ref "${GITHUB_REF_NAME}"
         env:
           GH_TOKEN: ${{ github.token }}

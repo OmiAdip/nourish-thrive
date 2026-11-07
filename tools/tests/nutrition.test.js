@@ -3,6 +3,7 @@ const fs=require('fs'),assert=require('assert');
 const html=fs.readFileSync(__dirname+'/../../web/index.html','utf8');
 const grab=(name)=>{const i=html.indexOf('function '+name+'(');let d=0,j=html.indexOf('{',i);for(;j<html.length;j++){if(html[j]=='{')d++;else if(html[j]=='}'&&--d===0)break}return html.slice(i,j+1)};
 eval(['ntBalanceDay','ntBalancePlan','ntDayTotals','ntDayError','ntDayOff'].map(grab).join('\n'));
+global.ntCountryInfo=()=>({c:{place:'Ireland'}});
 const fixSrc=html.slice(html.indexOf('async function ntFixPlan('),html.indexOf('\n}\n',html.indexOf('async function ntFixPlan('))+2);eval(fixSrc.replace('async function ntFixPlan','var ntFixPlan=async function'));
 const gate=fs.readFileSync(__dirname+'/../../web/gate.js','utf8');
 const fill=new Function('lsGet','window',gate.slice(gate.indexOf('window.ntTargetFill='),gate.indexOf('  function fixTarget'))+';return window.ntTargetFill')(()=>'{}',{});

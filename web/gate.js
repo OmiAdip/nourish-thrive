@@ -602,6 +602,8 @@
     if(link){
       if(link.access_token){
         try{var u=await userFor(link.access_token);saveSession({access_token:link.access_token,refresh_token:link.refresh_token,expires_in:Number(link.expires_in)||3600,user:u});
+          /* Google login started from the coach panel: hand the session back to it */
+          var adm=Number(lsGet('nt-admin-google'))||0;if(adm){lsDel('nt-admin-google');if(Date.now()-adm<6e5&&link.type!=='recovery'){location.replace(location.pathname.replace(/[^/]*$/,'')+'admin/#from-app');return}}
           if(link.type==='recovery'){showNewPassword();return}
           await enter(u,null);return;
         }catch(e){saveSession(null);showLogin('That link has expired. Log in, or tap “Forgot password?” to get a new link.');return}

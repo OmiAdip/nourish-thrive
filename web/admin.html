@@ -949,14 +949,16 @@ async function squadsCard(el){
 }
 async function leaderboardCard(el){
   var box=document.createElement('div');box.className='card';el.appendChild(box);
-  box.innerHTML='<span class="eyebrow">Leaderboard</span><h2 style="margin:8px 0 4px">Leaderboard, last 7 days</h2><input class="i" id="lbq" placeholder="Search name or email" style="max-width:300px;margin:8px 0"><div id="lbl" class="empty">Loading…</div>';
+  box.innerHTML='<span class="eyebrow">Leaderboard</span><h2 style="margin:8px 0 4px">Leaderboard, last 7 days</h2><form id="lbf" class="row" style="gap:8px;margin:8px 0"><input class="i" id="lbq" type="search" placeholder="Search name or email" style="max-width:300px"><button class="btn sm" id="lbs">Search</button></form><div id="lbl" class="empty">Loading…</div>';
+  /* the squads card loads members at the same time; don't build the board before names and emails are here */
+  if(!state.users||!state.users.length){try{state.users=await rest('POST','rpc/admin_users',{})||[]}catch(e){}}
   var rows=await rest('GET','shared_docs?collection=eq.scores&select=doc_id,data&limit=2000')||[];
   var users={};(state.users||[]).forEach(function(u){users[u.id]=u});
   var weekAgo=new Date(Date.now()-8*864e5).toISOString();
-  var list=rows.map(function(r){var d=r.data||{},u=users[r.doc_id]||{};return {u:u,name:d.name||'Member',email:u.email||'',score:d.updatedAt>=weekAgo?d.score||0:0,streak:d.streak||0,w:d.workouts7||0}}).sort(function(a,b){return b.score-a.score});
+  var list=rows.map(function(r){var d=r.data||{},u=users[r.doc_id]||{};var pn=(u.profile||{}).name;return {u:u,name:(d.name&&d.name!=='Member'?d.name:pn)||d.name||'Member',email:u.email||'',score:d.updatedAt>=weekAgo?d.score||0:0,streak:d.streak||0,w:d.workouts7||0}}).sort(function(a,b){return b.score-a.score});
   function draw(){var q=$('#lbq',box).value.trim().toLowerCase();var shown=list.map(function(x,i){x.rank=i+1;return x}).filter(function(x){return !q||(x.name+' '+x.email).toLowerCase().indexOf(q)>=0});
     $('#lbl',box).className='';$('#lbl',box).innerHTML=shown.length?'<div class="scroll"><table><thead><tr><th>#</th><th>Member</th><th>Points</th><th>Streak</th><th>Workouts</th></tr></thead><tbody>'+shown.map(function(x){return '<tr><td><b>'+x.rank+'</b></td><td><div class="row" style="gap:10px">'+avHtml(x.u,x.name,28)+'<div><b>'+esc(x.name)+'</b><div class="small mut">'+esc(x.email)+'</div></div></div></td><td><b>'+x.score+'</b></td><td>'+x.streak+' days</td><td>'+x.w+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">'+(list.length?'No match.':'No scores yet. They appear once members open the new version of the app.')+'</div>'}
-  $('#lbq',box).oninput=draw;draw();
+  $('#lbq',box).oninput=draw;$('#lbf',box).onsubmit=function(ev){ev.preventDefault();draw()};draw();
 }
 
 

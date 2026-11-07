@@ -244,13 +244,14 @@ async function start(){
   }catch(e){saveSession(null);loginView(e.message);return}
   var h=location.hash.slice(1);
   if(h.indexOf('member-')===0){state.tab='members';state.member=h.slice(7)}
-  else if(['members','library','plans','community','squad','reports'].indexOf(h)>=0)state.tab=h;
+  else if(['members','library','plans','community','squad','reports','admins'].indexOf(h)>=0)state.tab=h;
   render();
 }
 
 /* ---------- shell ---------- */
 function shell(inner){
   var tabs=[['members','Members'],['library','Recipes'],['plans','Training plans'],['squad','Squads & leaderboard'],['community','Community'],['reports','Reports']];
+  if(isMainAdmin())tabs.push(['admins','Admins']);
   app.innerHTML='<header class="top"><div class="top-in"><div class="brand"><img src="'+NT_LOGO+'" alt="DropASize"><small>Coach</small></div>'+
     '<nav class="tabs">'+tabs.map(function(t){return '<button class="tab" data-tab="'+t[0]+'" aria-current="'+(state.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</nav>'+
     '<button class="btn ghost sm" id="mypw">My password</button><button class="btn ghost sm" id="logout">Log out</button></div></header><main class="wrap" id="main">'+inner+'</main>';
@@ -266,6 +267,7 @@ function render(){
   if(state.tab==='library')return libraryView();
   if(state.tab==='plans')return plansView();
   if(state.tab==='reports')return reportsView();
+  if(state.tab==='admins')return adminsView();
 }
 
 /* ---------- members list ---------- */
@@ -1034,16 +1036,24 @@ async function recipesView(){
 }
 
 /* ---------- Calls ---------- */
-async function callsView(){
-  shell('<div class="card"><h2>Booked calls</h2><div id="cl" class="empty">Loading…</div></div>');
-  try{
-    var rows=await db.docs('bookings')||[],all=[];
-    rows.forEach(function(r){var d=r.data||{};(d.items||[]).forEach(function(it){all.push(Object.assign({},it,{name:d.name,phone:d.phone,tier:d.tier,uid:r.doc_id}))})});
-    var up=all.filter(function(x){return new Date(x.at).getTime()>Date.now()-15*6e4}).sort(function(a,b){return String(a.at).localeCompare(String(b.at))});
-    $('#cl').className='';
-    $('#cl').innerHTML=up.length?'<div class="scroll"><table><thead><tr><th>When</th><th>Member</th><th>Phone</th><th>Note</th></tr></thead><tbody>'+up.map(function(x){
-      return '<tr><td>'+esc(new Date(x.at).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))+'</td><td><a href="#member-'+esc(x.uid)+'">'+esc(x.name||'Member')+'</a></td><td>'+(x.phone?'<a href="https://wa.me/'+esc(String(x.phone).replace(/[^0-9]/g,''))+'" target="_blank" rel="noopener">'+esc(x.phone)+'</a>':'–')+'</td><td>'+esc(x.note||x.topic||'')+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">No upcoming calls.</div>';
-  }catch(e){$('#cl').innerHTML='<div class="err">'+esc(e.message)+'</div>'}
+/* ---------- admins (main admin only; the server checks this too, see tools/supabase/admins.sql) ---------- */
+var MAIN_ADMIN='omiadip308@gmail.com';
+function isMainAdmin(){return !!(session&&session.user&&String(session.user.email||'').toLowerCase()===MAIN_ADMIN)}
+async function adminsView(){
+  if(!isMainAdmin()){go('members');return}
+  shell('<div class="card"><h2>Admins</h2><p class="mut" style="margin:4px 0 14px">Admins can use this coach panel and the coach tools in the app. Only you, the main admin, can add or remove them. They need an app account first.</p>'+
+    '<form id="af" class="row" style="gap:8px;margin-bottom:16px"><input class="i" id="ae" type="email" placeholder="their@email.com" required style="flex:1;min-width:200px"><button class="btn" id="ab">Make admin</button></form>'+
+    '<div id="am"></div><div id="al" class="list"><div class="empty">Loading admins…</div></div></div>');
+  async function load(){
+    try{var rows=await rest('POST','rpc/admin_list',{})||[];
+      $('#al').innerHTML=rows.length?rows.map(function(r){return '<div class="row" style="justify-content:space-between;padding:10px 0;border-top:1px solid #E7EAE6"><span>'+esc(r.email)+(r.is_main?' <small class="mut">· main admin</small>':'')+'</span>'+(r.is_main?'':'<button class="btn ghost sm" data-rm="'+esc(r.email)+'">Remove</button>')+'</div>'}).join(''):'<div class="empty">No admins yet.</div>';
+      $$('[data-rm]').forEach(function(b){b.onclick=async function(){if(!confirm('Remove '+b.dataset.rm+' as admin?'))return;b.disabled=true;try{await rest('POST','rpc/admin_set',{p_email:b.dataset.rm,p_admin:false});await load()}catch(e){$('#am').innerHTML='<div class="err">'+esc(e.message)+'</div>';b.disabled=false}}});
+    }catch(e){$('#al').innerHTML='<div class="err">'+esc(/admin_list/.test(e.message)?'The admin tools aren\u2019t set up on the server yet. Run tools/supabase/admins.sql in Supabase first.':e.message)+'</div>'}
+  }
+  $('#af').onsubmit=async function(ev){ev.preventDefault();var b=$('#ab'),em=$('#ae').value.trim().toLowerCase();if(!em)return;b.disabled=true;$('#am').innerHTML='';
+    try{await rest('POST','rpc/admin_set',{p_email:em,p_admin:true});$('#ae').value='';$('#am').innerHTML='<div class="ok">'+esc(em)+' is now an admin.</div>';await load()}
+    catch(e){$('#am').innerHTML='<div class="err">'+esc(e.message)+'</div>'}b.disabled=false};
+  load();
 }
 
 /* ---------- boot ---------- */

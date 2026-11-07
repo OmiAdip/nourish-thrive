@@ -188,7 +188,7 @@
     };
   }
   var dbApi={doc:docRef,collection:function(c){return colRef(c)}};
-  var userApi={id:async function(){return session&&session.user?session.user.id:null},isOwner:async function(){return false},email:async function(){return session&&session.user?session.user.email:null}};
+  var userApi={id:async function(){return session&&session.user?session.user.id:null},isOwner:async function(){return isCoach||String(session&&session.user&&session.user.email||'').toLowerCase()==='omiadip308@gmail.com'},email:async function(){return session&&session.user?session.user.email:null}};
   window.claude={use:async function(name){
     if(name==='db')return dbApi;
     if(name==='user')return userApi;

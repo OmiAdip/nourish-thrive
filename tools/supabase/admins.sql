@@ -1,4 +1,4 @@
--- DropASize admins. Run once: Supabase dashboard -> SQL editor -> New query -> paste all -> Run.
+-- DropASize admins. Applied to project jzctsfvowmuowfxaiayy on 7 Nov 2026 (migration admin_tools). To redo:  Supabase dashboard -> SQL editor -> New query -> paste all -> Run.
 -- An admin is a coach account (profiles.role = 'coach'): they can use the coach panel (/admin)
 -- and the coach tools in the app. Only the main admin below can add or remove admins.
 
@@ -45,6 +45,7 @@ end $$;
 
 revoke all on function public.admin_set(text, boolean) from public, anon;
 revoke all on function public.admin_list() from public, anon;
+revoke all on function public.is_main_admin() from public, anon;
 grant execute on function public.admin_set(text, boolean) to authenticated;
 grant execute on function public.admin_list() to authenticated;
 grant execute on function public.is_main_admin() to authenticated;

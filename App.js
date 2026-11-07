@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { BackHandler, Linking, Platform, StyleSheet } from 'react-native';
+import { AppState, BackHandler, Linking, Platform, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
@@ -69,12 +69,68 @@ async function googleSignIn(url, web) {
   if (web) web.injectJavaScript(`window.ntOAuth&&window.ntOAuth(${JSON.stringify(hash)});true;`);
 }
 
+// Health Connect (Android only): read daily step totals, nothing else.
+// Loaded lazily: the native module is missing in Expo Go and on iPhone.
+function hcLib() {
+  if (Platform.OS !== 'android') return null;
+  try { return require('react-native-health-connect'); } catch { return null; }
+}
+const STEPS = [{ accessType: 'read', recordType: 'Steps' }];
+
+async function hcStatus() {
+  const HC = hcLib();
+  if (!HC) return 'none';
+  try {
+    const s = await HC.getSdkStatus();
+    return s === HC.SdkAvailabilityStatus.SDK_AVAILABLE ? 'ok'
+      : s === HC.SdkAvailabilityStatus.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED ? 'update' : 'none';
+  } catch { return 'none'; }
+}
+
+// Today plus the last 7 days, one total per local day: { 'YYYY-MM-DD': steps }.
+async function hcReadSteps(HC) {
+  const granted = await HC.getGrantedPermissions();
+  if (!granted.some((p) => p.recordType === 'Steps' && p.accessType === 'read')) return { error: 'denied' };
+  const start = new Date(); start.setHours(0, 0, 0, 0); start.setDate(start.getDate() - 7);
+  const rows = await HC.aggregateGroupByPeriod({
+    recordType: 'Steps',
+    timeRangeFilter: { operator: 'between', startTime: start.toISOString(), endTime: new Date().toISOString() },
+    timeRangeSlicer: { period: 'DAYS', length: 1 },
+  });
+  const days = {};
+  rows.forEach((r) => { days[String(r.startTime).slice(0, 10)] = Math.round(Number(r.result && r.result.COUNT_TOTAL) || 0); });
+  return { days, at: Date.now() };
+}
+
+async function healthConnect(action, web) {
+  const send = (r) => web && web.injectJavaScript(`window.ntHCResult&&window.ntHCResult(${JSON.stringify(r)});true;`);
+  const status = await hcStatus();
+  if (action === 'status') return send({ action, status });
+  if (action === 'install') {
+    Linking.openURL('market://details?id=com.google.android.apps.healthdata&url=healthconnect%3A%2F%2Fonboarding').catch(() => {});
+    return send({ action, status });
+  }
+  if (status !== 'ok') return send({ action, status, error: 'unavailable' });
+  const HC = hcLib();
+  try {
+    await HC.initialize();
+    if (action === 'settings') { HC.openHealthConnectSettings(); return send({ action, status }); }
+    // Revoking only takes full effect after the app restarts; the page stops syncing straight away.
+    if (action === 'disconnect') { await HC.revokeAllPermissions().catch(() => {}); return send({ action, status }); }
+    if (action === 'connect') await HC.requestPermission(STEPS);
+    if (action === 'connect' || action === 'sync') return send({ action, status, ...(await hcReadSteps(HC)) });
+  } catch (e) {
+    send({ action, status, error: String((e && e.message) || e).slice(0, 200) });
+  }
+}
+
 async function handleMessage(raw, web) {
   let msg;
   try { msg = JSON.parse(raw); } catch { return; }
   if (!msg || typeof msg.id !== 'string') return;
   if (msg.type === 'pick') { await pickPhoto(msg.id, web); return; }
   if (msg.type === 'google') { await googleSignIn(msg.url, web); return; }
+  if (msg.type === 'hc') { await healthConnect(String(msg.action), web); return; }
   if (msg.type === 'cancel') {
     await Notifications.cancelScheduledNotificationAsync(msg.id).catch(() => {});
     return;
@@ -103,6 +159,14 @@ export default function App() {
         return true;
       }
       return false;
+    });
+    return () => sub.remove();
+  }, []);
+
+  // Back in the foreground: let the page re-sync Health Connect steps if it is connected.
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (st) => {
+      if (st === 'active' && webRef.current) webRef.current.injectJavaScript('window.ntHCForeground&&window.ntHCForeground();true;');
     });
     return () => sub.remove();
   }, []);

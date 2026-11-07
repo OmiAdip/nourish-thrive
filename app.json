@@ -26,7 +26,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "permissions": [
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.health.READ_STEPS"
       ],
       "blockedPermissions": [
         "android.permission.SCHEDULE_EXACT_ALARM",
@@ -47,6 +48,16 @@
           "photosPermission": false,
           "cameraPermission": false,
           "microphonePermission": false
+        }
+      ],
+      "react-native-health-connect",
+      "./plugins/withHealthRationale",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
         }
       ]
     ]

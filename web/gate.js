@@ -392,6 +392,77 @@
     try{await rest('PATCH','profiles?id=eq.'+session.user.id,{display_name:name},{Prefer:'return=minimal'})}catch(e){}
   };
 
+  /* ---------- steps: manual entries vs Health Connect ---------- */
+  // steps-log (what the app shows and scores) = the higher of steps-manual and steps-hc for each day,
+  // so a walk logged by hand and also counted by the watch is never added twice.
+  function readObj(k){try{var v=JSON.parse(lsGet('nt:'+k)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(e){return {}}}
+  function keep120(o){var out={};Object.keys(o).sort().reverse().slice(0,120).forEach(function(k){out[k]=o[k]});return out}
+  function stepMaps(){return {log:readObj('steps-log'),man:readObj('steps-manual'),hc:readObj('steps-hc')}}
+  function saveSteps(m){lsSet('nt:steps-manual',JSON.stringify(keep120(m.man)));lsSet('nt:steps-hc',JSON.stringify(keep120(m.hc)));lsSet('nt:steps-log',JSON.stringify(keep120(m.log)))}
+  // Days logged before this existed have no steps-manual entry: their steps-log value was all manual.
+  function manualOf(m,d){return d in m.man?Number(m.man[d])||0:d in m.hc?0:Number(m.log[d])||0}
+  /* Every manual step entry goes through here (set = replace the day's total, else add). Returns the steps-log map. */
+  window.ntStepsWrite=async function(d,v,set){
+    var m=stepMaps();
+    m.man[d]=Math.max(0,Math.min(6e4,(set?0:manualOf(m,d))+(Number(v)||0)));
+    m.log[d]=Math.max(m.man[d],Number(m.hc[d])||0);
+    saveSteps(m);
+    return m.log;
+  };
+  function applyHealthSteps(days){
+    var m=stepMaps(),changed={};
+    Object.keys(days||{}).forEach(function(d){
+      if(!/^\d{4}-\d\d-\d\d$/.test(d))return;
+      var n=Math.max(0,Math.min(1e5,Math.round(Number(days[d])||0)));
+      if(!(d in m.man)&&!(d in m.hc)&&d in m.log)m.man[d]=Number(m.log[d])||0;
+      m.hc[d]=n;
+      var eff=Math.max(Number(m.man[d])||0,n);
+      if((Number(m.log[d])||0)!==eff||!(d in m.log)){m.log[d]=eff;changed[d]=eff}
+    });
+    saveSteps(m);
+    if(Object.keys(changed).length){
+      // refresh open screens only after the Squad copy is saved, so they never reload a stale one
+      Promise.resolve(window.ntPushSteps&&window.ntPushSteps(changed)).catch(function(){}).then(function(){try{window.dispatchEvent(new Event('nt-steps'))}catch(e){}});
+    }
+  }
+
+  /* ---------- Health Connect (Android app only) ---------- */
+  // The connection is a setting on this phone only (never synced): {uid,on,last}.
+  var HC_KEY='nthc',hcAvail='',hcBusy=false,hcLastAuto=0;
+  function hcSaved(){var s=null;try{s=JSON.parse(lsGet(HC_KEY)||'null')}catch(e){}return s&&session&&session.user&&s.uid===session.user.id?s:null}
+  function hcSet(s){if(s)lsSet(HC_KEY,JSON.stringify(s));else lsDel(HC_KEY);hcEmit()}
+  function hcEmit(){try{window.dispatchEvent(new Event('nt-hc'))}catch(e){}}
+  function hcPost(action){if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(JSON.stringify({type:'hc',id:'hc',action:action}))}
+  function hcOn(){var s=hcSaved();return !!(s&&s.on&&hcAvail==='ok')}
+  window.ntHC={
+    avail:function(){return hcAvail},  // 'ok', 'update' (Health Connect needs installing/updating) or '' (web, iPhone, unsupported)
+    state:function(){var s=hcSaved();return {on:hcOn(),last:s&&s.last||0,busy:hcBusy}},
+    connect:function(){if(hcAvail==='update'){hcPost('install');return}hcBusy=true;hcEmit();hcPost('connect')},
+    sync:function(){if(!hcOn()||hcBusy)return;hcBusy=true;hcEmit();hcPost('sync')},
+    disconnect:function(){hcSet(null);hcPost('disconnect');window.ntToast('Disconnected. Steps you already imported stay.')},
+    settings:function(){hcPost('settings')}
+  };
+  window.ntHCResult=function(r){
+    if(!r)return;
+    if(r.status)hcAvail=r.status==='none'?'':r.status;
+    if(r.action==='connect'||r.action==='sync'){
+      hcBusy=false;
+      var was=hcSaved();
+      if(r.days&&session&&(r.action==='connect'||(was&&was.on))){
+        applyHealthSteps(r.days);
+        hcSet({uid:session.user.id,on:true,last:r.at||Date.now()});
+        if(r.action==='connect')window.ntToast('Health Connect connected. Steps synced.');
+      }else if(r.error==='denied'){
+        if(was&&was.on){hcSet(null);window.ntToast('Health Connect access was turned off. Connect again to sync steps.')}
+        else window.ntToast('Steps access wasn\u2019t allowed, so nothing was imported.');
+      }else if(r.error&&r.action==='connect')window.ntToast('Couldn\u2019t connect to Health Connect. Please try again.');
+    }
+    hcEmit();
+    if(r.action==='status'&&hcOn())window.ntHC.sync();
+  };
+  window.ntHCForeground=function(){if(window.ReactNativeWebView&&hcAvail!=='ok'){hcPost('status');return}if(hcOn()&&Date.now()-hcLastAuto>30000){hcLastAuto=Date.now();window.ntHC.sync()}};
+  function hcBoot(){if(window.ReactNativeWebView){hcLastAuto=Date.now();hcPost('status')}}
+
   /* Hooks the app calls on Log out and Delete account. */
   window.ntSignOut=async function(){
     try{await flush()}catch(e){}
@@ -471,6 +542,7 @@
     window.ntSessionEmail=user.email;
     await Promise.all([loadRole(),loadLibrary(),loadAvatar()]);
     startApp();
+    setTimeout(hcBoot,600);
     setTimeout(showCoachNotes,1500);
     setTimeout(publishScore,4000);
   }
@@ -613,7 +685,7 @@
     if(session&&session.user){
       try{await token();await enter(session.user,null);return}
       catch(e){
-        if(/Failed to fetch|network/i.test(String(e&&e.message))&&lsGet(OWNER_KEY)===session.user.id){try{window.ntLibrary=JSON.parse(lsGet('ntlib')||'[]')}catch(x){}startApp();return}
+        if(/Failed to fetch|network/i.test(String(e&&e.message))&&lsGet(OWNER_KEY)===session.user.id){try{window.ntLibrary=JSON.parse(lsGet('ntlib')||'[]')}catch(x){}startApp();setTimeout(hcBoot,600);return}
         saveSession(null);showLogin('Please log in again.');return;
       }
     }

@@ -58,15 +58,8 @@ add(["Your thoughts are not facts.","Old beliefs, like I can't do it, were learn
  ["Your new belief.","Make it something you can believe today. A step forward, rather than a giant leap.","Edit the words so they feel like yours."],
  ["Make it stick.","Every morning, it joins your mirror ritual. Say it out loud, looking into your eyes.","Every day, add one piece of proof. Small proof counts... a glass of water, a walk, a kind word to yourself.","When the old thought comes back, notice it, say that's an old thought, and repeat your new belief.","Your new belief is..."]);
 
-// Workout coach lines (upbeat style): same text rules as ntSpoken() in web/index.html.
-const spoken=n=>n.replace(/ · (left|right)$/,'').replace(/\s*\(.*?\)/g,'').trim();
-const unq=m=>eval('"'+m+'"');
-const names=new Set([
-  ...[...html.matchAll(/\{n:"((?:[^"\\]|\\.)+)",(?:s|r|eq):/g)].map(m=>unq(m[1])),
-  ...[...html.matchAll(/\{n:o\?"((?:[^"\\]|\\.)+)":"((?:[^"\\]|\\.)+)",/g)].flatMap(m=>[unq(m[1]),unq(m[2])]),  // LISS picks by gym/home
-  ...eval(html.match(/fi=(\["Push-up".*?\])/)[1])  // Create your own / Log a workout pick list
-].filter(n=>!/^(rest|round rest)/i.test(n)));
-const W=["Voice guide on. Let's get moving!","Start the exercise.","Stop the exercise.","Take a rest.",...[...names].map(n=>"Start the exercise: "+spoken(n)+".")];
+// Workout coach lines (upbeat style). The exercise name after "Start the exercise." is read by the phone voice.
+const W=["Voice guide on. Let's get moving!","Start the exercise.","Stop the exercise.","Take a rest."];
 
 const out=new Map(),coach=new Set();
 V._parts(W,0).forEach(p=>{if(!out.has(p.k)){out.set(p.k,p.t);coach.add(p.k)}});  // first, so they record first

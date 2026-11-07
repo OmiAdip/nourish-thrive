@@ -636,7 +636,7 @@
   var bridge=!synth&&window.ReactNativeWebView&&window.ReactNativeWebView.postMessage?window.ReactNativeWebView:null;
   var FEMALE=/female|woman|serena|kate|stephanie|martha|moira|fiona|tessa|karen|samantha|victoria|allison|\bava\b|susan|\bzoe\b|catherine|hazel|libby|sonia|maisie|\bmia\b|abbi|bella|hollie|olivia|emma|\baria\b|jenny|michelle|natasha|clara|veena|isha|neerja|heera|kalpana|lekha|\bamy\b|joanna|salli|kimberly|\bivy\b|kendra|nicole|emily|ellie|\bsara\b|nora|zira|\beva\b|linda|heather|kathy|vicki|x-(gba|gbc|gbg|sfg|iob|iog|tpc|tpf|ahp|cxx)/i;
   var MALE=/\bmale\b|daniel|arthur|oliver|\bfred\b|\balex\b|aaron|rishi|george|ryan|thomas|\bguy\b|brian|matthew|justin|joey|\bravi\b|prabhat|\bdavid\b|\bmark\b|james|william|\btom\b|reed|rocko|eddy|grandpa|ralph|albert|bruce|junior|gordon|lee\b|x-(gbb|gbd|rjs|iol|iom|tpd|ene|end)/i;
-  var CUES={'breathe in':'Breathe in','hold':'Hold','breathe out':'And breathe out','hold softly':'Hold softly','slow exhale':'Slowly, breathe out','little top-up sip':'One more little sip','looong exhale':'Long, slow breath out','looooong slow exhale':'Long, slow breath out'};
+  var CUES={'breathe in':'Breathe in','hold':'Hold','breathe out':'And breathe out','hold softly':'Hold softly','slow exhale':'Slowly, breathe out','little top-up sip':'Sip','looong exhale':'Long, slow breath out','looooong slow exhale':'Long, slow breath out'};
   var KEEP={NLP:1,EFT:1,GP:1,UK:1,CBT:1,OK:1};
   var voice=null,isFemale=false,token=0,busy=false,timer=null,manifest=null,audio=null;
 
@@ -729,14 +729,14 @@
     if(pr&&pr.catch)pr.catch(function(){if(fired)return;fired=true;sayDevice(text,rate,done)});
   }
   /* m[k] = "file.mp3" recorded, null = waiting to be recorded, missing = not recordable (skip). */
-  function say(p,rate,done){
-    if(manifest){
+  function say(p,rate,done,dev){
+    if(manifest&&!dev){  /* dev: phone voice on purpose (e.g. an exercise name) */
       if(manifest[p.k])return sayClip(manifest[p.k],p.t,rate,done);
       if(!(p.k in manifest))return done();
     }
     sayDevice(p.t,rate,done);
   }
-  /* speak(lines,{onend,gap,rate,soft,force}) -> true if it started speaking */
+  /* speak(lines,{onend,gap,rate,soft,force,device}) -> true if it started speaking */
   function speak(lines,o){
     o=o||{};
     if(!synth&&!bridge&&!window.Audio)return false;
@@ -751,7 +751,7 @@
       if(my!==token)return;
       if(i>=list.length){busy=false;if(o.onend)o.onend();return}
       var p=list[i++];
-      say(p,rate,function(){if(my!==token)return;timer=setTimeout(next,p.pause)});
+      say(p,rate,function(){if(my!==token)return;timer=setTimeout(next,p.pause)},o.device);
     },80);
     return true;
   }

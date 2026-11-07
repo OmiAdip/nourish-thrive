@@ -1,1 +1,1 @@
-429 {"error":{"message":"Rate limit exceeded for model gemini-3.8-flash-tts (limit: 10 requests per minute on Tier 1). Please retry in 2s or upgrade your tier at https://ai.dev/rate-limit.","code":"too_many_requests"}}
+429 {"error":{"message":"Rate limit exceeded for model gemini-3.8-flash-tts (limit: 10 requests per minute on Tier 1). Please retry in 51s or upgrade your tier at https://ai.dev/rate-limit.","code":"too_many_requests"}}

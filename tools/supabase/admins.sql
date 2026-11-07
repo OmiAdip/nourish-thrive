@@ -48,3 +48,6 @@ revoke all on function public.admin_list() from public, anon;
 grant execute on function public.admin_set(text, boolean) to authenticated;
 grant execute on function public.admin_list() to authenticated;
 grant execute on function public.is_main_admin() to authenticated;
+
+-- Make the API see the new functions straight away.
+notify pgrst, 'reload schema';

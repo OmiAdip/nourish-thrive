@@ -1041,12 +1041,16 @@ var MAIN_ADMIN='omiadip308@gmail.com';
 function isMainAdmin(){return !!(session&&session.user&&String(session.user.email||'').toLowerCase()===MAIN_ADMIN)}
 async function adminsView(){
   if(!isMainAdmin()){go('members');return}
-  shell('<div class="card"><h2>Admins</h2><p class="mut" style="margin:4px 0 14px">Admins can use this coach panel and the coach tools in the app. Only you, the main admin, can add or remove them. They need an app account first.</p>'+
+  shell('<div class="card"><h2>Admins</h2><p class="mut" style="margin:4px 0 14px">Admins can use this coach panel and the coach tools in the app. Only you, the main admin, can add or remove them. They need an app account first. Adding someone doesn\u2019t send an email; use \u201cSend password email\u201d if they don\u2019t have a password yet.</p>'+
     '<form id="af" class="row" style="gap:8px;margin-bottom:16px"><input class="i" id="ae" type="email" placeholder="their@email.com" required style="flex:1;min-width:200px"><button class="btn" id="ab">Make admin</button></form>'+
     '<div id="am"></div><div id="al" class="list"><div class="empty">Loading admins…</div></div></div>');
   async function load(){
     try{var rows=await rest('POST','rpc/admin_list',{})||[];
-      $('#al').innerHTML=rows.length?rows.map(function(r){return '<div class="row" style="justify-content:space-between;padding:10px 0;border-top:1px solid #E7EAE6"><span>'+esc(r.email)+(r.is_main?' <small class="mut">· main admin</small>':'')+'</span>'+(r.is_main?'':'<button class="btn ghost sm" data-rm="'+esc(r.email)+'">Remove</button>')+'</div>'}).join(''):'<div class="empty">No admins yet.</div>';
+      $('#al').innerHTML=rows.length?rows.map(function(r){return '<div class="row" style="justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid #E7EAE6"><span>'+esc(r.email)+(r.is_main?' <small class="mut">· main admin</small>':'')+(r.has_password===false?'<br><small class="mut">No password yet (signs in with Google). Send a password email so they can log in here.</small>':'')+'</span>'+
+        '<span class="row" style="gap:6px">'+(r.is_main?'':'<button class="btn ghost sm" data-pw="'+esc(r.email)+'">Send password email</button><button class="btn ghost sm" data-rm="'+esc(r.email)+'">Remove</button>')+'</span></div>'}).join(''):'<div class="empty">No admins yet.</div>';
+      $$('[data-pw]').forEach(function(b){b.onclick=async function(){b.disabled=true;$('#am').innerHTML='';
+        try{await auth('recover?redirect_to='+encodeURIComponent('https://omiadip.github.io/nourish-thrive/'),{email:b.dataset.pw});$('#am').innerHTML='<div class="ok">Password email sent to '+esc(b.dataset.pw)+'. The link opens the app to set a password, then they can log in here.</div>'}
+        catch(e){$('#am').innerHTML='<div class="err">'+esc(/rate|seconds|too many/i.test(e.message)?'Please wait a minute before sending another email to this address.':e.message)+'</div>'}b.disabled=false}});
       $$('[data-rm]').forEach(function(b){b.onclick=async function(){if(!confirm('Remove '+b.dataset.rm+' as admin?'))return;b.disabled=true;try{await rest('POST','rpc/admin_set',{p_email:b.dataset.rm,p_admin:false});await load()}catch(e){$('#am').innerHTML='<div class="err">'+esc(e.message)+'</div>';b.disabled=false}}});
     }catch(e){$('#al').innerHTML='<div class="err">'+esc(/admin_list/.test(e.message)?'The admin tools aren\u2019t set up on the server yet. Run tools/supabase/admins.sql in Supabase first.':e.message)+'</div>'}
   }

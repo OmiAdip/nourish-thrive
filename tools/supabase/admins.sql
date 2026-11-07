@@ -11,11 +11,13 @@ $$;
 update public.profiles set role = 'coach'
 where id in (select id from auth.users where lower(email) = 'omiadip308@gmail.com');
 
--- Everyone with coach access, main admin first.
-create or replace function public.admin_list()
-returns table(email text, is_main boolean)
+-- Everyone with coach access, main admin first, and whether they have a password (Google-only accounts don't).
+drop function if exists public.admin_list();
+create function public.admin_list()
+returns table(email text, is_main boolean, has_password boolean)
 language sql stable security definer set search_path = public, auth as $$
-  select u.email::text, lower(u.email) = 'omiadip308@gmail.com'
+  select u.email::text, lower(u.email) = 'omiadip308@gmail.com',
+         coalesce(u.encrypted_password, '') <> ''
   from auth.users u join public.profiles p on p.id = u.id
   where p.role = 'coach' and (public.is_main_admin() or public.is_coach())
   order by 2 desc, 1

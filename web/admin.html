@@ -543,7 +543,9 @@ function tabMind(M,el){
   if(Object.keys(hh).length)html+=section('Daily habits','Water is in glasses (goal 12 a day).','<div class="scroll"><table><thead><tr><th>Date</th><th>Water</th><th>Other habits</th></tr></thead><tbody>'+
     Object.keys(hh).sort().reverse().slice(0,30).map(function(x){var v=obj(hh[x]),o=Object.keys(v).filter(function(k){return k!=='water'&&v[k]});return '<tr><td>'+esc(fmtDate(x))+'</td><td>'+(v.water?'💧 '+v.water:'<span class="mut">–</span>')+'</td><td>'+(o.length?esc(o.map(words).join(', ')):'<span class="mut">–</span>')+'</td></tr>'}).join('')+'</tbody></table></div>');
   var fh=arr(d['fasting-history']);
-  if(fh.length){var tot=fh.reduce(function(a,x){return a+(num(x.hours)||0)},0);html+=section('Fasting','',kvGrid([['Fasts completed',String(fh.length)],['Total hours fasted',(Math.round(tot*10)/10)+' h'],['Average fast',(Math.round(tot/fh.length*10)/10)+' h'],['Longest fast',Math.max.apply(null,fh.map(function(x){return num(x.hours)||0}))+' h']])+'<div style="margin-top:12px">'+pretty(fh)+'</div>')}
+  // same rule as the app: under 15 min = cancelled, reached target = completed, otherwise ended early
+  var fst=function(x){return x.status||((num(x.hours)||0)<.25?'cancelled':(num(x.hours)||0)>=(num(x.target)||0)?'completed':'ended-early')},fc=fh.filter(function(x){return fst(x)!=='cancelled'});
+  if(fh.length){var tot=fc.reduce(function(a,x){return a+(num(x.hours)||0)},0);html+=section('Fasting','',kvGrid([['Fasts completed',String(fh.filter(function(x){return fst(x)==='completed'}).length)],['Ended early',String(fh.filter(function(x){return fst(x)==='ended-early'}).length)],['Cancelled',String(fh.length-fc.length)],['Total hours fasted',(Math.round(tot*10)/10)+' h'],['Average fast',fc.length?(Math.round(tot/fc.length*10)/10)+' h':'\u2013'],['Longest fast',Math.max.apply(null,fh.map(function(x){return num(x.hours)||0}))+' h']])+'<div style="margin-top:12px">'+pretty(fh)+'</div>')}
   var shown=0;
   MIND_KEYS.forEach(function(m){if(d[m[0]]!==undefined){html+=section(m[1],m[2],pretty(d[m[0]]));shown++}});
   // anything else the app saved that isn't shown elsewhere

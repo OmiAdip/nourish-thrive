@@ -129,7 +129,8 @@
   async function loadLibrary(){
     try{
       var rows=await rest('GET','recipes?published=eq.true&select=id,title,meal,cuisine,minutes,kcal,protein,carbs,fat,tags,ingredients,steps,image_url,image_credit&order=title.asc&limit=2000');
-      if(Array.isArray(rows)){window.ntLibrary=rows.map(libRow);try{rawSet.call(localStorage,'ntlib',JSON.stringify(window.ntLibrary))}catch(e){}}
+      // placeholder content never reaches members, even if it was published by mistake
+      if(Array.isArray(rows)){window.ntLibrary=rows.filter(function(r){return !/^\s*(test|testing)\s*$/i.test(r.title||'')}).map(libRow);try{rawSet.call(localStorage,'ntlib',JSON.stringify(window.ntLibrary))}catch(e){}}
     }catch(e){try{window.ntLibrary=JSON.parse(lsGet('ntlib')||'[]')}catch(x){}}
   }
 

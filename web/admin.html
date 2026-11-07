@@ -200,6 +200,17 @@ async function rest(method,path,body,extra){
   var txt=await r.text();return txt?JSON.parse(txt):null;
 }
 function enc(v){return encodeURIComponent(v)}
+/* What a recipe needs before members can see it (mirrors the database rule in tools/supabase/2026-11-07-recipe-checks.sql). */
+function recipeProblem(d){
+  if(!d.published)return '';
+  if(/^\s*(test|testing)\s*$/i.test(d.title||''))return 'That looks like a test title. Rename it or leave it unpublished.';
+  if(!(d.kcal>0&&d.kcal<=5000))return 'Add the calories (per serving) before publishing.';
+  if(d.protein==null||!(d.protein>=0))return 'Add the protein (g) before publishing.';
+  if(!(d.minutes>0))return 'Add the time in minutes before publishing.';
+  if(!(d.ingredients||[]).length||!(d.steps||[]).length)return 'Add ingredients and steps before publishing.';
+  if(d.carbs!=null&&d.fat!=null&&Math.abs(4*d.protein+4*d.carbs+9*d.fat-d.kcal)>Math.max(60,d.kcal*.25))return 'Calories don\u2019t match protein, carbs and fat (4/4/9 kcal per g). Check the numbers.';
+  return '';
+}
 var db={
   // Coaches read member data only through coach_user_data (database-enforced: consent; food diary, cycle data and photos stay private)
   userKeys:async function(uid){return ((await rest('POST','rpc/coach_user_data',{p_user:uid}))||[]).map(function(r){return {key:r.key,updated_at:r.updated_at}})},
@@ -780,8 +791,9 @@ async function libraryView(){
     if(h.indexOf('title')<0){toast('The first row must have column names, including "title"');return}
     var recs=[],bad=0,seen={};
     rows.slice(1).forEach(function(c){var r=csvToRecipe(h,c);if(!r){bad++;return}if(seen[r.id])r.id=r.id+'-'+recs.length;seen[r.id]=1;recs.push(r)});
+    var drafts=0;recs.forEach(function(r){if(recipeProblem(r)){r.published=false;drafts++}});
     var existing=recs.filter(function(r){return lib.rows.some(function(x){return x.id===r.id})}).length;
-    if(!confirm('Import '+recs.length+' recipes?'+(existing?'\n\n'+existing+' have the same name as recipes already in the library and will be updated.':'')+(bad?'\n\n'+bad+' rows were skipped (no title).':'')))return;
+    if(!confirm('Import '+recs.length+' recipes?'+(existing?'\n\n'+existing+' have the same name as recipes already in the library and will be updated.':'')+(bad?'\n\n'+bad+' rows were skipped (no title).':'')+(drafts?'\n\n'+drafts+' are missing nutrition, time, ingredients or steps (or look like tests) and will be saved unpublished.':'')))return;
     try{
       for(var i=0;i<recs.length;i+=100)await rest('POST','recipes?on_conflict=id',recs.slice(i,i+100),{Prefer:'resolution=merge-duplicates,return=minimal'});
       toast('Imported '+recs.length+' recipes');await loadLib();draw();
@@ -840,6 +852,7 @@ function recipeEditor(rec,done){
     var data={title:title,meal:$('#em').value,cuisine:$('#ec').value.trim()||null,minutes:num($('#emin').value),kcal:num($('#ek').value),protein:num($('#ep').value),carbs:num($('#ecb').value),fat:num($('#ef').value),
       tags:$('#eg').value.split(/[;,]/).map(function(x){return x.trim().toLowerCase()}).filter(Boolean),ingredients:lines($('#ei').value),steps:lines($('#es').value),published:$('#ev').checked};
     ['minutes','kcal'].forEach(function(k){if(data[k]!=null)data[k]=Math.round(data[k])});
+    var why=recipeProblem(data);if(why){toast(why);return}
     var id=rec.id||slug(title);if(isNew&&lib.rows.some(function(r){return r.id===id}))id=id+'-'+Date.now().toString(36).slice(-4);
     this.disabled=true;
     try{

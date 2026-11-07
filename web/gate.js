@@ -514,14 +514,20 @@
   };
 
   /* ---------- login screen ---------- */
+  /* The one rule for carbs and fat when only calories and protein are set; every target writer uses it. */
+  window.ntTargetFill=function(t,pr){
+    t=Object.assign({},t||{});if(!t.calories)return t;
+    if(!pr)try{pr=JSON.parse(lsGet('nt:profile')||'{}')}catch(e){pr={}}
+    var sh={'low carb':.25,'high fat':.2}[(pr&&pr.style)||t.style]||.5,left=Math.max(0,t.calories-(Number(t.protein)||0)*4);
+    if(t.carbs==null)t.carbs=Math.round(left*sh/4);
+    if(t.fat==null)t.fat=Math.round(left*(1-sh)/9);
+    return t;
+  };
   function fixTarget(){
     try{
       var t=JSON.parse(lsGet('nt:daily-target')||'null');
       if(!t||!t.calories||(t.carbs!=null&&t.fat!=null))return;
-      var pr=JSON.parse(lsGet('nt:profile')||'{}'),sh={'low carb':.25,'high fat':.2}[pr.style]||.5,left=Math.max(0,t.calories-(Number(t.protein)||0)*4);
-      if(t.carbs==null)t.carbs=Math.round(left*sh/4);
-      if(t.fat==null)t.fat=Math.round(left*(1-sh)/9);
-      localStorage.setItem('nt:daily-target',JSON.stringify(t));
+      localStorage.setItem('nt:daily-target',JSON.stringify(window.ntTargetFill(t)));
     }catch(e){}
   }
   function startApp(){

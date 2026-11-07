@@ -201,9 +201,10 @@ async function rest(method,path,body,extra){
 }
 function enc(v){return encodeURIComponent(v)}
 var db={
-  userKeys:function(uid){return rest('GET','user_data?user_id=eq.'+uid+'&select=key,updated_at&order=key')},
+  // Coaches read member data only through coach_user_data (database-enforced: consent; food diary, cycle data and photos stay private)
+  userKeys:async function(uid){return ((await rest('POST','rpc/coach_user_data',{p_user:uid}))||[]).map(function(r){return {key:r.key,updated_at:r.updated_at}})},
   userGet:async function(uid,keys){
-    var rows=await rest('GET','user_data?user_id=eq.'+uid+'&key=in.('+enc(keys.map(function(k){return '"'+k.replace(/"/g,'')+'"'}).join(','))+')&select=key,value,updated_at');
+    var rows=await rest('POST','rpc/coach_user_data',{p_user:uid,p_keys:keys});
     var out={};(rows||[]).forEach(function(r){out[r.key]=parseVal(r.value)});return out;
   },
   userSet:function(uid,key,val){return rest('POST','user_data?on_conflict=user_id,key',[{user_id:uid,key:key,value:typeof val==='string'?val:JSON.stringify(val)}],{Prefer:'resolution=merge-duplicates,return=minimal'})},
@@ -399,10 +400,8 @@ async function memberView(uid,tab){
     if(!state.users){state.users=await rest('POST','rpc/admin_users',{});await signAvatars(state.users)}
     user=(state.users||[]).find(function(u){return u.id===uid});
     if(!user){$('#mv').innerHTML='<div class="card err">Member not found.</div>';return}
-    rows=await rest('GET','user_data?user_id=eq.'+uid+'&key=neq.progress-photos&select=key,value,updated_at')||[];
+    rows=await rest('POST','rpc/coach_user_data',{p_user:uid})||[];
     rows.forEach(function(r){data[r.key]=parseVal(r.value);meta[r.key]=r.updated_at});
-    var ph=await rest('GET','user_data?user_id=eq.'+uid+'&key=eq.progress-photos&select=key,updated_at');
-    if(ph&&ph.length)meta['progress-photos']=ph[0].updated_at;
   }catch(e){$('#mv').innerHTML='<div class="card err">'+esc(e.message)+'</div>';return}
   var M={uid:uid,user:user,data:data,meta:meta};
   var p=obj(data.profile);
@@ -450,8 +449,7 @@ function tabOverview(M,el){
   };
   $('#ps').onclick=async function(){
     this.disabled=true;
-    try{var fresh=obj((await db.userGet(M.uid,['profile'])).profile);var np=Object.assign({},fresh,{goal:$('#pg').value.trim()||fresh.goal,tier:$('#pt').value,maintenance:$('#pm').checked});
-      await db.userSet(M.uid,'profile',np);M.data.profile=np;M.user.profile=np;toast('Saved')}catch(e){toast(e.message)}
+    try{var fresh=obj((await db.userGet(M.uid,['profile'])).profile);var np=await rest('POST','rpc/coach_patch_profile',{p_user:M.uid,p_patch:{goal:$('#pg').value.trim()||fresh.goal,tier:$('#pt').value,maintenance:$('#pm').checked}});M.data.profile=np;M.user.profile=np;toast('Saved')}catch(e){toast(e.message)}
     this.disabled=false;
   };
 }
@@ -466,7 +464,7 @@ function tabProgress(M,el){
   html+=section('Last 4 weeks','Each square is a day. Green means they used the app that day.','<div class="calg">'+cells+'</div>');
   html+=section('Daily close','How they felt at the end of each day.',refl.length?'<div class="scroll"><table><thead><tr><th>Date</th><th>Mood</th><th>Energy</th><th>Cravings</th><th>Win</th><th>Struggle</th></tr></thead><tbody>'+
     refl.slice().reverse().slice(0,30).map(function(r){return '<tr><td>'+show(r.date)+'</td><td>'+show(r.mood,'mood')+'</td><td>'+show(r.energy)+'</td><td>'+show(r.cravings)+'</td><td>'+show(r.win)+'</td><td>'+show(r.struggle)+'</td></tr>'}).join('')+'</tbody></table></div>':'<div class="empty">Nothing yet.</div>');
-  html+=section('Before and after photos','',M.meta['progress-photos']?'<button class="btn ghost sm" id="ph">Show photos</button><div id="phs"></div>':'<div class="empty">No photos yet.</div>');
+  html+=section('Before and after photos','','<div class="empty">Progress photos are private to the member.</div>');
   el.innerHTML=html;
   var b=$('#ph');if(b)b.onclick=async function(){
     this.disabled=true;this.textContent='Loading photos…';

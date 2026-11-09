@@ -1,1 +1,1 @@
-rest,romanian-deadlift,mountain-climbers,plank
+barbell-back-squat,smith-machine-squat

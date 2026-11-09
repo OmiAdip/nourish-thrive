@@ -1,129 +1,980 @@
 {
  "_note": "One entry per image set. file = image name base (<file>-before/-after.webp, or <file>-before.webp alone when hold). names = every app exercise name shown with it. before/after = pose descriptions for the generator (empty for sets drawn by hand). Skipped on purpose: classes, walks and cardio machines (Easy walk, Brisk walk, Walk it off, Walk at a steady pace, Easy walk to cool down, Cross-trainer or brisk walk, Bike or cross-trainer, Bike sprint, Rower, Easy pace, Easy pace to cool down).",
  "sets": [
-  {"file":"march-on-the-spot","names":["March on the spot","March and arm swings"]},
-  {"file":"sit-to-stand-squat","names":["Sit-to-stand squat","Chair squats","Chair squat"]},
-  {"file":"wall-press-up","names":["Wall press-up"]},
-  {"file":"glute-bridge","names":["Glute bridge","Banded glute bridge","Dumbbell glute bridge","Bridge with slow roll-down"]},
-  {"file":"bird-dog","names":["Bird dog"]},
-  {"file":"standing-knee-lifts","names":["Standing knee lifts"]},
-  {"file":"hamstring-stretch","hold":true,"names":["Hamstring stretch"]},
-  {"file":"chest-opener-stretch","hold":true,"names":["Chest opener stretch"]},
-  {"file":"cat-cow","names":["Cat–cow"]},
-  {"file":"world-s-greatest-stretch","names":["World's greatest stretch"]},
-  {"file":"hip-circles","names":["Hip circles"]},
-  {"file":"slow-march-with-deep-breaths","names":["Slow march with deep breaths","Slow march and breathe"]},
-  {"file":"arm-swings","names":["Arm swings"]},
-  {"file":"inchworm","names":["Inchworm"]},
-  {"file":"goblet-squat","names":["Goblet squat","Kettlebell goblet squat","Goblet or barbell squat"]},
-  {"file":"reverse-lunge","names":["Reverse lunge","Dumbbell reverse lunge"]},
-  {"file":"dead-bug","names":["Dead bug"]},
-  {"file":"quad-stretch","hold":true,"names":["Quad stretch"]},
-  {"file":"child-s-pose","hold":true,"names":["Child's pose","Child's pose with slow breathing"]},
-  {"file":"lat-pulldown","names":["Lat pulldown"]},
-  {"file":"step-ups","names":["Step-ups","Dumbbell step-up","Step-up onto bottom stair"]},
-  {"file":"farmer-s-carry","names":["Farmer's carry","March on the spot holding weights"]},
-  {"file":"hip-flexor-stretch","hold":true,"names":["Hip flexor stretch"]},
-  {"file":"doorway-chest-stretch","hold":true,"names":["Doorway chest stretch"]},
-  {"file":"step-touch","names":["Step touch"]},
-  {"file":"step-out-jacks","names":["Jumping jacks","Step-out jacks"]},
-  {"file":"standing-punches","names":["Standing punches"]},
-  {"file":"knee-to-opposite-elbow","names":["Knee to opposite elbow"]},
-  {"file":"side-shuffles","names":["Side shuffles"]},
-  {"file":"calf-stretch","hold":true,"names":["Calf stretch"]},
-  {"file":"leg-swings","names":["Leg swings"]},
-  {"file":"side-lying-leg-raise","names":["Side-lying leg raise","Side-lying leg circles"]},
-  {"file":"clamshells","names":["Clamshells"]},
-  {"file":"box-squat-to-chair","names":["Box squat to chair"]},
-  {"file":"calf-raises","names":["Calf raises"]},
-  {"file":"figure-4-stretch","hold":true,"names":["Figure-4 stretch"]},
-  {"file":"dumbbell-shoulder-press","names":["Dumbbell shoulder press","Overhead press","Kettlebell overhead press","Band overhead press","Arnold press"]},
-  {"file":"single-arm-dumbbell-row","names":["Single-arm dumbbell row","Single-arm row","Kettlebell row"]},
-
-  {"file":"rest","hold":true,"names":["Rest","Round rest · sip water"],"before":"sitting relaxed on a simple plain wooden chair, seen from the side, back resting against the chair, hands resting on the thighs, feet flat on the floor line, calm and resting between exercises"},
-
-  {"file":"arm-circles","names":["Arm circles"],"before":"standing tall, both arms straight out to the sides at shoulder height, palms down","after":"same standing position, both straight arms raised diagonally up and slightly forward, mid arm circle"},
-  {"file":"squat-to-overhead-reach","names":["Squat to overhead reach"],"before":"in a bodyweight squat, thighs near parallel, hands together in front of the chest","after":"standing tall, both arms reaching straight overhead"},
-  {"file":"standing-side-bend","names":["Standing side bend"],"before":"standing tall, feet hip-width, facing the viewer, one arm overhead, other hand on the hip","after":"facing the viewer, bending sideways at the waist towards the hip hand, overhead arm arcing over the head"},
-  {"file":"bodyweight-squat","names":["Bodyweight squats","Bodyweight squat","Band squat","Squat jumps (or fast squats)"],"before":"standing tall, feet shoulder-width, arms straight out in front at shoulder height, no equipment","after":"deep bodyweight squat, hips back, thighs parallel to the floor, arms straight out in front for balance, no equipment"},
-  {"file":"dumbbell-sumo-squat","names":["Sumo squat","Dumbbell sumo squat"],"before":"standing with feet wide and toes turned out, holding one dumbbell vertically with both hands hanging between the legs","after":"wide sumo squat, knees out over the toes, dumbbell hanging low between the legs"},
-  {"file":"barbell-back-squat","names":["Barbell back squat","Smith machine squat"],"before":"standing tall with a barbell across the upper back, hands gripping the bar","after":"deep squat with the barbell across the upper back, thighs parallel to the floor"},
-  {"file":"leg-press","names":["Leg press"],"before":"on a leg press machine, back against the pad, knees bent towards the chest, feet on the platform","after":"on the same leg press machine, legs pushed out almost straight, platform moved away"},
-  {"file":"romanian-deadlift","names":["Romanian deadlift","Dumbbell Romanian deadlift","Kettlebell deadlift"],"before":"standing tall holding a dumbbell in each hand in front of the thighs","after":"hinged at the hips with a flat back and soft knees, dumbbells lowered to just below the knees"},
-  {"file":"barbell-romanian-deadlift","names":["Barbell Romanian deadlift","Trap-bar deadlift"],"before":"standing tall holding a barbell with straight arms in front of the thighs","after":"hinged at the hips with a flat back and soft knees, barbell lowered to mid-shin"},
-  {"file":"hip-hinge","names":["Hip hinges","Hip hinge to wall","Band good morning"],"before":"standing tall, hands on the hips, no equipment","after":"hips pushed back, flat back tilted forward about 45 degrees, soft knees, hands on the hips"},
-  {"file":"single-leg-romanian-deadlift","names":["Single-leg Romanian deadlift (bodyweight)"],"before":"standing on one leg, other foot just off the floor, arms by the sides, no equipment","after":"balancing on one leg, torso hinged forward level with the floor, free leg extended straight behind, arms reaching down"},
-  {"file":"cable-pull-through","names":["Cable pull-through"],"before":"facing away from a low cable machine, rope handle held between the legs, hips pushed back, torso leaning forward","after":"standing tall, hips driven forward, rope handle in front of the hips"},
-  {"file":"kettlebell-swing","names":["Kettlebell swing"],"before":"hips hinged back, flat back, holding a kettlebell with both hands between the legs","after":"standing tall, hips locked out, kettlebell swung up to chest height with straight arms"},
-  {"file":"walking-lunges","names":["Walking lunges"],"before":"standing tall holding a dumbbell in each hand at the sides","after":"stepping forward into a lunge, front thigh parallel to the floor, back knee near the floor, dumbbells at the sides"},
-  {"file":"split-squat","names":["Split squat","Bulgarian split squat"],"before":"split stance, rear foot resting on a low bench behind, standing tall","after":"lowered into the split squat, front thigh parallel to the floor, rear foot still on the bench"},
-  {"file":"lateral-lunge","names":["Lateral lunge"],"before":"standing with feet wide, facing the viewer, hands together at the chest","after":"facing the viewer, shifted to one side bending that knee, other leg straight, hips back"},
-  {"file":"press-up","names":["Push-up","Press-up"],"before":"full press-up top position, arms straight, body in one straight line","after":"full press-up bottom position, chest just above the floor, elbows bent"},
-  {"file":"knee-press-up","names":["Knee push-up","Knee press-up"],"before":"press-up on the knees, arms straight, straight line from knees to head","after":"press-up on the knees, chest lowered near the floor"},
-  {"file":"incline-press-up","names":["Incline press-up on the kitchen counter"],"before":"hands on a kitchen counter, body straight and leaning, arms straight","after":"same incline, elbows bent, chest lowered to the counter edge"},
-  {"file":"pike-press-up","names":["Pike press-up"],"before":"pike position, hips high, arms straight, body an upside-down V","after":"pike position, elbows bent, head lowered towards the floor"},
-  {"file":"dumbbell-bench-press","names":["Bench press","Chest press","Dumbbell chest press","Dumbbell bench press"],"before":"lying on a flat bench, dumbbells pressed straight up above the chest","after":"lying on the flat bench, dumbbells lowered beside the chest, elbows bent"},
-  {"file":"dumbbell-floor-press","names":["Dumbbell floor press"],"before":"lying on the floor, knees bent, dumbbells pressed straight up above the chest","after":"lying on the floor, upper arms resting on the floor, dumbbells beside the chest"},
-  {"file":"band-chest-press","names":["Band chest press"],"before":"standing, resistance band around the upper back, hands at the chest","after":"standing, arms pressed straight forward, band stretched"},
-  {"file":"chest-press-machine","names":["Chest press machine"],"before":"seated on a chest press machine, handles at the chest","after":"seated on the same machine, arms pressed straight forward"},
-  {"file":"prone-y-t-raise","names":["Prone Y-T raise"],"before":"lying face down on the floor, arms resting forward in a Y shape","after":"lying face down, chest and arms lifted a few centimetres in a Y shape"},
-  {"file":"superman-pull","names":["Superman pull"],"before":"lying face down, arms reaching straight forward, chest and legs slightly lifted","after":"lying face down, elbows pulled back to the ribs, chest lifted"},
-  {"file":"seated-cable-row","names":["Seated cable row","Band row"],"before":"seated on the floor, legs straight, arms reaching forward holding a cable handle","after":"seated upright, handle pulled to the stomach, elbows back"},
-  {"file":"bent-over-dumbbell-row","names":["Bent-over dumbbell row"],"before":"hinged forward with a flat back, a dumbbell in each hand hanging below the shoulders","after":"same hinge, both dumbbells rowed to the hips, elbows back"},
-  {"file":"assisted-pull-up","names":["Assisted pull-up"],"before":"hanging from a pull-up bar with straight arms, knees on the assisted pull-up machine pad","after":"chin pulled above the bar, knees on the machine pad"},
-  {"file":"wall-slides","names":["Wall slides"],"before":"standing with back against a wall, arms in a W shape, elbows bent","after":"back against the wall, arms slid up overhead in a Y shape"},
-  {"file":"machine-shoulder-press","names":["Machine shoulder press"],"before":"seated on a shoulder press machine, handles at shoulder height","after":"seated on the same machine, handles pressed overhead"},
-  {"file":"single-leg-glute-bridge","names":["Single-leg glute bridge","Glute bridge march"],"before":"lying on the back, one foot flat on the floor, other leg straight in the air, hips down","after":"hips lifted into a bridge on one foot, other leg straight in the air"},
-  {"file":"hip-thrust","names":["Hip thrust"],"before":"upper back against a bench, barbell across the hips, hips lowered","after":"hips driven up level with the knees, barbell across the hips"},
-  {"file":"cable-kickback","names":["Cable kickback","Band glute kickback","Banded glute kickback"],"before":"standing, leaning slightly forward holding a support, cable strap on one ankle, legs together","after":"same lean, strapped leg kicked straight back"},
-  {"file":"lying-leg-curl","names":["Hamstring curl","Lying leg curl"],"before":"lying face down on a leg curl machine, legs straight under the pad","after":"same machine, knees bent, heels curled towards the bum"},
-  {"file":"plank","hold":true,"names":["Plank"],"before":"forearm plank, elbows under the shoulders, body in one straight line"},
-  {"file":"side-plank","hold":true,"names":["Side plank"],"before":"side plank on one forearm, legs straight and stacked, hips lifted, body in one straight line"},
-  {"file":"side-plank-on-knees","hold":true,"names":["Side plank on knees"],"before":"side plank on one forearm and the knees, knees bent, hips lifted"},
-  {"file":"plank-shoulder-taps","names":["Plank shoulder taps"],"before":"high plank, arms straight, body in one straight line","after":"high plank, one hand lifted to tap the opposite shoulder"},
-  {"file":"pallof-press","names":["Pallof press"],"before":"standing side-on to a cable machine, both hands holding the handle at the chest","after":"same stance, arms pressed straight forward resisting the pull"},
-  {"file":"heel-taps","names":["Heel taps"],"before":"lying on the back, knees bent, head and shoulders lifted, arms by the sides","after":"same, reaching to one side to touch the heel"},
-  {"file":"toe-taps","names":["Toe taps"],"before":"lying on the back, knees bent at 90 degrees in tabletop, lower legs parallel to the floor","after":"one foot lowered to tap the floor, other leg in tabletop"},
-  {"file":"single-leg-stretch","names":["Single-leg stretch"],"before":"lying on the back, head lifted, one knee hugged to the chest, other leg straight out low","after":"same, legs switched"},
-  {"file":"swimming","names":["Swimming (lying face down)"],"before":"lying flat on the stomach on the floor (not on hands and knees), arms stretched forward past the head, legs straight, all limbs resting on the floor","after":"still lying flat on the stomach, one arm and the opposite leg lifted a little off the floor"},
-  {"file":"pelvic-tilts","names":["Pelvic tilts"],"before":"lying on the back, knees bent, feet flat, small natural arch in the lower back","after":"same, lower back flattened to the floor, pelvis tilted"},
-  {"file":"knees-to-chest-hug","hold":true,"names":["Knees-to-chest hug"],"before":"lying on the back hugging both knees to the chest"},
-  {"file":"lying-spinal-twist","hold":true,"names":["Lying spinal twist","Spine twist lying down"],"before":"lying on the back, both knees dropped to one side, arms out wide"},
-  {"file":"legs-up-the-wall","hold":true,"names":["Legs up the wall"],"before":"lying on the back, legs resting straight up a wall, arms relaxed"},
-  {"file":"pigeon-stretch","hold":true,"names":["Pigeon stretch"],"before":"pigeon stretch on the floor, front shin folded across, back leg straight behind, upright torso"},
-  {"file":"cross-body-shoulder-stretch","hold":true,"names":["Cross-body shoulder stretch"],"before":"standing, one straight arm pulled across the chest by the other forearm"},
-  {"file":"standing-hip-flexor-stretch","hold":true,"names":["Standing hip flexor stretch"],"before":"standing in a long split stance, back heel lifted, hips pushed forward, hands on hips"},
-  {"file":"neck-rolls","names":["Neck rolls"],"before":"standing tall facing the viewer, head tilted to one side","after":"standing tall facing the viewer, chin dropped to the chest"},
-  {"file":"shoulder-rolls","names":["Shoulder rolls"],"before":"standing tall, shoulders relaxed down","after":"standing tall, both shoulders lifted up towards the ears"},
-  {"file":"high-knees","names":["High knees","Fast knee drives","Jog on the spot"],"before":"standing tall on the spot, both feet flat on the floor, arms relaxed at the sides","after":"one knee driven up to hip height, foot off the floor, opposite arm swung forward"},
-  {"file":"mountain-climbers","names":["Mountain climbers"],"before":"high plank on straight arms, both legs straight back with toes on the floor, body in one line","after":"same high plank, but now one knee driven forward under the chest, the other leg still straight back"},
-  {"file":"burpees","names":["Burpee","Burpees (step-back option)"],"before":"squatting low with hands on the floor in front of the feet","after":"high plank with legs stepped back, body in one straight line"},
-  {"file":"band-pull-aparts","names":["Band pull-aparts","Band pull-apart"],"before":"standing, arms straight out in front at shoulder height holding a resistance band","after":"standing, arms pulled out wide to the sides, band stretched across the chest"},
-  {"file":"bicep-curl","names":["Hammer curl","Bicep curl"],"before":"standing, a dumbbell in each hand, arms straight by the sides","after":"standing, dumbbells curled up to the shoulders, elbows by the sides"},
-  {"file":"triceps-rope-pushdown","names":["Triceps rope pushdown"],"before":"standing at a cable machine, rope held at chest height, elbows bent at the sides","after":"same, arms pushed straight down, rope at the thighs"},
-  {"file":"halo","names":["Halo"],"before":"standing, holding a kettlebell upside down by the horns in front of the chest","after":"standing, kettlebell circled behind the head"},
-  {"file":"suitcase-carry","names":["Suitcase carry"],"before":"standing tall holding one heavy dumbbell in one hand at the side","after":"walking forward mid-step holding the dumbbell in one hand, torso upright"},
-  {"file":"barbell-deadlift","names":["Barbell deadlift"],"before":"standing behind a loaded barbell on the floor, hips back and knees bent, flat back, hands gripping the bar just outside the shins","after":"standing tall with the barbell held at the thighs, hips and knees straight"},
-  {"file":"crunch","names":["Crunch"],"before":"lying flat on the back on the floor, head and shoulders resting on the floor, knees bent, feet flat, fingertips lightly behind the ears","after":"head and shoulders now lifted clearly off the floor, upper back curled towards the knees, lower back still on the floor"},
-  {"file":"cable-crunch","names":["Cable crunch"],"before":"kneeling facing a cable machine, holding a rope beside the head, back upright","after":"kneeling, curled down with elbows towards the knees, rope still beside the head"},
-  {"file":"leg-extension","names":["Leg extension"],"before":"seated on a leg extension machine, knees bent at 90 degrees, shins behind the pad","after":"seated on the same machine, legs straightened out in front, pad lifted"},
-  {"file":"lateral-raise","names":["Lateral raise"],"before":"standing facing the viewer, a light dumbbell in each hand at the sides","after":"standing facing the viewer, arms raised out to the sides to shoulder height"},
-  {"file":"face-pull","names":["Face pull"],"before":"standing facing a cable machine, rope at face height held with straight arms","after":"same, rope pulled towards the face, elbows high and out to the sides"},
-  {"file":"abductor-machine","names":["Abductor machine"],"before":"front view facing the viewer: seated on a hip abductor machine, knees close together against the outer pads","after":"front view facing the viewer, same machine: knees pushed wide apart against the outer pads"},
-  {"file":"adductor-machine","names":["Adductor machine"],"before":"front view facing the viewer: seated on a hip adductor machine, legs spread wide apart against the inner pads","after":"front view facing the viewer, same machine: knees squeezed fully together in the middle"},
-  {"file":"skull-crusher","names":["Skull crusher"],"before":"lying on a flat bench, a dumbbell in each hand held straight up above the chest","after":"same, elbows bent, dumbbells lowered beside the head, upper arms still vertical"},
-  {"file":"chest-fly","names":["Chest fly"],"before":"lying on a flat bench, a dumbbell in each hand held up above the chest, palms facing","after":"same, arms opened wide to the sides with a slight elbow bend, dumbbells at chest level"},
-  {"file":"walk","names":["Brisk walk (you can talk, not sing)","Easy pace","Easy pace to cool down","Easy walk","Easy walk to cool down","Walk at a steady pace","Walk it off"],"before":"walking, wide stride: front heel touching the floor ahead, back foot pushing off on its toes, opposite arm swinging forward","after":"mid-step: standing on one straight leg, the other foot lifted just off the floor under the hips, legs close together"},
-  {"file":"incline-walk","names":["Incline walk or steady bike","Treadmill incline walk"],"before":"on a treadmill tilted up at an incline: wide walking stride, near foot planted far forward up the slope, far foot far back on its toes, near arm swung back","after":"on the same inclined treadmill: legs together, standing on the far leg, near knee lifted forward to hip height, near arm swung forward"},
-  {"file":"exercise-bike","names":["Bike or cross-trainer","Bike sprint","Cycling"],"before":"seated on an upright exercise bike, hands on the handlebars, near leg pushed down almost straight with the near pedal at the very bottom","after":"same bike, near knee lifted high up towards the handlebars with the near pedal at the very top"},
-  {"file":"cross-trainer","names":["Cross-trainer or brisk walk"],"before":"standing on a cross-trainer (elliptical), near foot forward and near hand pulled back on the moving handle","after":"same cross-trainer, near foot back and near hand pushed forward"},
-  {"file":"rower","names":["Rower","Rowing machine"],"before":"seated on a rowing machine at the catch: knees bent up to the chest, arms straight forward holding the handle","after":"same rowing machine at the finish: legs straight, leaning back slightly, handle pulled to the lower ribs"},
-  {"file":"stair-climber","names":["Stair climber"],"before":"on a stair-climber machine, standing tall with both feet together on the same step, hands lightly on the rails","after":"same machine, near knee lifted high to step up onto the next step, standing on the far leg"},
-  {"file":"skipping","names":["Skipping"],"before":"skipping with a jump rope, standing on the floor, rope swung up over the head","after":"skipping, both feet just off the floor in a small jump, rope passing under the feet"},
-  {"file":"swimming-laps","names":["Swimming"],"before":"swimming front crawl, body horizontal, a thin wavy water line at hip height instead of the floor line, near arm reaching forward","after":"same front crawl, near arm now pulled back by the hip and the far arm reaching forward"},
-  {"file":"dance-class","names":["Dance or Zumba class"],"before":"dancing, stepping to one side with both arms up in the air, smiling","after":"dancing, stepping to the other side, arms swung down and across the body"},
-  {"file":"russian-twist","names":["Russian twist"],"before":"seated in a V-sit on the floor: bottom on the floor, torso leaning back about 45 degrees, knees bent, heels on the floor, hands together at the chest, NOT squatting and NOT standing","after":"same V-sit on the floor, bottom still on the floor, upper body twisted so both hands touch the floor beside one hip"},
-  {"file":"yoga-class","names":["Yoga class"],"hold":true,"before":"in a yoga warrior two pose on a mat, front knee bent, arms stretched out level to the sides"},
-  {"file":"pilates-class","names":["Pilates class"],"hold":true,"before":"on a mat doing the Pilates hundred: lying on the back, head and shoulders lifted, legs raised in tabletop, arms straight by the sides just off the mat"}
+  {
+   "file": "march-on-the-spot",
+   "names": [
+    "March on the spot",
+    "March and arm swings"
+   ]
+  },
+  {
+   "file": "sit-to-stand-squat",
+   "names": [
+    "Sit-to-stand squat",
+    "Chair squats",
+    "Chair squat"
+   ]
+  },
+  {
+   "file": "wall-press-up",
+   "names": [
+    "Wall press-up"
+   ]
+  },
+  {
+   "file": "glute-bridge",
+   "names": [
+    "Glute bridge",
+    "Banded glute bridge",
+    "Dumbbell glute bridge",
+    "Bridge with slow roll-down"
+   ]
+  },
+  {
+   "file": "bird-dog",
+   "names": [
+    "Bird dog"
+   ]
+  },
+  {
+   "file": "standing-knee-lifts",
+   "names": [
+    "Standing knee lifts"
+   ]
+  },
+  {
+   "file": "hamstring-stretch",
+   "hold": true,
+   "names": [
+    "Hamstring stretch"
+   ]
+  },
+  {
+   "file": "chest-opener-stretch",
+   "hold": true,
+   "names": [
+    "Chest opener stretch"
+   ]
+  },
+  {
+   "file": "cat-cow",
+   "names": [
+    "Cat–cow"
+   ]
+  },
+  {
+   "file": "world-s-greatest-stretch",
+   "names": [
+    "World's greatest stretch"
+   ]
+  },
+  {
+   "file": "hip-circles",
+   "names": [
+    "Hip circles"
+   ]
+  },
+  {
+   "file": "slow-march-with-deep-breaths",
+   "names": [
+    "Slow march with deep breaths",
+    "Slow march and breathe"
+   ]
+  },
+  {
+   "file": "arm-swings",
+   "names": [
+    "Arm swings"
+   ]
+  },
+  {
+   "file": "inchworm",
+   "names": [
+    "Inchworm"
+   ]
+  },
+  {
+   "file": "goblet-squat",
+   "names": [
+    "Goblet squat",
+    "Kettlebell goblet squat",
+    "Goblet or barbell squat"
+   ]
+  },
+  {
+   "file": "reverse-lunge",
+   "names": [
+    "Reverse lunge",
+    "Dumbbell reverse lunge"
+   ]
+  },
+  {
+   "file": "dead-bug",
+   "names": [
+    "Dead bug"
+   ]
+  },
+  {
+   "file": "quad-stretch",
+   "hold": true,
+   "names": [
+    "Quad stretch"
+   ]
+  },
+  {
+   "file": "child-s-pose",
+   "hold": true,
+   "names": [
+    "Child's pose",
+    "Child's pose with slow breathing"
+   ]
+  },
+  {
+   "file": "lat-pulldown",
+   "names": [
+    "Lat pulldown"
+   ]
+  },
+  {
+   "file": "step-ups",
+   "names": [
+    "Step-ups",
+    "Dumbbell step-up",
+    "Step-up onto bottom stair"
+   ]
+  },
+  {
+   "file": "farmer-s-carry",
+   "names": [
+    "Farmer's carry",
+    "March on the spot holding weights"
+   ]
+  },
+  {
+   "file": "hip-flexor-stretch",
+   "hold": true,
+   "names": [
+    "Hip flexor stretch"
+   ]
+  },
+  {
+   "file": "doorway-chest-stretch",
+   "hold": true,
+   "names": [
+    "Doorway chest stretch"
+   ]
+  },
+  {
+   "file": "step-touch",
+   "names": [
+    "Step touch"
+   ]
+  },
+  {
+   "file": "step-out-jacks",
+   "names": [
+    "Jumping jacks",
+    "Step-out jacks"
+   ]
+  },
+  {
+   "file": "standing-punches",
+   "names": [
+    "Standing punches"
+   ]
+  },
+  {
+   "file": "knee-to-opposite-elbow",
+   "names": [
+    "Knee to opposite elbow"
+   ]
+  },
+  {
+   "file": "side-shuffles",
+   "names": [
+    "Side shuffles"
+   ]
+  },
+  {
+   "file": "calf-stretch",
+   "hold": true,
+   "names": [
+    "Calf stretch"
+   ]
+  },
+  {
+   "file": "leg-swings",
+   "names": [
+    "Leg swings"
+   ]
+  },
+  {
+   "file": "side-lying-leg-raise",
+   "names": [
+    "Side-lying leg raise",
+    "Side-lying leg circles"
+   ]
+  },
+  {
+   "file": "clamshells",
+   "names": [
+    "Clamshells"
+   ]
+  },
+  {
+   "file": "box-squat-to-chair",
+   "names": [
+    "Box squat to chair"
+   ]
+  },
+  {
+   "file": "calf-raises",
+   "names": [
+    "Calf raises"
+   ]
+  },
+  {
+   "file": "figure-4-stretch",
+   "hold": true,
+   "names": [
+    "Figure-4 stretch"
+   ]
+  },
+  {
+   "file": "dumbbell-shoulder-press",
+   "names": [
+    "Dumbbell shoulder press",
+    "Overhead press",
+    "Kettlebell overhead press",
+    "Band overhead press",
+    "Arnold press"
+   ]
+  },
+  {
+   "file": "single-arm-dumbbell-row",
+   "names": [
+    "Single-arm dumbbell row",
+    "Single-arm row",
+    "Kettlebell row"
+   ]
+  },
+  {
+   "file": "rest",
+   "hold": true,
+   "names": [
+    "Rest",
+    "Round rest · sip water"
+   ],
+   "before": "sitting relaxed on a simple plain wooden chair, seen from the side, back resting against the chair, hands resting on the thighs, feet flat on the floor line, calm and resting between exercises"
+  },
+  {
+   "file": "arm-circles",
+   "names": [
+    "Arm circles"
+   ],
+   "before": "standing tall, both arms straight out to the sides at shoulder height, palms down",
+   "after": "same standing position, both straight arms raised diagonally up and slightly forward, mid arm circle"
+  },
+  {
+   "file": "squat-to-overhead-reach",
+   "names": [
+    "Squat to overhead reach"
+   ],
+   "before": "in a bodyweight squat, thighs near parallel, hands together in front of the chest",
+   "after": "standing tall, both arms reaching straight overhead"
+  },
+  {
+   "file": "standing-side-bend",
+   "names": [
+    "Standing side bend"
+   ],
+   "before": "standing tall, feet hip-width, facing the viewer, one arm overhead, other hand on the hip",
+   "after": "facing the viewer, bending sideways at the waist towards the hip hand, overhead arm arcing over the head"
+  },
+  {
+   "file": "bodyweight-squat",
+   "names": [
+    "Bodyweight squats",
+    "Bodyweight squat",
+    "Band squat",
+    "Squat jumps (or fast squats)"
+   ],
+   "before": "standing tall, feet shoulder-width, arms straight out in front at shoulder height, no equipment",
+   "after": "deep bodyweight squat, hips back, thighs parallel to the floor, arms straight out in front for balance, no equipment"
+  },
+  {
+   "file": "dumbbell-sumo-squat",
+   "names": [
+    "Sumo squat",
+    "Dumbbell sumo squat"
+   ],
+   "before": "standing with feet wide and toes turned out, holding one dumbbell vertically with both hands hanging between the legs",
+   "after": "wide sumo squat, knees out over the toes, dumbbell hanging low between the legs"
+  },
+  {
+   "file": "barbell-back-squat",
+   "names": [
+    "Barbell back squat"
+   ],
+   "before": "side view, facing right: standing tall with a barbell resting across the upper back behind the neck, hands gripping the bar either side of the shoulders",
+   "after": "side view, facing right: deep squat with the barbell still across the upper back, hips back, thighs parallel to the floor, chest up"
+  },
+  {
+   "file": "smith-machine-squat",
+   "names": [
+    "Smith machine squat"
+   ],
+   "before": "side view, facing right: standing tall inside a Smith machine (two upright steel rails with the bar fixed between them), the bar resting across the upper back, hands gripping the bar either side of the shoulders, feet slightly in front of the bar",
+   "after": "side view, facing right: deep squat inside the same Smith machine, the bar lowered along the rails and still across the upper back, thighs parallel to the floor, chest up"
+  },
+  {
+   "file": "leg-press",
+   "names": [
+    "Leg press"
+   ],
+   "before": "on a leg press machine, back against the pad, knees bent towards the chest, feet on the platform",
+   "after": "on the same leg press machine, legs pushed out almost straight, platform moved away"
+  },
+  {
+   "file": "romanian-deadlift",
+   "names": [
+    "Romanian deadlift",
+    "Dumbbell Romanian deadlift",
+    "Kettlebell deadlift"
+   ],
+   "before": "standing tall holding a dumbbell in each hand in front of the thighs",
+   "after": "hinged at the hips with a flat back and soft knees, dumbbells lowered to just below the knees"
+  },
+  {
+   "file": "barbell-romanian-deadlift",
+   "names": [
+    "Barbell Romanian deadlift",
+    "Trap-bar deadlift"
+   ],
+   "before": "standing tall holding a barbell with straight arms in front of the thighs",
+   "after": "hinged at the hips with a flat back and soft knees, barbell lowered to mid-shin"
+  },
+  {
+   "file": "hip-hinge",
+   "names": [
+    "Hip hinges",
+    "Hip hinge to wall",
+    "Band good morning"
+   ],
+   "before": "standing tall, hands on the hips, no equipment",
+   "after": "hips pushed back, flat back tilted forward about 45 degrees, soft knees, hands on the hips"
+  },
+  {
+   "file": "single-leg-romanian-deadlift",
+   "names": [
+    "Single-leg Romanian deadlift (bodyweight)"
+   ],
+   "before": "standing on one leg, other foot just off the floor, arms by the sides, no equipment",
+   "after": "balancing on one leg, torso hinged forward level with the floor, free leg extended straight behind, arms reaching down"
+  },
+  {
+   "file": "cable-pull-through",
+   "names": [
+    "Cable pull-through"
+   ],
+   "before": "facing away from a low cable machine, rope handle held between the legs, hips pushed back, torso leaning forward",
+   "after": "standing tall, hips driven forward, rope handle in front of the hips"
+  },
+  {
+   "file": "kettlebell-swing",
+   "names": [
+    "Kettlebell swing"
+   ],
+   "before": "hips hinged back, flat back, holding a kettlebell with both hands between the legs",
+   "after": "standing tall, hips locked out, kettlebell swung up to chest height with straight arms"
+  },
+  {
+   "file": "walking-lunges",
+   "names": [
+    "Walking lunges"
+   ],
+   "before": "standing tall holding a dumbbell in each hand at the sides",
+   "after": "stepping forward into a lunge, front thigh parallel to the floor, back knee near the floor, dumbbells at the sides"
+  },
+  {
+   "file": "split-squat",
+   "names": [
+    "Split squat",
+    "Bulgarian split squat"
+   ],
+   "before": "split stance, rear foot resting on a low bench behind, standing tall",
+   "after": "lowered into the split squat, front thigh parallel to the floor, rear foot still on the bench"
+  },
+  {
+   "file": "lateral-lunge",
+   "names": [
+    "Lateral lunge"
+   ],
+   "before": "standing with feet wide, facing the viewer, hands together at the chest",
+   "after": "facing the viewer, shifted to one side bending that knee, other leg straight, hips back"
+  },
+  {
+   "file": "press-up",
+   "names": [
+    "Push-up",
+    "Press-up"
+   ],
+   "before": "full press-up top position, arms straight, body in one straight line",
+   "after": "full press-up bottom position, chest just above the floor, elbows bent"
+  },
+  {
+   "file": "knee-press-up",
+   "names": [
+    "Knee push-up",
+    "Knee press-up"
+   ],
+   "before": "press-up on the knees, arms straight, straight line from knees to head",
+   "after": "press-up on the knees, chest lowered near the floor"
+  },
+  {
+   "file": "incline-press-up",
+   "names": [
+    "Incline press-up on the kitchen counter"
+   ],
+   "before": "hands on a kitchen counter, body straight and leaning, arms straight",
+   "after": "same incline, elbows bent, chest lowered to the counter edge"
+  },
+  {
+   "file": "pike-press-up",
+   "names": [
+    "Pike press-up"
+   ],
+   "before": "pike position, hips high, arms straight, body an upside-down V",
+   "after": "pike position, elbows bent, head lowered towards the floor"
+  },
+  {
+   "file": "dumbbell-bench-press",
+   "names": [
+    "Bench press",
+    "Chest press",
+    "Dumbbell chest press",
+    "Dumbbell bench press"
+   ],
+   "before": "lying on a flat bench, dumbbells pressed straight up above the chest",
+   "after": "lying on the flat bench, dumbbells lowered beside the chest, elbows bent"
+  },
+  {
+   "file": "dumbbell-floor-press",
+   "names": [
+    "Dumbbell floor press"
+   ],
+   "before": "lying on the floor, knees bent, dumbbells pressed straight up above the chest",
+   "after": "lying on the floor, upper arms resting on the floor, dumbbells beside the chest"
+  },
+  {
+   "file": "band-chest-press",
+   "names": [
+    "Band chest press"
+   ],
+   "before": "standing, resistance band around the upper back, hands at the chest",
+   "after": "standing, arms pressed straight forward, band stretched"
+  },
+  {
+   "file": "chest-press-machine",
+   "names": [
+    "Chest press machine"
+   ],
+   "before": "seated on a chest press machine, handles at the chest",
+   "after": "seated on the same machine, arms pressed straight forward"
+  },
+  {
+   "file": "prone-y-t-raise",
+   "names": [
+    "Prone Y-T raise"
+   ],
+   "before": "lying face down on the floor, arms resting forward in a Y shape",
+   "after": "lying face down, chest and arms lifted a few centimetres in a Y shape"
+  },
+  {
+   "file": "superman-pull",
+   "names": [
+    "Superman pull"
+   ],
+   "before": "lying face down, arms reaching straight forward, chest and legs slightly lifted",
+   "after": "lying face down, elbows pulled back to the ribs, chest lifted"
+  },
+  {
+   "file": "seated-cable-row",
+   "names": [
+    "Seated cable row",
+    "Band row"
+   ],
+   "before": "seated on the floor, legs straight, arms reaching forward holding a cable handle",
+   "after": "seated upright, handle pulled to the stomach, elbows back"
+  },
+  {
+   "file": "bent-over-dumbbell-row",
+   "names": [
+    "Bent-over dumbbell row"
+   ],
+   "before": "hinged forward with a flat back, a dumbbell in each hand hanging below the shoulders",
+   "after": "same hinge, both dumbbells rowed to the hips, elbows back"
+  },
+  {
+   "file": "assisted-pull-up",
+   "names": [
+    "Assisted pull-up"
+   ],
+   "before": "hanging from a pull-up bar with straight arms, knees on the assisted pull-up machine pad",
+   "after": "chin pulled above the bar, knees on the machine pad"
+  },
+  {
+   "file": "wall-slides",
+   "names": [
+    "Wall slides"
+   ],
+   "before": "standing with back against a wall, arms in a W shape, elbows bent",
+   "after": "back against the wall, arms slid up overhead in a Y shape"
+  },
+  {
+   "file": "machine-shoulder-press",
+   "names": [
+    "Machine shoulder press"
+   ],
+   "before": "seated on a shoulder press machine, handles at shoulder height",
+   "after": "seated on the same machine, handles pressed overhead"
+  },
+  {
+   "file": "single-leg-glute-bridge",
+   "names": [
+    "Single-leg glute bridge",
+    "Glute bridge march"
+   ],
+   "before": "lying on the back, one foot flat on the floor, other leg straight in the air, hips down",
+   "after": "hips lifted into a bridge on one foot, other leg straight in the air"
+  },
+  {
+   "file": "hip-thrust",
+   "names": [
+    "Hip thrust"
+   ],
+   "before": "upper back against a bench, barbell across the hips, hips lowered",
+   "after": "hips driven up level with the knees, barbell across the hips"
+  },
+  {
+   "file": "cable-kickback",
+   "names": [
+    "Cable kickback",
+    "Band glute kickback",
+    "Banded glute kickback"
+   ],
+   "before": "standing, leaning slightly forward holding a support, cable strap on one ankle, legs together",
+   "after": "same lean, strapped leg kicked straight back"
+  },
+  {
+   "file": "lying-leg-curl",
+   "names": [
+    "Hamstring curl",
+    "Lying leg curl"
+   ],
+   "before": "lying face down on a leg curl machine, legs straight under the pad",
+   "after": "same machine, knees bent, heels curled towards the bum"
+  },
+  {
+   "file": "plank",
+   "hold": true,
+   "names": [
+    "Plank"
+   ],
+   "before": "forearm plank, elbows under the shoulders, body in one straight line"
+  },
+  {
+   "file": "side-plank",
+   "hold": true,
+   "names": [
+    "Side plank"
+   ],
+   "before": "side plank on one forearm, legs straight and stacked, hips lifted, body in one straight line"
+  },
+  {
+   "file": "side-plank-on-knees",
+   "hold": true,
+   "names": [
+    "Side plank on knees"
+   ],
+   "before": "side plank on one forearm and the knees, knees bent, hips lifted"
+  },
+  {
+   "file": "plank-shoulder-taps",
+   "names": [
+    "Plank shoulder taps"
+   ],
+   "before": "high plank, arms straight, body in one straight line",
+   "after": "high plank, one hand lifted to tap the opposite shoulder"
+  },
+  {
+   "file": "pallof-press",
+   "names": [
+    "Pallof press"
+   ],
+   "before": "standing side-on to a cable machine, both hands holding the handle at the chest",
+   "after": "same stance, arms pressed straight forward resisting the pull"
+  },
+  {
+   "file": "heel-taps",
+   "names": [
+    "Heel taps"
+   ],
+   "before": "lying on the back, knees bent, head and shoulders lifted, arms by the sides",
+   "after": "same, reaching to one side to touch the heel"
+  },
+  {
+   "file": "toe-taps",
+   "names": [
+    "Toe taps"
+   ],
+   "before": "lying on the back, knees bent at 90 degrees in tabletop, lower legs parallel to the floor",
+   "after": "one foot lowered to tap the floor, other leg in tabletop"
+  },
+  {
+   "file": "single-leg-stretch",
+   "names": [
+    "Single-leg stretch"
+   ],
+   "before": "lying on the back, head lifted, one knee hugged to the chest, other leg straight out low",
+   "after": "same, legs switched"
+  },
+  {
+   "file": "swimming",
+   "names": [
+    "Swimming (lying face down)"
+   ],
+   "before": "lying flat on the stomach on the floor (not on hands and knees), arms stretched forward past the head, legs straight, all limbs resting on the floor",
+   "after": "still lying flat on the stomach, one arm and the opposite leg lifted a little off the floor"
+  },
+  {
+   "file": "pelvic-tilts",
+   "names": [
+    "Pelvic tilts"
+   ],
+   "before": "lying on the back, knees bent, feet flat, small natural arch in the lower back",
+   "after": "same, lower back flattened to the floor, pelvis tilted"
+  },
+  {
+   "file": "knees-to-chest-hug",
+   "hold": true,
+   "names": [
+    "Knees-to-chest hug"
+   ],
+   "before": "lying on the back hugging both knees to the chest"
+  },
+  {
+   "file": "lying-spinal-twist",
+   "hold": true,
+   "names": [
+    "Lying spinal twist",
+    "Spine twist lying down"
+   ],
+   "before": "lying on the back, both knees dropped to one side, arms out wide"
+  },
+  {
+   "file": "legs-up-the-wall",
+   "hold": true,
+   "names": [
+    "Legs up the wall"
+   ],
+   "before": "lying on the back, legs resting straight up a wall, arms relaxed"
+  },
+  {
+   "file": "pigeon-stretch",
+   "hold": true,
+   "names": [
+    "Pigeon stretch"
+   ],
+   "before": "pigeon stretch on the floor, front shin folded across, back leg straight behind, upright torso"
+  },
+  {
+   "file": "cross-body-shoulder-stretch",
+   "hold": true,
+   "names": [
+    "Cross-body shoulder stretch"
+   ],
+   "before": "standing, one straight arm pulled across the chest by the other forearm"
+  },
+  {
+   "file": "standing-hip-flexor-stretch",
+   "hold": true,
+   "names": [
+    "Standing hip flexor stretch"
+   ],
+   "before": "standing in a long split stance, back heel lifted, hips pushed forward, hands on hips"
+  },
+  {
+   "file": "neck-rolls",
+   "names": [
+    "Neck rolls"
+   ],
+   "before": "standing tall facing the viewer, head tilted to one side",
+   "after": "standing tall facing the viewer, chin dropped to the chest"
+  },
+  {
+   "file": "shoulder-rolls",
+   "names": [
+    "Shoulder rolls"
+   ],
+   "before": "standing tall, shoulders relaxed down",
+   "after": "standing tall, both shoulders lifted up towards the ears"
+  },
+  {
+   "file": "high-knees",
+   "names": [
+    "High knees",
+    "Fast knee drives",
+    "Jog on the spot"
+   ],
+   "before": "standing tall on the spot, both feet flat on the floor, arms relaxed at the sides",
+   "after": "one knee driven up to hip height, foot off the floor, opposite arm swung forward"
+  },
+  {
+   "file": "mountain-climbers",
+   "names": [
+    "Mountain climbers"
+   ],
+   "before": "high plank on straight arms, both legs straight back with toes on the floor, body in one line",
+   "after": "same high plank, but now one knee driven forward under the chest, the other leg still straight back"
+  },
+  {
+   "file": "burpees",
+   "names": [
+    "Burpee",
+    "Burpees (step-back option)"
+   ],
+   "before": "squatting low with hands on the floor in front of the feet",
+   "after": "high plank with legs stepped back, body in one straight line"
+  },
+  {
+   "file": "band-pull-aparts",
+   "names": [
+    "Band pull-aparts",
+    "Band pull-apart"
+   ],
+   "before": "standing, arms straight out in front at shoulder height holding a resistance band",
+   "after": "standing, arms pulled out wide to the sides, band stretched across the chest"
+  },
+  {
+   "file": "bicep-curl",
+   "names": [
+    "Hammer curl",
+    "Bicep curl"
+   ],
+   "before": "standing, a dumbbell in each hand, arms straight by the sides",
+   "after": "standing, dumbbells curled up to the shoulders, elbows by the sides"
+  },
+  {
+   "file": "triceps-rope-pushdown",
+   "names": [
+    "Triceps rope pushdown"
+   ],
+   "before": "standing at a cable machine, rope held at chest height, elbows bent at the sides",
+   "after": "same, arms pushed straight down, rope at the thighs"
+  },
+  {
+   "file": "halo",
+   "names": [
+    "Halo"
+   ],
+   "before": "standing, holding a kettlebell upside down by the horns in front of the chest",
+   "after": "standing, kettlebell circled behind the head"
+  },
+  {
+   "file": "suitcase-carry",
+   "names": [
+    "Suitcase carry"
+   ],
+   "before": "standing tall holding one heavy dumbbell in one hand at the side",
+   "after": "walking forward mid-step holding the dumbbell in one hand, torso upright"
+  },
+  {
+   "file": "barbell-deadlift",
+   "names": [
+    "Barbell deadlift"
+   ],
+   "before": "standing behind a loaded barbell on the floor, hips back and knees bent, flat back, hands gripping the bar just outside the shins",
+   "after": "standing tall with the barbell held at the thighs, hips and knees straight"
+  },
+  {
+   "file": "crunch",
+   "names": [
+    "Crunch"
+   ],
+   "before": "lying flat on the back on the floor, head and shoulders resting on the floor, knees bent, feet flat, fingertips lightly behind the ears",
+   "after": "head and shoulders now lifted clearly off the floor, upper back curled towards the knees, lower back still on the floor"
+  },
+  {
+   "file": "cable-crunch",
+   "names": [
+    "Cable crunch"
+   ],
+   "before": "kneeling facing a cable machine, holding a rope beside the head, back upright",
+   "after": "kneeling, curled down with elbows towards the knees, rope still beside the head"
+  },
+  {
+   "file": "leg-extension",
+   "names": [
+    "Leg extension"
+   ],
+   "before": "seated on a leg extension machine, knees bent at 90 degrees, shins behind the pad",
+   "after": "seated on the same machine, legs straightened out in front, pad lifted"
+  },
+  {
+   "file": "lateral-raise",
+   "names": [
+    "Lateral raise"
+   ],
+   "before": "standing facing the viewer, a light dumbbell in each hand at the sides",
+   "after": "standing facing the viewer, arms raised out to the sides to shoulder height"
+  },
+  {
+   "file": "face-pull",
+   "names": [
+    "Face pull"
+   ],
+   "before": "standing facing a cable machine, rope at face height held with straight arms",
+   "after": "same, rope pulled towards the face, elbows high and out to the sides"
+  },
+  {
+   "file": "abductor-machine",
+   "names": [
+    "Abductor machine"
+   ],
+   "before": "front view facing the viewer: seated on a hip abductor machine, knees close together against the outer pads",
+   "after": "front view facing the viewer, same machine: knees pushed wide apart against the outer pads"
+  },
+  {
+   "file": "adductor-machine",
+   "names": [
+    "Adductor machine"
+   ],
+   "before": "front view facing the viewer: seated on a hip adductor machine, legs spread wide apart against the inner pads",
+   "after": "front view facing the viewer, same machine: knees squeezed fully together in the middle"
+  },
+  {
+   "file": "skull-crusher",
+   "names": [
+    "Skull crusher"
+   ],
+   "before": "lying on a flat bench, a dumbbell in each hand held straight up above the chest",
+   "after": "same, elbows bent, dumbbells lowered beside the head, upper arms still vertical"
+  },
+  {
+   "file": "chest-fly",
+   "names": [
+    "Chest fly"
+   ],
+   "before": "lying on a flat bench, a dumbbell in each hand held up above the chest, palms facing",
+   "after": "same, arms opened wide to the sides with a slight elbow bend, dumbbells at chest level"
+  },
+  {
+   "file": "walk",
+   "names": [
+    "Brisk walk (you can talk, not sing)",
+    "Easy pace",
+    "Easy pace to cool down",
+    "Easy walk",
+    "Easy walk to cool down",
+    "Walk at a steady pace",
+    "Walk it off"
+   ],
+   "before": "walking, wide stride: front heel touching the floor ahead, back foot pushing off on its toes, opposite arm swinging forward",
+   "after": "mid-step: standing on one straight leg, the other foot lifted just off the floor under the hips, legs close together"
+  },
+  {
+   "file": "incline-walk",
+   "names": [
+    "Incline walk or steady bike",
+    "Treadmill incline walk"
+   ],
+   "before": "on a treadmill tilted up at an incline: wide walking stride, near foot planted far forward up the slope, far foot far back on its toes, near arm swung back",
+   "after": "on the same inclined treadmill: legs together, standing on the far leg, near knee lifted forward to hip height, near arm swung forward"
+  },
+  {
+   "file": "exercise-bike",
+   "names": [
+    "Bike or cross-trainer",
+    "Bike sprint",
+    "Cycling"
+   ],
+   "before": "seated on an upright exercise bike, hands on the handlebars, near leg pushed down almost straight with the near pedal at the very bottom",
+   "after": "same bike, near knee lifted high up towards the handlebars with the near pedal at the very top"
+  },
+  {
+   "file": "cross-trainer",
+   "names": [
+    "Cross-trainer or brisk walk"
+   ],
+   "before": "standing on a cross-trainer (elliptical), near foot forward and near hand pulled back on the moving handle",
+   "after": "same cross-trainer, near foot back and near hand pushed forward"
+  },
+  {
+   "file": "rower",
+   "names": [
+    "Rower",
+    "Rowing machine"
+   ],
+   "before": "seated on a rowing machine at the catch: knees bent up to the chest, arms straight forward holding the handle",
+   "after": "same rowing machine at the finish: legs straight, leaning back slightly, handle pulled to the lower ribs"
+  },
+  {
+   "file": "stair-climber",
+   "names": [
+    "Stair climber"
+   ],
+   "before": "on a stair-climber machine, standing tall with both feet together on the same step, hands lightly on the rails",
+   "after": "same machine, near knee lifted high to step up onto the next step, standing on the far leg"
+  },
+  {
+   "file": "skipping",
+   "names": [
+    "Skipping"
+   ],
+   "before": "skipping with a jump rope, standing on the floor, rope swung up over the head",
+   "after": "skipping, both feet just off the floor in a small jump, rope passing under the feet"
+  },
+  {
+   "file": "swimming-laps",
+   "names": [
+    "Swimming"
+   ],
+   "before": "swimming front crawl, body horizontal, a thin wavy water line at hip height instead of the floor line, near arm reaching forward",
+   "after": "same front crawl, near arm now pulled back by the hip and the far arm reaching forward"
+  },
+  {
+   "file": "dance-class",
+   "names": [
+    "Dance or Zumba class"
+   ],
+   "before": "dancing, stepping to one side with both arms up in the air, smiling",
+   "after": "dancing, stepping to the other side, arms swung down and across the body"
+  },
+  {
+   "file": "russian-twist",
+   "names": [
+    "Russian twist"
+   ],
+   "before": "seated in a V-sit on the floor: bottom on the floor, torso leaning back about 45 degrees, knees bent, heels on the floor, hands together at the chest, NOT squatting and NOT standing",
+   "after": "same V-sit on the floor, bottom still on the floor, upper body twisted so both hands touch the floor beside one hip"
+  },
+  {
+   "file": "yoga-class",
+   "names": [
+    "Yoga class"
+   ],
+   "hold": true,
+   "before": "in a yoga warrior two pose on a mat, front knee bent, arms stretched out level to the sides"
+  },
+  {
+   "file": "pilates-class",
+   "names": [
+    "Pilates class"
+   ],
+   "hold": true,
+   "before": "on a mat doing the Pilates hundred: lying on the back, head and shoulders lifted, legs raised in tabletop, arms straight by the sides just off the mat"
+  }
  ]
 }
